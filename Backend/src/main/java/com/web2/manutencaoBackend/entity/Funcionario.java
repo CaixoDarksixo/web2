@@ -24,5 +24,36 @@ public class Funcionario {
         this.email = email;
         this.dataNascimento = dataNascimento;
     }
+    
+    public void setId(Long id) {
+    	this.id = id;
+    }
+    
+    public Long getId() {
+    	return id;
+    }
+    
+    public void setNome(String nome) {
+    	this.nome = nome;
+    }
+    
+    public String getNome() {
+    	return this.nome;
+    }
+    
+    public void setEmail(String email) {
+    	this.email = email;
+    }
 
+    public String getEmail() {
+    	return this.email;
+    }
+    
+    public void setDataNascimento(Date data) {
+    	this.dataNascimento = data;
+    }
+    
+    public Date getDataNascimento() {
+    	return dataNascimento;
+    }
 }
