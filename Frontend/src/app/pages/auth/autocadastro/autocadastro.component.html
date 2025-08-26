@@ -1,0 +1,33 @@
+<div class="p-fluid">
+  <h2>AutoCadastro</h2>
+  <form [formGroup]="cadastroForm" (ngSubmit)="onSubmit()">
+
+    <div class="p-field">
+      <label for="nome">Nome</label>
+      <input id="nome" type="text" pInputText formControlName="nome">
+      <small *ngIf="nome?.invalid && (nome?.dirty || nome?.touched)" class="p-error">
+        O nome é obrigatório.
+      </small>
+    </div>
+
+    <div class="p-field">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" pInputText formControlName="email">
+      <small *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="p-error">
+        <span *ngIf="email?.errors?.['required']">O e-mail é obrigatório.</span>
+        <span *ngIf="email?.errors?.['email']">Digite um e-mail válido.</span>
+      </small>
+    </div>
+
+    <div class="p-field">
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" pInputText formControlName="senha">
+      <small *ngIf="senha?.invalid && (senha?.dirty || senha?.touched)" class="p-error">
+        <span *ngIf="senha?.errors?.['required']">A senha é obrigatória.</span>
+        <span *ngIf="senha?.errors?.['minlength']">A senha deve ter pelo menos 6 caracteres.</span>
+      </small>
+    </div>
+
+    <button pButton type="submit" label="Cadastrar" [disabled]="cadastroForm.invalid"></button>
+  </form>
+</div>
