@@ -9,11 +9,19 @@ import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
-import { AuthService } from 'frontend/layout/service/core/auth/auth.ts';
+import { AuthService } from '../../layout/service/core/auth/auth';
 
-/* tenho que alterar o path do authservice aqui e tirar o NgIf porque o commonmodules não é mais suportado
-farei isso quando voltar da aula
-*/
+interface LoginResponse {
+  token?: string;
+  message?: string;
+  //Propriedades da API
+}
+
+interface LoginError {
+  error?: {
+    message?: string;
+  };
+}
 
 @Component({
   selector: 'app-login',
@@ -55,11 +63,15 @@ farei isso quando voltar da aula
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
               <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
               <input pInputText id="email1" type="email" placeholder="Email address" class="w-full md:w-120 mb-2" formControlName="email" />
-              <small class="text-red-500" *ngIf="form.controls.email.touched && form.controls.email.invalid">Informe um email válido.</small>
+              @if (form.controls.email.touched && form.controls.email.invalid) {
+                <small class="text-red-500">Informe um email válido.</small>
+              }
 
               <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-4">Password</label>
               <p-password id="password1" formControlName="password" placeholder="Password" [toggleMask]="true" styleClass="mb-2" [fluid]="true" [feedback]="false"></p-password>
-              <small class="text-red-500" *ngIf="form.controls.password.touched && form.controls.password.invalid">Senha é obrigatória.</small>
+              @if (form.controls.password.touched && form.controls.password.invalid) {
+                <small class="text-red-500">Senha é obrigatória.</small>
+              }
 
               <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                 <div class="flex items-center">
@@ -77,6 +89,7 @@ farei isso quando voltar da aula
     </div>
   `
 })
+
 export class Login {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
@@ -93,19 +106,37 @@ export class Login {
   onSubmit() {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
+    
     this.loading = true;
     const { email, password, remember } = this.form.getRawValue();
 
-this.auth.login({ email: String(email), password: String(password) }).subscribe({
-    next: (res) => {
-this.msg.add({ severity: 'success', summary: 'Login', detail: 'Login realizado com sucesso!' });
-    if (res?.token) this.auth.storeToken(res.token, !!remember);
-this.router.navigate(['/dashboard']);
-    },
-error: (err) => {
-const detail = err?.error?.message ?? 'Falha no login. Verifique se você digitou certo.';
-this.msg.add({ severity: 'error', summary: 'Erro', detail });
+    this.auth.login({ 
+      email: String(email), 
+      password: String(password) 
+    }).subscribe({
+      next: (res: LoginResponse) => {
+        this.msg.add({ 
+          severity: 'success', 
+          summary: 'Login', 
+          detail: 'Login realizado com sucesso!' 
+        });
+        
+        if (res?.token) {
+          this.auth.storeToken(res.token, !!remember);
+        }
+        
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err: LoginError) => {
+        const detail = err?.error?.message ?? 'Falha no login. Verifique se você digitou certo.';
+        this.msg.add({ 
+          severity: 'error', 
+          summary: 'Erro', 
+          detail 
+        });
       }
-    }).add(() => (this.loading = false));
+    }).add(() => {
+      this.loading = false;
+    });
   }
 }
