@@ -18,7 +18,7 @@ import { RouterModule } from '@angular/router';
                 <button pButton pRipple [rounded]="true" type="button" label="Acessar Agora" class="text-xl! mt-8 px-4!" routerLink="/auth/login"></button>
             </div>
             <div class="flex justify-center md:justify-end">
-                <img src="https://media.discordapp.net/attachments/1236531266845671494/1406093598008545340/Projeto_Remover_fundo_2.png?ex=68a13635&is=689fe4b5&hm=8b96d3087dbc31b4ee21bdba14623be7b96f2086c06652dc926bee34aca34626&=&format=webp&quality=lossless" alt="Hero Image" class="w-9/12 md:w-auto" />
+                <img src="dogshero.png" alt="Hero Image" class="w-9/12 md:w-auto" />
             </div>
         </div>
     `

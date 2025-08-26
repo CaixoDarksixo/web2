@@ -10,39 +10,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.web2.manutencaoBackend.entity.Cliente;
-import com.web2.manutencaoBackend.service.ClienteService;
+import com.web2.manutencaoBackend.entity.Servico;
+import com.web2.manutencaoBackend.service.ServicoService;
 ;
 
 
 @RestController
-@RequestMapping("/cliente")
-public class ClienteController {
+@RequestMapping("/servico")
+public class ServicoController {
 
-    private final ClienteService clienteService;
+    private final ServicoService servicoService;
 
-    public ClienteController(ClienteService clienteService) {
-        this.clienteService = clienteService;
+    public ServicoController(ServicoService servicoService) {
+        this.servicoService = servicoService;
     }
 
     @GetMapping
-    public List<Cliente> getAll() {
-        return clienteService.getAll();
+    public List<Servico> getAll() {
+        return servicoService.getAll();
     }
 
     @PostMapping
-    public Cliente post(@RequestBody Cliente cliente) {
-        return clienteService.save(cliente);
+    public Servico post(@RequestBody Servico servico) {
+        return servicoService.save(servico);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        clienteService.delete(id);
+        servicoService.delete(id);
     }
 
     @PutMapping("/{id}")
-    public Cliente put(@PathVariable Long id, @RequestBody Cliente cliente){
-        return clienteService.update(id, cliente);
+    public Servico put(@PathVariable Long id, @RequestBody Servico servico){
+        return servicoService.update(id, servico);
     }
 
 

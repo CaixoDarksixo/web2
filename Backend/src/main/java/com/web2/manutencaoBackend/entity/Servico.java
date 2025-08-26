@@ -26,6 +26,10 @@ public class Servico {
     private String descDefeito;
     private Long idCliente;
 
+    private String descRejeicao;
+
+    private long idFuncionario;
+
     protected Servico(){}
 
     public Servico(LocalDateTime datahora, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Long idCliente) {
@@ -35,6 +39,8 @@ public class Servico {
         this.categoriaEquipamento = categoriaEquipamento;
         this.descDefeito = descDefeito;
         this.idCliente = idCliente;
+        this.descRejeicao = "Não Rejeitada";
+        this.idFuncionario = 0;
     }
     
     public void setId(Long id) {
@@ -84,6 +90,14 @@ public class Servico {
     public String getDescDefeito() {
     	return descDefeito;
     }
+
+    public void setDescRejeicao(String desc) {
+    	this.descRejeicao = desc;
+    }
+    
+    public String getDescRejeicao() {
+    	return descRejeicao;
+    }
     
     public void setIdCliente(Long idCliente) {
     	this.idCliente = idCliente;
@@ -91,5 +105,22 @@ public class Servico {
     
     public Long getIdCliente() {
     	return this.idCliente;
+    }
+
+    public void setIdFuncionario(Long id){
+        this.idFuncionario = id;
+    }
+    
+    public Long getIdFuncionario(){
+        return this.idFuncionario;
+    }
+
+    public void rejeitar(String desc){
+        this.setDescRejeicao(desc);
+        this.setStatus(Status.REJEITADO);
+    }
+
+    public void encaminhar(Funcionario funcionario){
+        this.setIdFuncionario(funcionario.getId());
     }
 }
