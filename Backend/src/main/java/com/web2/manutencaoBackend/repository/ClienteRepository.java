@@ -12,4 +12,10 @@ public interface  ClienteRepository extends JpaRepository<Cliente, Long>{
 
     // Declaração do método para buscar um cliente pelo CPF
     Optional<Cliente> findByCpf(String cpf);
+
+    private void register(Cliente cliente);
+
+    private void update(Cliente cliente);
+
+    private void delete(Cliente cliente);
 }
