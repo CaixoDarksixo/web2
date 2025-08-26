@@ -11,9 +11,9 @@ public interface  FuncionarioRepository extends JpaRepository<Funcionario, Long>
 
     Optional<Funcionario> findByCPF(String cpf);
 
-    void register(Funcionario funcionario);
+    private void register(Funcionario funcionario);
 
-    void update(Funcionario funcionario);
+    private void update(Funcionario funcionario);
 
-    void delete(Funcionario funcionario);
+    private void delete(Funcionario funcionario);
 }
