@@ -31,7 +31,7 @@ public class ClienteService {
         // Define a data de registro como a data e hora atuais
         cliente.setDataRegistro(LocalDateTime.now());
         // Salva o cliente no banco de dados
-        return clienteRepository.save(cliente);
+        return clienteRepository.register(cliente);
     }
 
     // Método para verificar se um cliente já existe pelo e-mail
