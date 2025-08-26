@@ -18,6 +18,6 @@ public class FuncionarioService {
     }
 
     public Funcionario save(Funcionario funcionario) {
-        return funcionarioRepository.save(funcionario);
+        return funcionarioRepository.register(funcionario);
     }
 }
