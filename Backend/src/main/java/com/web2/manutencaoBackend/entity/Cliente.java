@@ -1,5 +1,7 @@
 package com.web2.manutencaoBackend.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,21 +13,23 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String cpf;
-    private int telefone;
-    private String nome, email, endereco;
-
+    private String nome, email, endereco, senha, telefone;
+    private LocalDateTime dataRegistro;
     public Cliente() {
     }
 
 
-    public Cliente(String CPF, int telefone, String nome, String email, String endereco) {
+    public Cliente(String CPF, String telefone, String nome, String email, String endereco, String senha) {
         this.cpf = CPF;
         this.telefone = telefone;
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
+        this.senha = senha;
     }
     
+
+    //setter e getters
     public void setId(Long id) {
     	this.id = id;
     }
@@ -42,11 +46,16 @@ public class Cliente {
     	return this.cpf;
     }
     
-    public void setTelefone(int telefone) {
+    public void setTelefone(String telefone) {
     	this.telefone = telefone;
     }
-    
-    public int getTelefone() {
+
+
+    public void setSenha(String senha){
+        this.senha = senha;
+    }
+
+    public String getTelefone() {
     	return this.telefone;
     }
     
@@ -72,5 +81,17 @@ public class Cliente {
     
     public String getEndereco() {
     	return this.endereco;
+    }
+     
+    public String getSenha() {
+        return senha;
+    }
+
+    public LocalDateTime getDataRegistro() {
+        return dataRegistro;
+    }
+    
+    public void setDataRegistro(LocalDateTime dataRegistro) {
+        this.dataRegistro = dataRegistro;
     }
 }
