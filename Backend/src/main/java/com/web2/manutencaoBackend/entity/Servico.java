@@ -37,6 +37,7 @@ public class Servico {
         this.categoriaEquipamento = categoriaEquipamento;
         this.descDefeito = descDefeito;
         this.idCliente = idCliente;
+        this.descRejeicao = "Não Rejeitada";
     }
     
     public void setId(Long id) {
