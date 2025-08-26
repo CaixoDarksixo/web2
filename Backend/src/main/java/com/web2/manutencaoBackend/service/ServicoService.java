@@ -17,7 +17,7 @@ public class ServicoService {
         this.servicoRepository = servicoRepository;
     }
     public Servico save(Servico servico) {
-        return servicoRepository.save(servico);
+        return servicoRepository.register(servico);
     }
 
 }
