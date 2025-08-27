@@ -9,7 +9,7 @@ import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
-import { AuthService } from '../../layout/service/core/auth/auth';
+import { AuthService } from '../service/auth.service';
 
 interface LoginResponse {
   token?: string;
@@ -56,19 +56,19 @@ interface LoginError {
                   <circle cx="38.5" cy="38.5" r="31.5" stroke="var(--primary-color)" stroke-width="18"/>
                 </g>
               </svg>
-              <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to FixSys!</div>
-              <span class="text-muted-color font-medium">Sign in to continue</span>
+              <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Bem-vindo ao FixSys!</div>
+              <span class="text-muted-color font-medium">Faça login para continuar</span>
             </div>
 
             <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
-              <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-              <input pInputText id="email1" type="email" placeholder="Email address" class="w-full md:w-120 mb-2" formControlName="email" />
+              <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2" >E-mail</label>
+              <input pInputText id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
               @if (form.controls.email.touched && form.controls.email.invalid) {
                 <small class="text-red-500">Informe um email válido.</small>
               }
 
-              <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-4">Password</label>
-              <p-password id="password1" formControlName="password" placeholder="Password" [toggleMask]="true" styleClass="mb-2" [fluid]="true" [feedback]="false"></p-password>
+              <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-4">Senha</label>
+              <p-password id="password1" formControlName="password" placeholder="Insira a senha" [toggleMask]="true" styleClass="mb-2" [fluid]="true" [feedback]="false"></p-password>
               @if (form.controls.password.touched && form.controls.password.invalid) {
                 <small class="text-red-500">Senha é obrigatória.</small>
               }
@@ -76,12 +76,15 @@ interface LoginError {
               <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                 <div class="flex items-center">
                   <p-checkbox formControlName="remember" inputId="rememberme1" binary class="mr-2"></p-checkbox>
-                  <label for="rememberme1">Remember me</label>
+                  <label for="rememberme1">Lembre-se de mim</label>
                 </div>
-                <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" [routerLink]="['/auth/forgot']">Forgot password?</a>
               </div>
 
               <p-button type="submit" [label]="loading ? 'Entrando...' : 'Entrar'" styleClass="w-full" [disabled]="form.invalid || loading" [loading]="loading"></p-button>
+              <div class="mt-4 text-center">
+                <span class="text-muted-color">Não tem uma conta?</span>
+                <a routerLink="/auth/registration" class="font-medium ml-2 text-primary-500 hover:text-primary-700 transition-colors duration-200">Cadastre-se</a>
+              </div>
             </form>
           </div>
         </div>
