@@ -20,10 +20,8 @@ public class ClienteController {
         this.clienteService = clienteService;
     }
 
-    // Endpoint para autocadastro (RF001)
     @PostMapping("/autocadastro")
     public ResponseEntity<Cliente> autocadastro(@RequestBody Cliente cliente) {
-        // Validação básica para evitar clientes com e-mail ou CPF já cadastrados
         if (clienteService.findByEmail(cliente.getEmail()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -45,7 +43,6 @@ public class ClienteController {
 
     @PostMapping
     public ResponseEntity<Cliente> post(@RequestBody Cliente cliente) {
-        // Este endpoint é para o caso geral de criação, o autocadastro é específico.
         Cliente novoCliente = clienteService.save(cliente);
         return new ResponseEntity<>(novoCliente, HttpStatus.CREATED);
     }
