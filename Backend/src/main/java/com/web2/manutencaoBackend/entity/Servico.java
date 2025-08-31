@@ -26,7 +26,7 @@ public class Servico {
 
     @ManyToOne // Mapeamento para a entidade Categoria
     @JoinColumn(name = "categoria_id") // Nome da coluna de chave estrangeira
-    private Categoria categoriaEquipamento;
+    private CategoriaE categoriaEquipamento;
 
     private String descDefeito;
 
@@ -40,7 +40,7 @@ public class Servico {
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
-    public Servico(LocalDateTime datahora, Status status, String descEquipamento, Categoria categoriaEquipamento, String descDefeito, Cliente cliente) {
+    public Servico(LocalDateTime datahora, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
         this.datahora = datahora;
         this.status = status;
         this.descEquipamento = descEquipamento;
