@@ -4,10 +4,11 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.web2.manutencaoBackend.entity.Cliente;
+import com.web2.manutencaoBackend.entity.CategoriaE;
 
-public interface CategoriaERepository extends JpaRepository<Cliente, Long>{
+public interface CategoriaERepository extends JpaRepository<CategoriaE, Long>{
     // Declaração do método para buscar uma categoria pelo nome
-    Optional<CategoriaERepository> findByName(String name);
+     Optional<CategoriaE> findByNome(String nome);
+
 
 }

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,28 +19,28 @@ import jakarta.transaction.Transactional;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
-    private final PasswordEncoder passwordEncoder;
+    // private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClienteService(ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
+    public ClienteService(ClienteRepository clienteRepository /* PasswordEncoder passwordEncoder*/ ) {
         this.clienteRepository = clienteRepository;
-        this.passwordEncoder = passwordEncoder;
+        // this.passwordEncoder = passwordEncoder;
     }
 
     public Cliente save(Cliente cliente) {
-        cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
+        //cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
         cliente.setDataRegistro(LocalDateTime.now());
         return clienteRepository.save(cliente);
     }
 
 
-    public Optional<Cliente> findByEmail(String email) {
+     public Optional<Cliente> findByEmail(String email) {
         return clienteRepository.findByEmail(email);
     }
 
     public Optional<Cliente> findByCpf(String cpf) {
         return clienteRepository.findByCpf(cpf);
-    }
+    } 
 
     public List<Cliente> getAll(){
         return clienteRepository.findAll();
