@@ -18,14 +18,6 @@ export const appRoutes: Routes = [
         { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
-
-    {
-        path: 'auth',
-        children: [
-            { path: 'login', loadChildren: () => import('./app/pages/auth/login/login.module').then(m => m.LoginModule) },
-            { path: 'autocadastro', loadChildren: () => import('./app/pages/auth/autocadastro/autocadastro.module').then(m => m.AutoCadastroModule) }
-        ]
-    },
     
     { path: 'notfound', component: Notfound },
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },

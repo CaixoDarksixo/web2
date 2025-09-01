@@ -1,10 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputMaskModule } from 'primeng/inputmask';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 
 @Component({
     selector: 'app-registration',
     standalone: true,
-    imports: [AppFloatingConfigurator],
+    imports: [
+        AppFloatingConfigurator,
+        ReactiveFormsModule,
+        InputTextModule,
+        InputMaskModule,
+    ],
     template: ` 
     <app-floating-configurator />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
@@ -12,7 +21,7 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
         <div style="border-radius:56px;padding:0.3rem;background:linear-gradient(180deg,var(--primary-color) 10%, rgba(33,150,243,0) 30%)">
           <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius:53px">
             <div class="text-center mb-8">
-              <svg viewBox="0 0 78 78" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto">
+                <svg viewBox="0 0 78 78" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto">
                 <path d="M26.8414 30.472L52.0329 56.52L55.1818 53.3627L29.2031 28.104L34.7138 23.368L26.8414 21L18.1818 29.6827L22.9052 34.4187L26.8414 30.472Z" fill="var(--primary-color)"/>
                 <path d="M44.6747 33.5972L22.9294 54.0659L26.8164 57.998L47.0069 35.9565L54.778 38.3129L60.2133 31.2287L56.3263 27.2966L52.4442 32.8064L49.3358 32.0212L48.5568 28.0874L53.9941 24.9373L50.1071 21.0052L42.3396 25.7302L44.6747 33.5972Z" fill="var(--primary-color)"/>
                 <mask id="mask0_4_30" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="78" height="78">
@@ -21,14 +30,33 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                 <g mask="url(#mask0_4_30)">
                   <circle cx="38.5" cy="38.5" r="31.5" stroke="var(--primary-color)" stroke-width="18"/>
                 </g>
-              </svg>
-              <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Olá, cliente FixSys!</div>
-              <span class="text-muted-color font-medium">Faça seu cadastro para acessar o sistema</span>
+                </svg>
+                <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Olá, cliente FixSys!</div>
+                <span class="text-muted-color font-medium">Faça seu cadastro para acessar o sistema</span>
             </div>
+
+            
+            <form [formGroup]="form" class="w-full">
+                <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2" >E-mail</label>
+                <input pInputText id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                    <small class="text-red-500 block">Informe um email válido.</small>
+                }
+                <label for="cpf" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2" >CPF</label>
+                <p-inputmask mask="999.999.999-99" id="cpf" type="cpf" placeholder="Insira o CPF" class="w-full md:w-120 mb-2" formControlName="cpf" />
+            </form>
           </div>
         </div>
       </div>
     </div>  
     `
 })
-export class Registration {}
+export class Registration {
+    private fb = inject(FormBuilder);
+
+    form = this.fb.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', Validators.required],
+        remember: [true]
+    });
+}
