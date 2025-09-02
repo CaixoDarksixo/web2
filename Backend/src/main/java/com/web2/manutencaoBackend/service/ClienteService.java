@@ -20,13 +20,13 @@ import jakarta.transaction.Transactional;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
-    private final PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClienteService(ClienteRepository clienteRepository, PasswordEncoder passwordEncoder) {
-        this.clienteRepository = clienteRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    public ClienteService(ClienteRepository clienteRepository) {
+        this.clienteRepository = clienteRepository;    }
 
     public Cliente save(Cliente cliente) {
         cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
@@ -57,6 +57,7 @@ public class ClienteService {
     public Cliente update(Long id, Cliente cliente) {
         Cliente c = clienteRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        c.setSenha(passwordEncoder.encode(cliente.getSenha()));
         c.setCpf(cliente.getCpf());
         c.setEmail(cliente.getEmail());
         c.setEndereco(cliente.getEndereco());
