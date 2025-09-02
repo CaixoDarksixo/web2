@@ -1,9 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
+import { MessageModule } from 'primeng/message';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { CepService } from '../service/cep.service';
+import { debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
+
 
 @Component({
     selector: 'app-registration',
@@ -13,10 +19,14 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
         ReactiveFormsModule,
         InputTextModule,
         InputMaskModule,
+        InputNumberModule,
+        MessageModule,
+        ButtonModule,
+        RouterModule
     ],
     template: ` 
     <app-floating-configurator />
-    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen w-full overflow-hidden">
       <div class="flex flex-col items-center justify-center">
         <div style="border-radius:56px;padding:0.3rem;background:linear-gradient(180deg,var(--primary-color) 10%, rgba(33,150,243,0) 30%)">
           <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius:53px">
@@ -37,13 +47,71 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
 
             
             <form [formGroup]="form" class="w-full">
-                <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2" >E-mail</label>
+                <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 after:ml-0.5 after:text-red-600 after:content-['*']" >E-mail</label>
                 <input pInputText id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
                 @if (form.controls.email.touched && form.controls.email.invalid) {
-                    <small class="text-red-500 block">Informe um email válido.</small>
+                    <p-message severity="error" size="small" variant="simple">Informe um email válido.</p-message>
                 }
-                <label for="cpf" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2" >CPF</label>
-                <p-inputmask mask="999.999.999-99" id="cpf" type="cpf" placeholder="Insira o CPF" class="w-full md:w-120 mb-2" formControlName="cpf" />
+                  
+                <label for="cpf" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >CPF</label>
+                <div class="w-full md:w-120 mb-2">
+                  <p-inputmask mask="999.999.999-99" id="cpf" fluid="true" placeholder="Insira o CPF" formControlName="cpf" />
+                </div>
+                @if (form.controls.cpf.touched && form.controls.cpf.invalid) {
+                      @if (form.controls.cpf.errors?.['required']) {
+                          <p-message severity="error" size="small" variant="simple">O CPF é obrigatório.</p-message>
+                      } @else if (form.controls.cpf.errors?.['invalidCpf']) {
+                          <p-message severity="error" size="small" variant="simple">Informe um CPF válido.</p-message>
+                      }
+                  }
+                
+                <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
+                <input pInputText id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
+                @if (form.controls.nome.touched && form.controls.nome.invalid) {
+                    <p-message severity="error" size="small" variant="simple">Informe seu nome.</p-message>
+                }
+
+                <label for="telefone" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Telefone</label>
+                <div class="w-full md:w-120 mb-2">
+                <p-inputmask mask="(99) 99999-9999" id="telefone" fluid="true" placeholder="Insira o telefone" class="w-full md:w-120 mb-2" formControlName="telefone" />
+                </div>
+                @if (form.controls.telefone.touched && form.controls.telefone.invalid) {
+                    <p-message severity="error" size="small" variant="simple">Informe um telefone válido.</p-message>
+                }
+                
+                <label for="cep" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >CEP</label>
+                <div class="w-full md:w-120 mb-2">
+                  <p-inputmask mask="99.999-999" id="cep" fluid="true" placeholder="Insira o CEP" formControlName="cep" />
+                </div>
+                @if (form.controls.cep.touched && form.controls.cep.invalid) {
+                      @if (form.controls.cep.errors?.['required']) {
+                          <p-message severity="error" size="small" variant="simple">Informe o CEP.</p-message>
+                      } @else if (form.controls.cep.errors?.['invalidCep']) {
+                        <p-message severity="error" size="small" variant="simple">Informe um CEP válido.</p-message>
+                      }
+                  }
+
+                <label for="logradouro" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4" >Logradouro</label>
+                <input pInputText id="logradouro" placeholder="Logradouro" class="w-full md:w-120 mb-2" formControlName="logradouro" readonly />
+                <label for="numero" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Número</label>
+                <input pInputText inputId="integeronly" type="number" placeholder="Insira o número" class="w-full md:w-120 mb-2" formControlName="numero" [min]="0"/>
+                @if (form.controls.numero.touched && form.controls.numero.invalid) {
+                <p-message severity="error" size="small" variant="simple">Insira um número válido.</p-message>
+                }
+
+                <label for="bairro" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4" >Bairro</label>
+                <input pInputText id="bairro" placeholder="Bairro" class="w-full md:w-120 mb-2" formControlName="bairro" readonly />
+                <label for="cidade" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4" >Cidade</label>
+                <input pInputText id="cidade" placeholder="Cidade" class="w-full md:w-120 mb-2" formControlName="cidade" readonly />
+                <label for="estado" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4" >Estado</label>
+                <input pInputText id="estado" placeholder="Estado" class="w-full md:w-120 mb-12" formControlName="estado" readonly />
+
+                <p-button type="submit" [label]="loading ? 'Cadastrando...' : 'Cadastrar'" class="block" styleClass="w-full" [disabled]="form.invalid || loading" [loading]="loading"></p-button>
+                <div class="mt-4 text-center">
+                  <span class="text-muted-color">Já tem uma conta?</span>
+                  <a routerLink="/auth/login" class="font-medium ml-2 text-primary-500 hover:text-primary-700 transition-colors duration-200">Faça login</a>
+                </div>
+
             </form>
           </div>
         </div>
@@ -53,10 +121,105 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
 })
 export class Registration {
     private fb = inject(FormBuilder);
+    private cepService = inject(CepService);
+
+    loading = false;
 
     form = this.fb.group({
         email: ['', [Validators.required, Validators.email]],
-        password: ['', Validators.required],
-        remember: [true]
+        cpf: ['', [Validators.required, this.cpfValidator]],
+        nome: ['', Validators.required],
+        cep: ['', [Validators.required, this.cepValidator]],
+        logradouro: [{ value: '', disabled: true }],
+        numero: ['', [Validators.required, Validators.min(1)]],
+        bairro: [{ value: '', disabled: true }],
+        cidade: [{ value: '', disabled: true }],
+        estado: [{ value: '', disabled: true }],
+        telefone: ['', [Validators.required]]
     });
+
+    ngOnInit() {
+      this.form.get('cep')?.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        filter(() => this.form.get('cep')?.valid ?? false)
+      ).subscribe(cep => {
+        const cleanedCep = cep ? cep.replace(/[^\d]/g, '') : '';
+        this.cepService.getAddressByCep(cleanedCep).subscribe(address => {
+        if (address) {
+          this.form.patchValue({
+          logradouro: address.logradouro,
+          bairro: address.bairro,
+          cidade: address.localidade,
+          estado: address.uf
+          });
+        } else {
+          this.form.get('cep')?.markAsTouched();
+          this.form.get('cep')?.setErrors({ invalidCep: true });
+          this.form.patchValue({
+            logradouro: '',
+            bairro: '',
+            cidade: '',
+            estado: ''
+          });
+        }
+      });
+      });
+    }
+
+    onSubmit() {
+      this.form.markAllAsTouched();
+      if (this.form.invalid) return;
+    
+      this.loading = true;
+    } 
+
+    private cpfValidator(control: AbstractControl): ValidationErrors | null {
+      const cpf = control.value?.replace(/[^\d]/g, '');
+
+
+      if (!cpf || cpf.length !== 11) {
+          return { invalidCpf: true };
+      }
+
+      if (/^(\d)\1{10}$/.test(cpf)) {
+          return { invalidCpf: true };
+      }
+
+      let sum = 0;
+      for (let i = 0; i < 9; i++) {
+          sum += parseInt(cpf.charAt(i)) * (10 - i);
+      }
+      let firstDigit = (sum * 10) % 11;
+      if (firstDigit === 10 || firstDigit === 11) {
+          firstDigit = 0;
+      }
+      if (firstDigit !== parseInt(cpf.charAt(9))) {
+          return { invalidCpf: true };
+      }
+
+      sum = 0;
+      for (let i = 0; i < 10; i++) {
+          sum += parseInt(cpf.charAt(i)) * (11 - i);
+      }
+      let secondDigit = (sum * 10) % 11;
+      if (secondDigit === 10 || secondDigit === 11) {
+          secondDigit = 0;
+      }
+      if (secondDigit !== parseInt(cpf.charAt(10))) {
+          return { invalidCpf: true };
+      }
+
+      return null;
+    }
+
+    private cepValidator(control: AbstractControl): ValidationErrors | null {
+      const cep = control.value?.replace(/[^\d]/g, '');
+
+      if (!cep || cep.length !== 8) {
+          return { invalidCep: true };
+        }
+      
+      return null; 
+    }
 }

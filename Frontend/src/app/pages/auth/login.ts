@@ -6,6 +6,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
@@ -35,16 +36,17 @@ interface LoginError {
     PasswordModule,
     RippleModule,
     ToastModule,
-    AppFloatingConfigurator
+    AppFloatingConfigurator,
+    MessageModule
   ],
   providers: [MessageService],
   template: `
     <app-floating-configurator />
     <p-toast></p-toast>
-    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+    <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen w-full overflow-hidden">
       <div class="flex flex-col items-center justify-center">
         <div style="border-radius:56px;padding:0.3rem;background:linear-gradient(180deg,var(--primary-color) 10%, rgba(33,150,243,0) 30%)">
-          <div class="w-full bg-surface-0 dark:bg-surface-900 py-15 px-8 sm:px-20" style="border-radius:53px">
+          <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius:53px">
             <div class="text-center mb-8">
               <svg viewBox="0 0 78 78" fill="none" xmlns="http://www.w3.org/2000/svg" class="mb-8 w-16 shrink-0 mx-auto">
                 <path d="M26.8414 30.472L52.0329 56.52L55.1818 53.3627L29.2031 28.104L34.7138 23.368L26.8414 21L18.1818 29.6827L22.9052 34.4187L26.8414 30.472Z" fill="var(--primary-color)"/>
@@ -64,13 +66,13 @@ interface LoginError {
               <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2" >E-mail</label>
               <input pInputText id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
               @if (form.controls.email.touched && form.controls.email.invalid) {
-                <small class="text-red-500 block">Informe um email válido.</small>
+                <p-message severity="error" size="small" variant="simple">Informe um email válido.</p-message>
               }
-
+              
               <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2 mt-4">Senha</label>
               <p-password id="password1" formControlName="password" placeholder="Insira a senha" [toggleMask]="true" styleClass="mb-2" [fluid]="true" [feedback]="false"></p-password>
               @if (form.controls.password.touched && form.controls.password.invalid) {
-                <small class="text-red-500 block">Senha é obrigatória.</small>
+                <p-message severity="error" size="small" variant="simple">Senha é obrigatória.</p-message>
               }
 
               <div class="flex mt-4 mb-8">
