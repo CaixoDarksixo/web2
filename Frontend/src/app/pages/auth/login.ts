@@ -9,7 +9,7 @@ import { RippleModule } from 'primeng/ripple';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { AppFloatingConfigurator } from '../../layouts/component/app.floatingconfigurator';
 import { AuthService } from '../service/auth.service';
 
 interface LoginResponse {

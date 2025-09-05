@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { TableModule } from "primeng/table";
 
 @Component({
   selector: 'app-funcionario',
   templateUrl: './funcionario.component.html',
-  styleUrls: ['./funcionario.component.css']
+  styleUrls: ['./funcionario.component.css'],
+  imports: [TableModule]
 })
 export class FuncionarioComponent implements OnInit {
 

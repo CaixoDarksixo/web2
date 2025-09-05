@@ -3,3 +3,8 @@
 @use './layout/layout.scss';
 @use 'primeicons/primeicons.css';
 @use './demo/demo.scss';
+
+
+.order-table {
+  --p-datatable-body-cell-lg-padding: 2rem 1.25rem;
+}
