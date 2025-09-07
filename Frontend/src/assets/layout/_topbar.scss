@@ -72,6 +72,21 @@
         }
     }
 
+    .layout-topbar-action-text {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: 2.5rem;
+
+        .p-button-icon {
+            font-size: 1.25rem!important;
+        }
+
+        span {
+            font-size: 1rem;
+        }
+    }
+
     .layout-menu-button {
         margin-right: 0.5rem;
     }
@@ -151,6 +166,26 @@
                     display: block;
                 }
             }
+
+            .layout-topbar-action-text {
+                display: flex;
+                width: 100%;
+                height: auto;
+                justify-content: flex-start;
+                border-radius: var(--content-border-radius);
+                padding: 0.5rem 1rem;
+
+                i {
+                    font-size: 1rem;
+                    margin-right: 0.5rem;
+                }
+
+                span {
+                    font-weight: medium;
+                    display: block;
+                }
+            }
+
         }
 
         .layout-topbar-menu-content {

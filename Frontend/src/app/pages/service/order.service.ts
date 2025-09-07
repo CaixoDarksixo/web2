@@ -13,32 +13,38 @@ export class OrderService {
             {
                 "id": "1",
                 "dataHora": "2025-09-01T10:30:00",
-                "descricao": "Pedido de notebooks",
-                "status": "pendente"
+                "descricao": "Notebook Dell Inspiron 15",
+                "status": "FINALIZADA"
             },
             {
                 "id": "2",
                 "dataHora": "2025-09-02T15:45:00",
-                "descricao": "Compra de acessórios de informática",
-                "status": "em processamento"
+                "descricao":  "Impressora HP LaserJet M227",
+                "status": "ORÇADA"
             },
             {
                 "id": "3",
                 "dataHora": "2025-09-03T09:10:00",
-                "descricao": "Solicitação de móveis para escritório",
-                "status": "concluído"
+                "descricao": "PC Desktop Lenovo ThinkCentre",
+                "status": "APROVADA"
             },
             {
                 "id": "4",
                 "dataHora": "2025-09-04T18:20:00",
-                "descricao": "Reposição de materiais de limpeza",
-                "status": "pendente"
+                "descricao": "Teclado Redragon",
+                "status": "ARRUMADA"
             },
             {
                 "id": "5",
                 "dataHora": "2025-09-05T11:05:00",
-                "descricao": "Encomenda de cadeiras ergonômicas",
-                "status": "cancelado"
+                "descricao": "Monitor IDK 22",
+                "status": "REJEITADA"
+            },
+            {
+                "id": "6",
+                "dataHora": "2025-09-05T11:05:00",
+                "descricao": "Mouse Logitech MX Master 3",
+                "status": "ABERTA"
             }
         ];
         return of(orders);
