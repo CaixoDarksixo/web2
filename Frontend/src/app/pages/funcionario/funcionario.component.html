@@ -1,13 +1,45 @@
 <div class="p-4">
-  <h2>Bem-vindo, {{ funcionario.nome }}</h2>
-  <p><strong>Cargo:</strong> {{ funcionario.cargo }} | <strong>Setor:</strong> {{ funcionario.setor }}</p>
 
-  <h3 class="mt-4">Seus Chamados</h3>
-  <p-table [value]="chamados" class="p-mt-3" [paginator]="true" [rows]="5">
+  <!-- Cabeçalho -->
+  <h2>Bem-vindo, {{ funcionario.nome }}</h2>
+  <p>
+    <strong>Cargo:</strong> {{ funcionario.cargo }} |
+    <strong>Setor:</strong> {{ funcionario.setor }} |
+    <strong>Admissão:</strong> {{ funcionario.dataAdmissao }}
+  </p>
+
+  <!-- Estatísticas -->
+  <div class="grid mt-4">
+    <div class="col-12 md:col-3">
+      <p-card header="Total de Chamados">
+        <h2>{{ estatisticas.total }}</h2>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-3">
+      <p-card header="Concluídos">
+        <h2>{{ estatisticas.concluidos }}</h2>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-3">
+      <p-card header="Pendentes">
+        <h2>{{ estatisticas.pendentes }}</h2>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-3">
+      <p-card header="Em Andamento">
+        <h2>{{ estatisticas.andamento }}</h2>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Lista de Chamados -->
+  <h3 class="mt-6">Seus Chamados</h3>
+  <p-table [value]="chamados" [paginator]="true" [rows]="5" class="p-mt-3">
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
         <th>Título</th>
+        <th>Prioridade</th>
         <th>Status</th>
       </tr>
     </ng-template>
@@ -15,8 +47,14 @@
       <tr>
         <td>{{ chamado.id }}</td>
         <td>{{ chamado.titulo }}</td>
-        <td>{{ chamado.status }}</td>
+        <td>{{ chamado.prioridade }}</td>
+        <td>
+          <span class="p-badge" [ngClass]="getStatusClass(chamado.status)">
+            {{ chamado.status }}
+          </span>
+        </td>
       </tr>
     </ng-template>
   </p-table>
+
 </div>

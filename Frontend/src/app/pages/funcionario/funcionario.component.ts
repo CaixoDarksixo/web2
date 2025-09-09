@@ -1,28 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { TableModule } from "primeng/table";
+import { FuncionarioService } from './funcionario.service';
 
 @Component({
   selector: 'app-funcionario',
   templateUrl: './funcionario.component.html',
-  styleUrls: ['./funcionario.component.css'],
-  imports: [TableModule]
+  styleUrls: ['./funcionario.component.css']
 })
 export class FuncionarioComponent implements OnInit {
 
-  funcionario = {
-    nome: 'João Vitor',
-    cargo: 'Técnico de Suporte',
-    setor: 'Manutenção',
-  };
+  funcionario: any;
+  chamados: any[] = [];
+  estatisticas: any;
 
-  chamados = [
-    { id: 1, titulo: 'Troca de HD', status: 'Em andamento' },
-    { id: 2, titulo: 'Formatação de notebook', status: 'Pendente' },
-    { id: 3, titulo: 'Limpeza de gabinete', status: 'Concluído' }
-  ];
-
-  constructor() { }
+  constructor(private funcionarioService: FuncionarioService) {}
 
   ngOnInit(): void {
+    // Inicializa os dados vindos do service
+    this.funcionario = this.funcionarioService.getFuncionario();
+    this.chamados = this.funcionarioService.getChamados();
+    this.estatisticas = this.funcionarioService.getEstatisticas();
+  }
+
+  // Método para exibir badge de status com cor
+  getStatusClass(status: string): string {
+    switch (status) {
+      case 'Concluído': return 'p-badge-success';
+      case 'Em andamento': return 'p-badge-warning';
+      case 'Pendente': return 'p-badge-danger';
+      default: return 'p-badge-info';
+    }
   }
 }
