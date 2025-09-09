@@ -8,6 +8,7 @@ import { TopbarWidget } from './components/topbarwidget.component';
 import { HeroWidget } from './components/herowidget';
 import { FeaturesWidget } from './components/featureswidget';
 import { ContactWidget } from './components/contactwidget';
+import { ScrollDownArrowWidget } from './components/scrolldownarrow.widget';
 
 @Component({
     selector: 'app-landing',
@@ -18,20 +19,23 @@ import { ContactWidget } from './components/contactwidget';
         HeroWidget,
         FeaturesWidget,
         ContactWidget,
+        ScrollDownArrowWidget,
         RippleModule,
         StyleClassModule,
         ButtonModule,
         DividerModule
     ],
-    template: `
-        <div class="bg-surface-0 dark:bg-surface-900">
-            <div id="home" class="landing-wrapper overflow-hidden">
-                <topbar-widget class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static" />
-                <hero-widget />
-                <features-widget />
-                <contact-widget />
-            </div>
-        </div>
+template: `
+<div class="bg-surface-0 dark:bg-surface-900">
+    <div id="home" class="landing-wrapper overflow-hidden">
+        <topbar-widget class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static" />
+        <hero-widget id="hero" />
+        <app-scroll-down-arrow targetId="features" />
+        <features-widget id="features" />
+        <app-scroll-down-arrow targetId="contact" />
+        <contact-widget id="contact" />
+    </div>
+</div>
     `
 })
 export class Landing {}
