@@ -1,6 +1,7 @@
 package com.web2.manutencaoBackend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -43,5 +44,9 @@ public class FuncionarioService {
         f.setNome(funcionario.getNome());
         f.setDataNascimento(funcionario.getDataNascimento());
         return funcionarioRepository.save(f);
+    }
+
+    public Optional<Funcionario> findByEmail(String email) {
+    return funcionarioRepository.findByEmail(email);
     }
 }

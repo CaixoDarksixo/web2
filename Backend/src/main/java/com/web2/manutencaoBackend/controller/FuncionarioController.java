@@ -1,6 +1,8 @@
 package com.web2.manutencaoBackend.controller;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,8 +33,16 @@ public class FuncionarioController {
     }
 
     @PostMapping
-    public Funcionario post(@RequestBody Funcionario funcionario) {
-        return funcionarioService.save(funcionario);
+    public ResponseEntity<Funcionario> post(@RequestBody Funcionario funcionario) {
+        if (funcionarioService.findByEmail(funcionario.getEmail()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Funcionario novoFuncionario = funcionarioService.save(funcionario);
+            return new ResponseEntity<>(novoFuncionario, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{id}")

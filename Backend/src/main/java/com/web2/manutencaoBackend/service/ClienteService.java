@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.web2.manutencaoBackend.entity.Cliente;
+import com.web2.manutencaoBackend.entity.Servico;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,12 +29,21 @@ public class ClienteService {
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;    }
 
+
+/*  private final RestTemplate restTemplate = new RestTemplate();
+
+    public EnderecoDTO buscarEnderecoPorCep(String cep) {
+        String url = "https://viacep.com.br/ws/" + cep + "/json/";
+        return restTemplate.getForObject(url, EnderecoDTO.class);
+    }
+*/
     public Cliente save(Cliente cliente) {
-        cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
+        String senha = String.format("%04d", (int)(Math.random() * 10000));
+        EmailService.enviarSenha(cliente.getEmail(), senha);
+        cliente.setSenha(passwordEncoder.encode(senha));
         cliente.setDataRegistro(LocalDateTime.now());
         return clienteRepository.save(cliente);
     }
-
 
     public Optional<Cliente> findByEmail(String email) {
         return clienteRepository.findByEmail(email);
@@ -64,5 +74,25 @@ public class ClienteService {
         c.setNome(cliente.getNome());
         c.setTelefone(cliente.getTelefone());
         return clienteRepository.save(c);
+    }
+
+    public Servico solicitaServico(){
+        return null;
+    }
+
+    public Servico aprovaServico(){
+        return null;
+    }
+
+    public Servico rejeitaServico(){
+        return null;
+    }
+
+    public Servico resgataServico(){
+        return null;
+    }
+
+    public Servico pagaServico(){
+        return null;
     }
 }

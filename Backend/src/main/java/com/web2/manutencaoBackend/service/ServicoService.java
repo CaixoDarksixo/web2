@@ -39,7 +39,32 @@ public class ServicoService {
     public Servico update(Long id, Servico servico) {
         Servico s = servicoRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Servico não encontrado"));
-        //S.setX(servico.getX());
+        s.setDatahora(servico.getDatahora());
+        s.setStatus(servico.getStatus());
+        s.setDescEquipamento(servico.getDescEquipamento());
+        s.setCategoriaEquipamento(servico.getCategoriaEquipamento());
+        s.setDescDefeito(servico.getDescDefeito());
+        s.setCliente(servico.getCliente());
+        s.setDescRejeicao(servico.getDescRejeicao());
+        s.setFuncionario(servico.getFuncionario());
         return servicoRepository.save(s);
     }
+
+    public Servico orcamentaServico(){
+        return null;
+    }
+
+    public Servico manutencaoServico(){
+        return null;
+    }
+
+    public Servico redirecionarManutencaoServico(){
+        return null;
+    }
+
+    public Servico finalizarServico(){
+        return null;
+    }
+
+
 }

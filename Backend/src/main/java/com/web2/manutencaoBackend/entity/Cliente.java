@@ -1,11 +1,14 @@
 package com.web2.manutencaoBackend.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clientes")
@@ -19,6 +22,7 @@ public class Cliente {
     private String endereco;
     private String senha;
     private String telefone;
+    @CreationTimestamp
     private LocalDateTime dataRegistro;
 
     public Cliente() {
