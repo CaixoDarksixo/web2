@@ -14,8 +14,14 @@ import { AuthService } from '../service/auth.service';
 
 interface LoginResponse {
   token?: string;
-  message?: string;
-  //Propriedades da API
+  usuario?: {
+    id: number,
+		nome: string,
+		email: string,
+		roles: [
+			string
+		]
+	}
 }
 
 interface LoginError {
@@ -127,8 +133,15 @@ export class Login {
         if (res?.token) {
           this.auth.storeToken(res.token, !!remember);
         }
-        
-        this.router.navigate(['/dashboard']);
+        console.log(res?.usuario?.roles[0]);
+        switch (res?.usuario?.roles[0]) {
+          case 'FUNCIONARIO':
+            this.router.navigate(['/funcionario']);
+            return;
+          case 'CLIENTE':
+            this.router.navigate(['/cliente']);
+            return;
+        }
       },
       error: (err: LoginError) => {
         const detail = err?.error?.message ?? 'Falha no login. Verifique se você digitou certo.';

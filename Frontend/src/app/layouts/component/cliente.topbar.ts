@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
-import { Button } from "primeng/button";
+import { Button } from "primeng/button"
+import { AuthService } from '../../pages/service/auth.service';
 
 @Component({
     selector: 'cliente-topbar',
@@ -39,7 +40,7 @@ import { Button } from "primeng/button";
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <p-button type="button" class="layout-topbar-action-text" label="Neymar Junior" icon="pi pi-user" iconPos="right" styleClass="p-button-text p-button-plain"/>
+                    <p-button type="button" class="layout-topbar-action-text" label={{currentUser.nome}} icon="pi pi-user" iconPos="right" styleClass="p-button-text p-button-plain"/>
                 </div>
             </div>
 
@@ -49,10 +50,19 @@ import { Button } from "primeng/button";
         </div>
     </div>`
 })
-export class ClienteTopbar {
+export class ClienteTopbar implements OnInit {
     items!: MenuItem[];
+    currentUser: any;
 
-    constructor(public layoutService: LayoutService) {}
+    layoutService = inject(LayoutService);
+    authService = inject(AuthService);
+
+    ngOnInit() {
+        this.currentUser = this.authService.getAuthenticatedUser().subscribe(user => {
+            this.currentUser = user;
+        }
+        );
+    }
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));

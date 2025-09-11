@@ -1,8 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { FuncionarioService } from './funcionario.service';
+import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { BadgeModule } from 'primeng/badge';
+import { ChartModule } from 'primeng/chart';
+import { MessageModule } from 'primeng/message';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-funcionario',
+  imports: 
+  [
+    CommonModule,
+    CardModule,
+    TableModule,
+    BadgeModule,
+    ChartModule,
+    MessageModule,
+    FormsModule
+  ],
+  standalone: true,
   templateUrl: './funcionario.component.html',
   styleUrls: ['./funcionario.component.css']
 })

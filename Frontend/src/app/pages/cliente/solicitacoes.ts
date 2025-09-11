@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { RequestService } from '../service/request.service';
+import { AuthService } from '../../pages/service/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
@@ -148,6 +149,7 @@ export class Solicitacoes implements OnInit {
     requests!: Request[];
     cols!: Column[];
     newRequestVisible: boolean = false;
+    currentUser: any;
     categorias = [
         { label: 'Hardware', value: 'hardware' },
         { label: 'Software', value: 'software' },
@@ -157,6 +159,7 @@ export class Solicitacoes implements OnInit {
 
     requestService = inject(RequestService);
     router = inject(Router);
+    authService = inject(AuthService);
 
     newRequestForm = this.fb.group({
         descricaoEquipamento: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
@@ -165,10 +168,13 @@ export class Solicitacoes implements OnInit {
     });
 
     ngOnInit() {
-        this.requestService.getRequests().subscribe((data: Request[]) => {
-            this.requests = data;
-            console.log(this.requests);
+        this.authService.getAuthenticatedUser().subscribe(user => {
+            this.currentUser = user;
+            this.requestService.getRequests(this.currentUser.id).subscribe((data: Request[]) => {
+                this.requests = data;
+            });
         });
+
 
         this.cols = [
             { field: 'id', header: 'ID' },
@@ -182,10 +188,14 @@ export class Solicitacoes implements OnInit {
     createRequest() {
         if (this.newRequestForm.valid) {
             const newRequest = {
+                clienteId: 1,
+	            funcionarioId: 2,
                 descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento,
                 descricaoProblema: this.newRequestForm.value.descricaoProblema,
                 categoria: this.newRequestForm.value.categoria,
                 status: 'ABERTA',
+                valorOrcado: 0,
+	            valorPago: 0,
                 dataHora: new Date().toISOString()
             };
             this.requestService.createRequest(newRequest).subscribe((request) => {

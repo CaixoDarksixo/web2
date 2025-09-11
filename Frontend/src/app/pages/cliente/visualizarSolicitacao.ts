@@ -7,7 +7,7 @@ import { DatePipe } from '@angular/common';
 import { Location } from '@angular/common';
 
 interface Request {
-    id?: string;
+    id?: number;
     dataHora?: string;
     descricaoEquipamento?: string;
     categoria?: string;
@@ -67,11 +67,20 @@ export class VisualizarSolicitacao implements OnInit {
     requestService = inject(RequestService);
 
     ngOnInit(): void {
-    this.requestId = parseInt(this.route.snapshot.paramMap.get('id') || '0');
+    this.requestId = parseInt(this.route.snapshot.paramMap.get('id') || '-1');
+    if (isNaN(this.requestId) || this.requestId < 1) {
+        this.router.navigate(['/notfound']);
+        return;
+    }
     this.requestService.getRequestById(this.requestId).subscribe((data: Request) => {
             this.request = data;
             console.log(this.request);
+            if (!this.request) {
+                this.router.navigate(['/notfound']);
+                return;
+            }
         });
+
     }
 
     voltar() {

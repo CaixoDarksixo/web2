@@ -1,0 +1,176 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "João da Silva",
+      "email": "joao@email.com",
+      "password": "123456",
+      "roles": ["CLIENTE"]
+    },
+    {
+      "id": 2,
+      "nome": "José Pereira",
+      "email": "jose@email.com",
+      "password": "123456",
+      "roles": ["CLIENTE"]
+    },
+    {
+      "id": 3,
+      "nome": "Joana Lima",
+      "email": "joana@email.com",
+      "password": "123456",
+      "roles": ["CLIENTE"]
+    },
+    {
+      "id": 4,
+      "nome": "Joaquina Souza",
+      "email": "joaquina@email.com",
+      "password": "123456",
+      "roles": ["CLIENTE"]
+    },
+    {
+      "id": 5,
+      "nome": "Maria Oliveira",
+      "email": "maria@fixsys.com",
+      "password": "123456",
+      "roles": ["FUNCIONARIO"]
+    },
+    {
+      "id": 6,
+      "nome": "Mário Santos",
+      "email": "mario@fixsys.com",
+      "password": "123456",
+      "roles": ["FUNCIONARIO"]
+    }
+  ],
+  "categorias": [
+    { "id": 1, "nome": "Notebook" },
+    { "id": 2, "nome": "Desktop" },
+    { "id": 3, "nome": "Impressora" },
+    { "id": 4, "nome": "Mouse" },
+    { "id": 5, "nome": "Teclado" }
+  ],
+  "solicitacoes": [
+    {
+      "id": 1,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Notebook Dell Inspiron",
+      "descricaoProblema": "Não liga",
+      "categoriaId": 1,
+      "status": "PAGA",
+      "valorOrcado": 450,
+      "valorPago": 450,
+      "metodoPagamento": "PIX",
+      "dataHoraAbertura": "2025-09-01T10:00:00",
+      "dataHoraPagamento": "2025-09-02T09:00:00"
+    },
+    {
+      "id": 2,
+      "clienteId": 2,
+      "funcionarioId": 6,
+      "descricaoEquipamento": "Impressora HP",
+      "descricaoProblema": "Não puxa papel",
+      "categoriaId": 3,
+      "status": "ORÇADA",
+      "valorOrcado": 200,
+      "dataHoraAbertura": "2025-09-02T14:00:00"
+    },
+    {
+      "id": 3,
+      "clienteId": 3,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Desktop Lenovo",
+      "descricaoProblema": "Lento para inicializar",
+      "categoriaId": 2,
+      "status": "APROVADA",
+      "valorOrcado": 500,
+      "dataHoraAbertura": "2025-09-03T09:00:00"
+    },
+    {
+      "id": 4,
+      "clienteId": 4,
+      "funcionarioId": 6,
+      "descricaoEquipamento": "Mouse Logitech",
+      "descricaoProblema": "Botão direito não funciona",
+      "categoriaId": 4,
+      "status": "ARRUMADA",
+      "valorOrcado": 80,
+      "dataHoraAbertura": "2025-09-04T11:00:00"
+    },
+    {
+      "id": 5,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Teclado Redragon",
+      "descricaoProblema": "Teclas duplas",
+      "categoriaId": 5,
+      "status": "REJEITADA",
+      "valorOrcado": 120,
+      "dataHoraAbertura": "2025-09-05T08:00:00"
+    },
+    {
+      "id": 6,
+      "clienteId": 2,
+      "descricaoEquipamento": "Notebook Acer Aspire",
+      "descricaoProblema": "Superaquecimento",
+      "categoriaId": 1,
+      "status": "ABERTA",
+      "dataHoraAbertura": "2025-09-06T10:30:00"
+    }
+  ],
+  "historicos": [
+    {
+      "id": 1001,
+      "solicitacaoId": 1,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-01T10:00:00"
+    },
+    {
+      "id": 1002,
+      "solicitacaoId": 1,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-01T14:00:00",
+      "observacao": "Troca de placa-mãe R$450"
+    },
+    {
+      "id": 1003,
+      "solicitacaoId": 1,
+      "estadoAnterior": "ORÇADA",
+      "estadoNovo": "APROVADA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-01T16:00:00"
+    },
+    {
+      "id": 1004,
+      "solicitacaoId": 1,
+      "estadoAnterior": "APROVADA",
+      "estadoNovo": "ARRUMADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-02T08:00:00",
+      "observacao": "Peça substituída"
+    },
+    {
+      "id": 1005,
+      "solicitacaoId": 1,
+      "estadoAnterior": "ARRUMADA",
+      "estadoNovo": "FINALIZADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-02T08:30:00"
+    },
+    {
+      "id": 1006,
+      "solicitacaoId": 1,
+      "estadoAnterior": "FINALIZADA",
+      "estadoNovo": "PAGA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-02T09:00:00",
+      "observacao": "Pagamento via PIX"
+    }
+  ],
+  "roles": ["CLIENTE", "FUNCIONARIO"]
+}

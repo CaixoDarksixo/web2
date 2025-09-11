@@ -7,6 +7,7 @@ import { Observable, of } from 'rxjs';
 })
 
 export class RequestService {
+    http = inject(HttpClient);
 
      private requests = [
             {
@@ -60,17 +61,16 @@ export class RequestService {
             ];
 
 
-    public getRequests(): Observable<any[]> {
-
-        return of(this.requests);
+    public getRequests(clienteId?: number): Observable<any[]> {
+        return this.http.get<any[]>(`http://localhost:3000/solicitacoes${clienteId ? `?clienteId=${clienteId}` : ''}`);
     }
 
     public getRequestById(id: number): Observable<any> {
-        return of(this.requests[id - 1]);
+        return this.http.get<any>(`http://localhost:3000/solicitacoes/${id}`);
     }
 
     public createRequest(request: any): Observable<any> {
-        return of({ ...request, id: Math.floor(Math.random() * 1000) });
+        return this.http.post<any>('http://localhost:3000/solicitacoes', request);
     }
     
 }
