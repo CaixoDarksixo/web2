@@ -89,7 +89,7 @@ interface LoginError {
               <p-button type="submit" [label]="loading ? 'Entrando...' : 'Entrar'" styleClass="w-full" [disabled]="form.invalid || loading" [loading]="loading"></p-button>
               <div class="mt-4 text-center">
                 <span class="text-muted-color">Não tem uma conta?</span>
-                <a routerLink="/auth/registration" class="font-medium ml-2 text-primary-500 hover:text-primary-700 transition-colors duration-200">Cadastre-se</a>
+                <a routerLink="/auth/registration" class="font-medium ml-2 text-primary-400 hover:text-primary-500 transition-colors duration-200">Cadastre-se</a>
               </div>
             </form>
           </div>

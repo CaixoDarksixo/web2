@@ -16,7 +16,7 @@ import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 
 interface Request {
     id?: string;
-    dataHora?: string;
+    dataHoraAbertura?: string;
     descricaoEquipamento?: string;
     descricaoProblema?: string;
     status?: string;
@@ -101,7 +101,7 @@ interface Column {
                         @for (col of columns; track col) {
                             @if (col.header === 'Status') {
                                 <td>
-                                    <p-tag [icon]="getIcon(rowData[col.field])" [value]="rowData[col.field]" [severity]="getSeverity(rowData[col.field])"/>
+                                    <p-tag [icon]="requestService.getIcon(rowData[col.field])" [value]="rowData[col.field]" [class]="requestService.getTagClass(rowData[col.field])"/>
                                 </td>
                             }
 
@@ -117,7 +117,7 @@ interface Column {
                                     <p-button label="Visualizar" icon="pi pi-eye" (onClick)="router.navigate(['/cliente/solicitacoes', rowData['id']], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
                 
                                     @if (rowData['status'] === 'ORÇADA') {
-                                        <p-button label="Aprovar/Rejeitar" severity="warn" icon="pi pi-check-square" styleClass="p-button-text"/>
+                                        <p-button label="Aprovar/Rejeitar" class="p-button-orcada" icon="pi pi-check-square" styleClass="p-button-text"/>
                                     }
 
                                     @else if (rowData['status'] === 'REJEITADA') {    
@@ -178,7 +178,7 @@ export class Solicitacoes implements OnInit {
 
         this.cols = [
             { field: 'id', header: 'ID' },
-            { field: 'dataHora', header: 'Data/Hora de Abertura' },
+            { field: 'dataHoraAbertura', header: 'Data/Hora de Abertura' },
             { field: 'descricaoEquipamento', header: 'Descrição do Equipamento' },
             { field: 'status', header: 'Status' },
             { field: 'Ações', header: 'Ações' }
@@ -203,45 +203,6 @@ export class Solicitacoes implements OnInit {
                 this.newRequestForm.reset();
                 this.newRequestVisible = false;
             });
-        }
-    }
-
-    getSeverity(status: string) {
-        switch (status) {
-            case 'APROVADA':
-                return 'primary';
-
-            case 'ARRUMADA':
-                return 'info';
-
-            case 'ORÇADA':
-                return 'warn';
-
-            case 'REJEITADA':
-                return 'danger';
-
-            case 'FINALIZADA':
-                return 'success';
-
-            default:
-                return 'secondary';
-        }
-    };
-
-    getIcon(status: string) {
-        switch (status) {
-            case 'APROVADA':
-                return 'pi pi-check-circle';
-            case 'ARRUMADA':
-                return 'pi pi-cog';
-            case 'ORÇADA':
-                return 'pi pi-file';
-            case 'REJEITADA':
-                return 'pi pi-times-circle';
-            case 'FINALIZADA':
-                return 'pi pi-thumbs-up';
-            default:
-                return 'pi pi-info-circle';
         }
     }
 }

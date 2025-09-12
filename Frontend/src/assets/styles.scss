@@ -4,7 +4,110 @@
 @use 'primeicons/primeicons.css';
 @use './demo/demo.scss';
 
+:root {
+  --p-tag-icon-size: 1.25rem;
+}
 
 .request-table {
   --p-datatable-body-cell-lg-padding: 2rem 1.25rem;
+}
+
+.big-tag {
+  font-size: 1.25rem !important;
+  --p-tag-icon-size: 1.25rem;
+}
+
+.visualizar-solicitacao-card {
+  padding: 3rem !important;
+}
+
+.p-tag-aberta {
+  background: var(--p-gray-100) !important;
+  color: var(--p-gray-700) !important;
+}
+
+
+.app-dark .p-tag-aberta {
+  background: color-mix(in srgb,var(--p-gray-500),transparent 84%) !important;
+  color: var(--p-gray-300) !important;
+}
+
+.p-tag-orcada {
+  background: #e6c9be !important;
+  color: #642913 !important;
+}
+
+
+.app-dark .p-tag-orcada {
+  background: color-mix(in srgb,#703018,transparent 84%) !important;
+  color: #c9785b !important;
+}
+
+.p-tag-rejeitada {
+  background: var(--p-red-100) !important;
+  color: var(--p-red-700) !important;
+}
+
+
+.app-dark .p-tag-rejeitada {
+  background: color-mix(in srgb,var(--p-red-500),transparent 84%) !important;
+  color: var(--p-red-300) !important;
+}
+
+.p-tag-aprovada {
+  background: var(--p-yellow-100) !important;
+  color: var(--p-yellow-700) !important;
+}
+
+.app-dark .p-tag-aprovada {
+  background: color-mix(in srgb,var(--p-yellow-500),transparent 84%) !important;
+  color: var(--p-yellow-300) !important;
+}
+
+.p-tag-redirecionada {
+  background: var(--p-purple-100) !important;
+  color: var(--p-purple-700) !important;
+}
+
+.app-dark .p-tag-redirecionada {
+  background: color-mix(in srgb,var(--p-purple-500),transparent 84%) !important;
+  color: var(--p-purple-300) !important;
+}
+
+.p-tag-arrumada {
+  background: var(--p-blue-100) !important;
+  color: var(--p-blue-700) !important;
+}
+
+.app-dark .p-tag-arrumada {
+  background: color-mix(in srgb,var(--p-blue-500),transparent 84%) !important;
+  color: var(--p-blue-300) !important;
+}
+
+.p-tag-paga {
+  background: var(--p-orange-100) !important;
+  color: var(--p-orange-700) !important;
+}
+
+.app-dark .p-tag-paga {
+  background: color-mix(in srgb,var(--p-orange-500),transparent 84%) !important;
+  color: var(--p-orange-300) !important;
+}
+
+.p-tag-finalizada {
+  background: var(--p-green-100) !important;
+  color: var(--p-green-700) !important;
+}
+
+.app-dark .p-tag-finalizada {
+  background: color-mix(in srgb,var(--p-green-500),transparent 84%) !important;
+  color: var(--p-green-300) !important;
+}
+
+.p-button-orcada .p-ripple {
+  color:#642913 !important
+}
+
+.app-dark .p-button-orcada .p-ripple {
+  color:#c9785b !important
 }

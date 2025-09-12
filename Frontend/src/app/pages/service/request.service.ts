@@ -72,5 +72,34 @@ export class RequestService {
     public createRequest(request: any): Observable<any> {
         return this.http.post<any>('http://localhost:3000/solicitacoes', request);
     }
+
+    public getTagClass(status: string) {
+        return ('p-tag-' + status
+                            .normalize('NFD')
+                            .replace(/[\u0300-\u036f]/g, '')
+                            .replace(/ç/g, 'c')             
+                            .toLowerCase())
+        }
+
+    public getIcon(status: string) {
+        switch (status) {
+            case 'APROVADA':
+                return 'pi pi-check-circle';
+            case 'ARRUMADA':
+                return 'pi pi-cog';
+            case 'ORÇADA':
+                return 'pi pi-file';
+            case 'REJEITADA':
+                return 'pi pi-times-circle';
+            case 'REDIRECIONADA':
+                return 'pi pi-external-link';
+            case 'PAGA':
+                return 'pi pi-money-bill';
+            case 'FINALIZADA':
+                return 'pi pi-thumbs-up';
+            default:
+                return 'pi pi-info-circle';
+        }
+    }
     
 }
