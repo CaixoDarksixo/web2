@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { AppLayout } from './app/layouts/component/app.layout';
-import { FuncionarioComponent } from './app/pages/funcionario/funcionario.component';
 import { Dashboard } from './app/pages/dashboard/dashboard';
 import { Documentation } from './app/pages/documentation/documentation';
 import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { ClienteLayout } from './app/layouts/component/cliente.layout';
+import { FuncionarioComponent } from './app/pages/funcionario/funcionario.component';
 
 export const appRoutes: Routes = [
     { path: '', component: Landing, pathMatch: 'full' },
@@ -31,7 +31,6 @@ export const appRoutes: Routes = [
             { path: '', loadChildren: () => import('./app/pages/cliente/cliente.routes') }
         ]
     },
-    
     { path: 'funcionario', component: FuncionarioComponent },
     { path: '**', redirectTo: '/notfound' },
 

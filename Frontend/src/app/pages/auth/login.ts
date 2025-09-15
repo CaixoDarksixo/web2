@@ -14,8 +14,14 @@ import { AuthService } from '../service/auth.service';
 
 interface LoginResponse {
   token?: string;
-  message?: string;
-  //Propriedades da API
+  usuario?: {
+    id: number,
+		nome: string,
+		email: string,
+		roles: [
+			string
+		]
+	}
 }
 
 interface LoginError {
@@ -83,7 +89,7 @@ interface LoginError {
               <p-button type="submit" [label]="loading ? 'Entrando...' : 'Entrar'" styleClass="w-full" [disabled]="form.invalid || loading" [loading]="loading"></p-button>
               <div class="mt-4 text-center">
                 <span class="text-muted-color">Não tem uma conta?</span>
-                <a routerLink="/auth/registration" class="font-medium ml-2 text-primary-500 hover:text-primary-700 transition-colors duration-200">Cadastre-se</a>
+                <a routerLink="/auth/registration" class="font-medium ml-2 text-primary-400 hover:text-primary-500 transition-colors duration-200">Cadastre-se</a>
               </div>
             </form>
           </div>
@@ -127,8 +133,15 @@ export class Login {
         if (res?.token) {
           this.auth.storeToken(res.token, !!remember);
         }
-        
-        this.router.navigate(['/dashboard']);
+        console.log(res?.usuario?.roles[0]);
+        switch (res?.usuario?.roles[0]) {
+          case 'FUNCIONARIO':
+            this.router.navigate(['/funcionario']);
+            return;
+          case 'CLIENTE':
+            this.router.navigate(['/cliente']);
+            return;
+        }
       },
       error: (err: LoginError) => {
         const detail = err?.error?.message ?? 'Falha no login. Verifique se você digitou certo.';

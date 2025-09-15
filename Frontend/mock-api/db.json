@@ -1,0 +1,438 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "João da Silva",
+      "email": "joao@email.com",
+      "password": "123456",
+      "roles": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "José Pereira",
+      "email": "jose@email.com",
+      "password": "123456",
+      "roles": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "id": 3,
+      "nome": "Joana Lima",
+      "email": "joana@email.com",
+      "password": "123456",
+      "roles": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "id": 4,
+      "nome": "Joaquina Souza",
+      "email": "joaquina@email.com",
+      "password": "123456",
+      "roles": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "id": 5,
+      "nome": "Maria Oliveira",
+      "email": "maria@fixsys.com",
+      "password": "123456",
+      "roles": [
+        "FUNCIONARIO"
+      ]
+    },
+    {
+      "id": 6,
+      "nome": "Mário Santos",
+      "email": "mario@fixsys.com",
+      "password": "123456",
+      "roles": [
+        "FUNCIONARIO"
+      ]
+    }
+  ],
+  "categorias": [
+    {
+      "id": 1,
+      "nome": "Notebook"
+    },
+    {
+      "id": 2,
+      "nome": "Desktop"
+    },
+    {
+      "id": 3,
+      "nome": "Impressora"
+    },
+    {
+      "id": 4,
+      "nome": "Mouse"
+    },
+    {
+      "id": 5,
+      "nome": "Teclado"
+    }
+  ],
+  "solicitacoes": [
+    {
+      "id": 1,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Notebook Dell Inspiron",
+      "descricaoProblema": "O notebook Dell Inspiron não liga ao pressionar o botão de power. A tela permanece escura, sem qualquer indicação de atividade, possivelmente devido a um problema na fonte de alimentação ou na placa-mãe.",
+      "categoria": "Hardware",
+      "status": "PAGA",
+      "valorOrcado": 450,
+      "valorPago": 450,
+      "metodoPagamento": "PIX",
+      "dataHoraAbertura": "2025-09-01T10:00:00",
+      "dataHoraPagamento": "2025-09-02T09:00:00"
+    },
+    {
+      "id": 2,
+      "clienteId": 2,
+      "funcionarioId": 6,
+      "descricaoEquipamento": "Impressora HP",
+      "descricaoProblema": "Não puxa papel",
+      "categoria": "Hardware",
+      "status": "ORÇADA",
+      "valorOrcado": 200,
+      "dataHoraAbertura": "2025-09-02T14:00:00"
+    },
+    {
+      "id": 3,
+      "clienteId": 3,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Desktop Lenovo",
+      "descricaoProblema": "Lento para inicializar",
+      "categoria": "Hardware",
+      "status": "APROVADA",
+      "valorOrcado": 500,
+      "dataHoraAbertura": "2025-09-03T09:00:00"
+    },
+    {
+      "id": 4,
+      "clienteId": 4,
+      "funcionarioId": 6,
+      "descricaoEquipamento": "Mouse Logitech",
+      "descricaoProblema": "Botão direito não funciona",
+      "categoria": "Hardware",
+      "status": "ARRUMADA",
+      "valorOrcado": 80,
+      "dataHoraAbertura": "2025-09-04T11:00:00"
+    },
+    {
+      "id": 5,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Teclado Redragon",
+      "descricaoProblema": "O teclado Redragon registra entradas duplas ou triplas para algumas teclas, levando a erros repetidos na digitação, mesmo após tentativas de limpeza e reconexão.",
+      "categoria": "Hardware",
+      "status": "REJEITADA",
+      "valorOrcado": 120,
+      "dataHoraAbertura": "2025-09-05T08:00:00"
+    },
+    {
+      "id": 6,
+      "clienteId": 2,
+      "descricaoEquipamento": "Notebook Acer Aspire",
+      "descricaoProblema": "Superaquecimento",
+      "categoria": "Hardware",
+      "status": "ABERTA",
+      "dataHoraAbertura": "2025-09-06T10:30:00"
+    },
+    {
+      "id": 7,
+      "clienteId": 1,
+      "descricaoEquipamento": "Impressora Brother",
+      "descricaoProblema": "A impressora Brother falha ao puxar o papel da bandeja, emitindo um som de engrenagem rangendo e exibindo erro de atolamento de papel, embora não haja papel atolado visível.",
+      "categoria": "Hardware",
+      "status": "ABERTA",
+      "dataHoraAbertura": "2025-09-12T10:00:00"
+    },
+    {
+      "id": 8,
+      "clienteId": 1,
+      "funcionarioId": 6,
+      "descricaoEquipamento": "Desktop Asus",
+      "descricaoProblema": "O desktop Asus está extremamente lento, demorando mais de 5 minutos para inicializar o sistema operacional e congelando durante o uso de aplicações simples, com ruídos altos provenientes do ventilador.",
+      "categoria": "Hardware",
+      "status": "ORÇADA",
+      "valorOrcado": 300,
+      "dataHoraAbertura": "2025-09-10T09:00:00"
+    },
+    {
+      "id": 9,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Notebook Lenovo Thinkpad",
+      "descricaoProblema": "O notebook Lenovo Thinkpad superaquece rapidamente durante o uso normal, desligando automaticamente após cerca de 20 minutos para evitar danos, com os ventiladores operando em alta velocidade mas ineficazmente.",
+      "categoria": "Hardware",
+      "status": "APROVADA",
+      "valorOrcado": 350,
+      "dataHoraAbertura": "2025-09-08T11:00:00"
+    },
+    {
+      "id": 10,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Teclado Logitech",
+      "descricaoProblema": "O teclado Logitech tem teclas que não respondem ao serem pressionadas, incluindo teclas de função e letras específicas, impedindo o uso de atalhos e digitando incorretamente, mesmo testado em diferentes portas USB.",
+      "categoria": "Hardware",
+      "status": "REDIRECIONADA",
+      "dataHoraAbertura": "2025-09-07T13:00:00"
+    },
+    {
+      "id": 11,
+      "clienteId": 1,
+      "funcionarioId": 6,
+      "descricaoEquipamento": "Mouse Razer",
+      "descricaoProblema": "O mouse Razer apresenta cliques duplos involuntários no botão esquerdo com uma única pressão, causando seleções indesejadas e interrupções em tarefas como jogos ou edição, likely devido a desgaste mecânico.",
+      "categoria": "Hardware",
+      "status": "ARRUMADA",
+      "valorOrcado": 100,
+      "dataHoraAbertura": "2025-09-05T15:00:00"
+    },
+    {
+      "id": 12,
+      "clienteId": 1,
+      "funcionarioId": 5,
+      "descricaoEquipamento": "Impressora Samsung",
+      "descricaoProblema": "A impressora Samsung produz páginas em branco ou com partes do texto faltando, apesar dos níveis de tinta estarem adequados, apontando para um possível defeito no cabeçote de impressão ou incompatibilidade de drivers.",
+      "categoria": "Hardware",
+      "status": "FINALIZADA",
+      "valorOrcado": 250,
+      "dataHoraAbertura": "2025-09-04T08:00:00"
+    }
+  ],
+  "historicos": [
+    {
+      "id": 1001,
+      "solicitacaoId": 1,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-01T10:00:00"
+    },
+    {
+      "id": 1002,
+      "solicitacaoId": 1,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-01T14:00:00",
+      "observacao": "Troca de placa-mãe R$450"
+    },
+    {
+      "id": 1003,
+      "solicitacaoId": 1,
+      "estadoAnterior": "ORÇADA",
+      "estadoNovo": "APROVADA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-01T16:00:00"
+    },
+    {
+      "id": 1004,
+      "solicitacaoId": 1,
+      "estadoAnterior": "APROVADA",
+      "estadoNovo": "ARRUMADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-02T08:00:00",
+      "observacao": "Peça substituída"
+    },
+    {
+      "id": 1005,
+      "solicitacaoId": 1,
+      "estadoAnterior": "ARRUMADA",
+      "estadoNovo": "FINALIZADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-02T08:30:00"
+    },
+    {
+      "id": 1006,
+      "solicitacaoId": 1,
+      "estadoAnterior": "FINALIZADA",
+      "estadoNovo": "PAGA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-02T09:00:00",
+      "observacao": "Pagamento via PIX"
+    },
+    {
+      "id": 1007,
+      "solicitacaoId": 7,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-12T10:00:00"
+    },
+    {
+      "id": 1008,
+      "solicitacaoId": 8,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-10T09:00:00"
+    },
+    {
+      "id": 1009,
+      "solicitacaoId": 8,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:6",
+      "dataHora": "2025-09-10T13:00:00",
+      "observacao": "Limpeza interna, remoção de poeira e possível substituição do HD R$300"
+    },
+    {
+      "id": 1010,
+      "solicitacaoId": 9,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-08T11:00:00"
+    },
+    {
+      "id": 1011,
+      "solicitacaoId": 9,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-08T15:00:00",
+      "observacao": "Limpeza do sistema de refrigeração e aplicação de nova pasta térmica R$350"
+    },
+    {
+      "id": 1012,
+      "solicitacaoId": 9,
+      "estadoAnterior": "ORÇADA",
+      "estadoNovo": "APROVADA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-09T09:00:00"
+    },
+    {
+      "id": 1013,
+      "solicitacaoId": 10,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-07T13:00:00"
+    },
+    {
+      "id": 1014,
+      "solicitacaoId": 10,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "REDIRECIONADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-07T16:00:00",
+      "observacao": "Redirecionado para o suporte da fabricante Logitech devido a possível defeito de fábrica coberto por garantia"
+    },
+    {
+      "id": 1015,
+      "solicitacaoId": 11,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-05T15:00:00"
+    },
+    {
+      "id": 1016,
+      "solicitacaoId": 11,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:6",
+      "dataHora": "2025-09-05T17:00:00",
+      "observacao": "Substituição do switch do botão esquerdo R$100"
+    },
+    {
+      "id": 1017,
+      "solicitacaoId": 11,
+      "estadoAnterior": "ORÇADA",
+      "estadoNovo": "APROVADA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-06T10:00:00"
+    },
+    {
+      "id": 1018,
+      "solicitacaoId": 11,
+      "estadoAnterior": "APROVADA",
+      "estadoNovo": "ARRUMADA",
+      "autor": "FUNCIONARIO:6",
+      "dataHora": "2025-09-06T14:00:00",
+      "observacao": "Reparo realizado e testado com sucesso"
+    },
+    {
+      "id": 1019,
+      "solicitacaoId": 12,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-04T08:00:00"
+    },
+    {
+      "id": 1020,
+      "solicitacaoId": 12,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-04T11:00:00",
+      "observacao": "Substituição do cabeçote de impressão R$250"
+    },
+    {
+      "id": 1021,
+      "solicitacaoId": 12,
+      "estadoAnterior": "ORÇADA",
+      "estadoNovo": "APROVADA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-04T14:00:00"
+    },
+    {
+      "id": 1022,
+      "solicitacaoId": 12,
+      "estadoAnterior": "APROVADA",
+      "estadoNovo": "ARRUMADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-05T09:00:00",
+      "observacao": "Cabeçote substituído e impressora testada"
+    },
+    {
+      "id": 1023,
+      "solicitacaoId": 12,
+      "estadoAnterior": "ARRUMADA",
+      "estadoNovo": "FINALIZADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-05T10:00:00"
+    },
+    {
+      "id": 1024,
+      "solicitacaoId": 5,
+      "estadoAnterior": null,
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-05T08:00:00"
+    },
+    {
+      "id": 1025,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "ORÇADA",
+      "autor": "FUNCIONARIO:5",
+      "dataHora": "2025-09-05T12:00:00",
+      "observacao": "Substituição da membrana do teclado R$120"
+    },
+    {
+      "id": 1026,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ORÇADA",
+      "estadoNovo": "REJEITADA",
+      "autor": "CLIENTE:1",
+      "dataHora": "2025-09-05T14:00:00",
+      "observacao": "Cliente optou por não prosseguir com o reparo"
+    }
+  ],
+  "roles": [
+    "CLIENTE",
+    "FUNCIONARIO"
+  ]
+}

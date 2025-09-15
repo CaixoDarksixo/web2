@@ -1,13 +1,60 @@
 <div class="p-4">
-  <h2>Bem-vindo, {{ funcionario.nome }}</h2>
-  <p><strong>Cargo:</strong> {{ funcionario.cargo }} | <strong>Setor:</strong> {{ funcionario.setor }}</p>
 
+  <!-- Cabeçalho -->
+  <h2>Bem-vindo, {{ funcionario.nome }}</h2>
+  <p>
+    <strong>Cargo:</strong> {{ funcionario.cargo }} |
+    <strong>Setor:</strong> {{ funcionario.setor }} |
+    <strong>Admissão:</strong> {{ funcionario.dataAdmissao }}
+  </p>
+
+  <!-- Estatísticas -->
+  <div class="grid mt-4">
+    <div class="col-12 md:col-3">
+      <p-card header="Total de Chamados">
+        <h2>{{ estatisticas.total }}</h2>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-3">
+      <p-card header="Concluídos">
+        <h2>{{ estatisticas.concluidos }}</h2>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-3">
+      <p-card header="Pendentes">
+        <h2>{{ estatisticas.pendentes }}</h2>
+      </p-card>
+    </div>
+    <div class="col-12 md:col-3">
+      <p-card header="Em Andamento">
+        <h2>{{ estatisticas.andamento }}</h2>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Gráfico -->
+  <div class="mt-5">
+    <p-card header="Resumo dos Chamados">
+      <p-chart type="pie" [data]="chartData" [options]="chartOptions"></p-chart>
+    </p-card>
+  </div>
+
+  <!-- Barra de busca -->
+  <div class="mt-6">
+    <span class="p-input-icon-left w-full md:w-30rem">
+      <i class="pi pi-search"></i>
+      <input type="text" pInputText placeholder="Buscar chamado..." [(ngModel)]="filtro" (input)="filtrarChamados()" />
+    </span>
+  </div>
+
+  <!-- Lista de Chamados -->
   <h3 class="mt-4">Seus Chamados</h3>
-  <p-table [value]="chamados" class="p-mt-3" [paginator]="true" [rows]="5">
+  <p-table [value]="chamadosFiltrados" [paginator]="true" [rows]="5" class="p-mt-3">
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
         <th>Título</th>
+        <th>Prioridade</th>
         <th>Status</th>
       </tr>
     </ng-template>
@@ -15,8 +62,30 @@
       <tr>
         <td>{{ chamado.id }}</td>
         <td>{{ chamado.titulo }}</td>
-        <td>{{ chamado.status }}</td>
+        <td>{{ chamado.prioridade }}</td>
+        <td>
+          <span class="p-badge" [ngClass]="getStatusClass(chamado.status)">
+            {{ chamado.status }}
+          </span>
+        </td>
       </tr>
     </ng-template>
   </p-table>
+
+  <!-- Notificações -->
+  <h3 class="mt-6">Notificações</h3>
+  <div *ngFor="let n of notificacoes" class="mb-2">
+    <p-message severity="info" *ngIf="n.tipo === 'info'" text="{{ n.mensagem }}"></p-message>
+    <p-message severity="warn" *ngIf="n.tipo === 'aviso'" text="{{ n.mensagem }}"></p-message>
+    <p-message severity="error" *ngIf="n.tipo === 'alerta'" text="{{ n.mensagem }}"></p-message>
+  </div>
+
+  <!-- Histórico -->
+  <h3 class="mt-6">Histórico de Atividades</h3>
+  <ul>
+    <li *ngFor="let h of historico">
+      {{ h.data }} - {{ h.descricao }}
+    </li>
+  </ul>
+
 </div>
