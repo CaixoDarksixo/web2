@@ -1,6 +1,5 @@
 package com.web2.manutencaoBackend.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +24,8 @@ public class ClienteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired MailService mailService;
+
     @Autowired
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;    }
@@ -37,11 +38,11 @@ public class ClienteService {
         return restTemplate.getForObject(url, EnderecoDTO.class);
     }
 */
+
     public Cliente save(Cliente cliente) {
         String senha = String.format("%04d", (int)(Math.random() * 10000));
-        EmailService.enviarSenha(cliente.getEmail(), senha);
+        mailService.enviarSenha(cliente.getEmail(), senha);
         cliente.setSenha(passwordEncoder.encode(senha));
-        cliente.setDataRegistro(LocalDateTime.now());
         return clienteRepository.save(cliente);
     }
 
