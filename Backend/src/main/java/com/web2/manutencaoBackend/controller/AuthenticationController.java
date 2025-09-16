@@ -40,7 +40,12 @@ public class AuthenticationController {
         String encryptedPassword = new BCryptPasswordEncoder.encode(data.senha());
         User newUser = new User(data.login(), encryptedPassword, data.role());
 
+        this.repository.save(newUser);
+
+        return ResponseEntity.ok().build();
+        
     }
 
 }
+
 
