@@ -16,7 +16,16 @@ public class User implements UserDetails{
     private Long id;
     private String login;
     private String password;
-    private String role;
+    private UserRole role;
+
+    public User(
+        String login,
+        String password,
+        UserRole role){
+        this.login = login;
+        this.password = password;
+        this.role = role;
+    }
 
     @Override
     public String getUsername() {
@@ -62,3 +71,4 @@ public class User implements UserDetails{
         return true;
     }
 }
+
