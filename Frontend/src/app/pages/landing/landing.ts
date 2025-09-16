@@ -9,6 +9,7 @@ import { HeroWidget } from './components/herowidget';
 import { FeaturesWidget } from './components/featureswidget';
 import { ContactWidget } from './components/contactwidget';
 import { ScrollDownArrowWidget } from './components/scrolldownarrow.widget';
+import { TransitionOverlay } from './components/transition.overlay';
 
 @Component({
     selector: 'app-landing',
@@ -20,6 +21,7 @@ import { ScrollDownArrowWidget } from './components/scrolldownarrow.widget';
         FeaturesWidget,
         ContactWidget,
         ScrollDownArrowWidget,
+        TransitionOverlay,
         RippleModule,
         StyleClassModule,
         ButtonModule,
@@ -27,6 +29,7 @@ import { ScrollDownArrowWidget } from './components/scrolldownarrow.widget';
     ],
 template: `
 <div class="bg-surface-0 dark:bg-surface-900">
+    <transition-overlay />
     <div id="home" class="landing-wrapper overflow-hidden">
         <topbar-widget class="py-6 px-6 mx-0 md:mx-12 lg:mx-20 lg:px-20 flex items-center justify-between relative lg:static" />
         <hero-widget id="hero" />
