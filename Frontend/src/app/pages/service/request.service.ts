@@ -73,6 +73,11 @@ export class RequestService {
         return this.http.post<any>('http://localhost:3000/solicitacoes', request);
     }
 
+    public rescueRequest(id: number): Observable<any> {
+        console.log(id);
+        return this.http.post<any>(`http://localhost:3000/solicitacoes/${id}/resgatar`, "");
+    }
+
     public getTagClass(status: string) {
         return ('p-tag-' + status
                             .normalize('NFD')

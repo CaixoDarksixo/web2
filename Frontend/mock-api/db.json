@@ -207,6 +207,18 @@
       "status": "FINALIZADA",
       "valorOrcado": 250,
       "dataHoraAbertura": "2025-09-04T08:00:00"
+    },
+    {
+      "clienteId": 1,
+      "funcionarioId": 2,
+      "descricaoEquipamento": "Máquina de café",
+      "descricaoProblema": "Não tá fazendo café direito",
+      "categoria": "hardware",
+      "status": "ABERTA",
+      "valorOrcado": 0,
+      "valorPago": 0,
+      "dataHora": "2025-09-12T06:07:29.753Z",
+      "id": 13
     }
   ],
   "historicos": [
@@ -429,6 +441,96 @@
       "autor": "CLIENTE:1",
       "dataHora": "2025-09-05T14:00:00",
       "observacao": "Cliente optou por não prosseguir com o reparo"
+    },
+    {
+      "id": 1757824043388,
+      "solicitacaoId": 5,
+      "estadoAnterior": "REJEITADA",
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:27:23.149Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824133716,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "REJEITADA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:28:53.323Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824378043,
+      "solicitacaoId": 5,
+      "estadoAnterior": "REJEITADA",
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:32:57.494Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824393322,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "REJEITADA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:33:12.955Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824403342,
+      "solicitacaoId": 5,
+      "estadoAnterior": "REJEITADA",
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:33:22.985Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824410112,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "REJEITADA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:33:29.210Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824445630,
+      "solicitacaoId": 5,
+      "estadoAnterior": "REJEITADA",
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:34:05.513Z",
+      "observacao": null
+    },
+    {
+      "id": 1757824448717,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "REJEITADA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-14T04:34:08.570Z",
+      "observacao": null
+    },
+    {
+      "id": 1757905075148,
+      "solicitacaoId": 5,
+      "estadoAnterior": "REJEITADA",
+      "estadoNovo": "ABERTA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-15T02:57:54.185Z",
+      "observacao": null
+    },
+    {
+      "id": 1757905087100,
+      "solicitacaoId": 5,
+      "estadoAnterior": "ABERTA",
+      "estadoNovo": "REJEITADA",
+      "autor": "CLIENTE",
+      "dataHora": "2025-09-15T02:58:06.942Z",
+      "observacao": null
     }
   ],
   "roles": [

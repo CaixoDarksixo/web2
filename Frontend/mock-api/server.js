@@ -91,6 +91,7 @@ transitionEndpoint("orcamento", "ORÇADA", "FUNCIONARIO");
 transitionEndpoint("aprovar", "APROVADA", "CLIENTE");
 transitionEndpoint("rejeitar", "REJEITADA", "CLIENTE");
 transitionEndpoint("redirecionar", "REDIRECIONADA", "FUNCIONARIO");
+transitionEndpoint("resgatar", "ABERTA", "CLIENTE");
 transitionEndpoint("manutencao", "ARRUMADA", "FUNCIONARIO");
 transitionEndpoint("finalizar", "FINALIZADA", "FUNCIONARIO");
 transitionEndpoint("pagar", "PAGA", "CLIENTE");

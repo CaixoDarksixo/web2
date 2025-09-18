@@ -73,7 +73,7 @@ interface Column {
 
                     <div class="flex justify-end gap-2">
                         <p-button label="Cancelar" severity="secondary" (click)="newRequestVisible = false; this.newRequestForm.reset()" />
-                        <p-button label="Solicitar" (click)="createRequest()" />
+                        <p-button label="Solicitar" (click)="onCreate()" />
                     </div>
                 </form>
             </p-dialog>
@@ -112,20 +112,20 @@ interface Column {
                             }
 
                             @else if (col.header === 'Ações') {
-                                <td style="width: 17%">
+                                <td style="width: 15%">
                                     
                                     <p-button label="Visualizar" icon="pi pi-eye" (onClick)="router.navigate(['/cliente/solicitacoes', rowData['id']], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
                 
                                     @if (rowData['status'] === 'ORÇADA') {
-                                        <p-button label="Aprovar/Rejeitar" class="p-button-orcada" icon="pi pi-check-square" styleClass="p-button-text"/>
+                                        <p-button class="block" label="Aprovar/Rejeitar Orçamento" icon="pi pi-check-square" styleClass="p-button-text"/>
                                     }
 
                                     @else if (rowData['status'] === 'REJEITADA') {    
-                                        <p-button label="Resgatar" severity="danger" icon="pi pi-reply" styleClass="p-button-text"/>
+                                        <p-button class="block" (onClick)="onRescue(rowData['id'])" label="Resgatar" icon="pi pi-reply" styleClass="p-button-text"/>
                                     }
 
                                     @else if (rowData['status'] === 'ARRUMADA') {    
-                                        <p-button label="Pagar" severity="info" icon="pi pi-dollar" styleClass="p-button-text"/>
+                                        <p-button class="block" label="Pagar" icon="pi pi-dollar" styleClass="p-button-text"/>
                                     }
                                 </td>
                             }
@@ -184,8 +184,17 @@ export class Solicitacoes implements OnInit {
             { field: 'Ações', header: 'Ações' }
         ];
     };
+    
+    onRescue(id: number) {
+    this.requestService.rescueRequest(id).subscribe((updatedRequest) => {
+        const index = this.requests.findIndex(r => r.id === updatedRequest.id);
+        if (index > -1) {
+        this.requests[index] = updatedRequest;
+        }
+    });
+    }
 
-    createRequest() {
+    onCreate() {
         if (this.newRequestForm.valid) {
             const newRequest = {
                 clienteId: 1,

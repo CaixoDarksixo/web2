@@ -48,30 +48,41 @@ interface Request {
                     <div class="text-xl block">{{ request.categoria }}</div>
                 </div>
             </div>
-            <div class="mb-20">
+            <div class="mb-12">
                 <div class="text-xl font-semibold mb-4">Descrição do Problema</div>
                 <div class="block text-xl rounded-border border border-surface p-4">{{ request.descricaoProblema }}</div>
             </div>
-            <div class="font-semibold text-xl mb-4">Histórico</div>
-            <p-timeline [value]="events" align="alternate" styleClass="customized-timeline">
-            <ng-template pTemplate="marker" let-event>
-                <span
-                class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm"
-                [style]="{ 'background-color': event.color }"
-                >
-                <i [class]="event.icon"></i>
-                </span>
-            </ng-template>
+            <div class="mb-16">
+                @if (request.status === 'ORÇADA') {
+                    <p-button label="Aprovar/Rejeitar Orçamento" size="large" fluid="true" icon="pi pi-check-square"/>
+                }
 
-            <ng-template pTemplate="content" let-event>
-                <p-card [header]="event.status" [subheader]="event.date" class="rounded-border border border-surface">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam
-                    deserunt quisquam repellat libero asperiores earum nam nobis.
-                </p>
-                <p-button label="Read more" [text]="true"></p-button>
-                </p-card>
-            </ng-template>
+                @else if (request.status === 'REJEITADA') {    
+                    <p-button label="Resgatar" size="large" fluid="true" icon="pi pi-reply"/>
+                }
+
+                @else if (request.status === 'ARRUMADA') {    
+                    <p-button label="Pagar" size="large" fluid="true" icon="pi pi-dollar"/>
+                }
+            </div>
+            <div class="font-semibold text-xl mb-4">Histórico</div>
+            <p-timeline [value]="events" align="alternate" class="customized-timeline">
+                <ng-template pTemplate="marker" let-event>
+                    <span
+                    class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm"
+                    [style]="{ 'background-color': event.color }"
+                    >
+                    <i [class]="event.icon"></i>
+                    </span>
+                </ng-template>
+
+                <ng-template pTemplate="content" let-event>
+                    <p-card [header]="event.status" [subheader]="event.date" class="rounded-border border border-surface">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae.
+                    </p>
+                    </p-card>
+                </ng-template>
             </p-timeline>
         </div>
     </div>`
@@ -86,9 +97,9 @@ export class VisualizarSolicitacao implements OnInit {
     requestService = inject(RequestService);
 
     events = [
-    { status: 'Aberta', date: '2025-09-01', icon: 'pi pi-info-circle', color: '#636363ff' },
-    { status: 'Orçada', date: '2025-09-03', icon: 'pi pi-file', color: '#5f3e13ff' },
-    { status: 'Rejeitada', date: '2025-09-05', icon: 'pi pi-times-circle', color: '#8d2929ff' },
+    { status: 'Aberta', date: '2025-09-01', icon: 'pi pi-info-circle', color: '#727272ff' },
+    { status: 'Orçada', date: '2025-09-03', icon: 'pi pi-file', color: '#9f510cff' },
+    { status: 'Rejeitada', date: '2025-09-05', icon: 'pi pi-times-circle', color: '#ce0e0eff' },
   ];
 
     ngOnInit(): void {
