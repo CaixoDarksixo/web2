@@ -9,56 +9,15 @@ import { Observable, of } from 'rxjs';
 export class RequestService {
     http = inject(HttpClient);
 
-     private requests = [
-            {
-                "id": "1",
-                "descricaoEquipamento": "Notebook Dell Inspiron 15",
-                "descricaoProblema": "Não liga ao pressionar o botão de energia",
-                "categoria": "Informática",
-                "status": "FINALIZADA",
-                "dataHora": "2025-09-01T10:30:00"
-            },
-            {
-                "id": "2",
-                "descricaoEquipamento": "Impressora HP LaserJet M227",
-                "descricaoProblema": "Impressões saindo com manchas",
-                "categoria": "Periféricos",
-                "status": "ORÇADA",
-                "dataHora": "2025-09-02T15:45:00"
-            },
-            {
-                "id": "3",
-                "descricaoEquipamento": "PC Desktop Lenovo ThinkCentre",
-                "descricaoProblema": "Travamentos constantes e lentidão",
-                "categoria": "Informática",
-                "status": "APROVADA",
-                "dataHora": "2025-09-03T09:10:00"
-            },
-            {
-                "id": "4",
-                "descricaoEquipamento": "Teclado Redragon",
-                "descricaoProblema": "Teclas não respondem corretamente",
-                "categoria": "Periféricos",
-                "status": "ARRUMADA",
-                "dataHora": "2025-09-04T18:20:00"
-            },
-            {
-                "id": "5",
-                "descricaoEquipamento": "Monitor IDK 22",
-                "descricaoProblema": "Tela piscando durante o uso",
-                "categoria": "Periféricos",
-                "status": "REJEITADA",
-                "dataHora": "2025-09-05T11:05:00"
-            },
-            {
-                "id": "6",
-                "descricaoEquipamento": "Mouse Logitech MX Master 3",
-                "descricaoProblema": "Botão lateral não funciona",
-                "categoria": "Periféricos",
-                "status": "ABERTA",
-                "dataHora": "2025-09-05T11:05:00"
-            }
-            ];
+    private statusIcons: Record<string, string> = {
+        APROVADA: 'pi pi-check-circle',
+        ARRUMADA: 'pi pi-cog',
+        ORÇADA: 'pi pi-file',
+        REJEITADA: 'pi pi-times-circle',
+        REDIRECIONADA: 'pi pi-external-link',
+        PAGA: 'pi pi-money-bill',
+        FINALIZADA: 'pi pi-thumbs-up'
+        };
 
 
     public getRequests(clienteId?: number): Observable<any[]> {
@@ -74,8 +33,19 @@ export class RequestService {
     }
 
     public rescueRequest(id: number): Observable<any> {
-        console.log(id);
         return this.http.post<any>(`http://localhost:3000/solicitacoes/${id}/resgatar`, "");
+    }
+
+    public getHistory(id: number): Observable<any[]> {
+        return this.http.get<any[]>(`http://localhost:3000/solicitacoes/${id}/historico`);
+    }
+
+    public getOrcamento(id: number): Observable<any> {
+        return this.http.get<any[]>(`http://localhost:3000/solicitacoes/${id}/orcamento`);
+    }
+
+    public aprovarOrcamento(requestId: number): Observable<any> {
+        return this.http.post<any>(`http://localhost:3000/solicitacoes/${requestId}/aprovar`, "");
     }
 
     public getTagClass(status: string) {
@@ -86,25 +56,8 @@ export class RequestService {
                             .toLowerCase())
         }
 
-    public getIcon(status: string) {
-        switch (status) {
-            case 'APROVADA':
-                return 'pi pi-check-circle';
-            case 'ARRUMADA':
-                return 'pi pi-cog';
-            case 'ORÇADA':
-                return 'pi pi-file';
-            case 'REJEITADA':
-                return 'pi pi-times-circle';
-            case 'REDIRECIONADA':
-                return 'pi pi-external-link';
-            case 'PAGA':
-                return 'pi pi-money-bill';
-            case 'FINALIZADA':
-                return 'pi pi-thumbs-up';
-            default:
-                return 'pi pi-info-circle';
-        }
+    public getIcon(status: string): string {
+        return this.statusIcons[status] ?? 'pi pi-info-circle';
     }
     
 }

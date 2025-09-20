@@ -114,10 +114,10 @@ interface Column {
                             @else if (col.header === 'Ações') {
                                 <td style="width: 15%">
                                     
-                                    <p-button label="Visualizar" icon="pi pi-eye" (onClick)="router.navigate(['/cliente/solicitacoes', rowData['id']], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
+                                    <p-button label="Visualizar" icon="pi pi-eye" (onClick)="router.navigate(['/cliente/solicitacoes', rowData.id], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
                 
                                     @if (rowData['status'] === 'ORÇADA') {
-                                        <p-button class="block" label="Aprovar/Rejeitar Orçamento" icon="pi pi-check-square" styleClass="p-button-text"/>
+                                        <p-button class="block" label="Aprovar/Rejeitar Orçamento" icon="pi pi-check-square" (onClick)="router.navigate(['/cliente/solicitacoes', rowData.id, 'orcamento'], { state: { fromList: true } })" styleClass="p-button-text"/>
                                     }
 
                                     @else if (rowData['status'] === 'REJEITADA') {    

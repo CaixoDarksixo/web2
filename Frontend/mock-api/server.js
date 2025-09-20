@@ -13,17 +13,19 @@ server.use(middlewares);
 const db = router.db;
 
 // Helpers
-function addHistory(solicitacaoId, estadoAnterior, estadoNovo, autor, observacao) {
+function addHistory(solicitacaoId, statusAnterior, funcionarioDestino, statusAtual, autor, observacao, motivoRejeicao) {
   const id = Date.now() + Math.floor(Math.random() * 1000);
   db.get("historicos")
     .push({
       id,
       solicitacaoId,
-      estadoAnterior,
-      estadoNovo,
+      statusAnterior,
+      funcionarioDestino: funcionarioDestino || null,
+      statusAtual,
       autor,
       dataHora: new Date().toISOString(),
       observacao: observacao || null,
+      motivoRejeicao: motivoRejeicao || null
     })
     .write();
 }
@@ -68,6 +70,12 @@ server.get("/solicitacoes/:id/historico", (req, res) => {
   const id = parseInt(req.params.id, 10);
   const historicos = db.get("historicos").filter({ solicitacaoId: id }).value();
   res.json(historicos);
+});
+
+server.get("/solicitacoes/:id/orcamento", (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const orcamento = db.get("orcamentos").find({ solicitacaoId: id }).value();
+  res.json(orcamento);
 });
 
 function transitionEndpoint(path, novoEstado, autorPrefix) {
