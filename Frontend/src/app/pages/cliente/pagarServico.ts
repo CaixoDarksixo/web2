@@ -48,7 +48,7 @@ interface Orcamento {
             <div class="flex align-items-center justify-content-between mb-4">
                 <p-button label="Voltar" (onClick)="voltar()" icon="pi pi-arrow-left" variant="text" severity="secondary"></p-button>
             </div>
-            <div class="font-semibold text-xl mb-6">Pagar Serviço</div>
+            <div class="font-semibold text-xl mb-6">Realizar Pagamento</div>
             <div class="font-bold block text-5xl mb-4">{{ request.descricaoEquipamento }}</div>
             <div class="block font-light text-xl mb-8">Solicitado em {{request.dataHoraAbertura | date:'dd/MM/yyyy'}} às {{request.dataHoraAbertura | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
             <div class="mb-12">
