@@ -4,9 +4,6 @@ import { RouterModule, Router, ActivatedRoute, Data } from '@angular/router';
 import { RequestService } from '../service/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { TextareaModule } from 'primeng/textarea';
-import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import { MessageModule } from 'primeng/message';
 
 interface Request {
     id: number;
@@ -32,44 +29,26 @@ interface Orcamento {
 
 
 @Component({
-    selector: 'mostrar-orcamento',
+    selector: 'pagar-servico',
     standalone: true,
     imports: [
     ButtonModule,
     RouterModule,
     DatePipe,
-    MessageModule,
-    ReactiveFormsModule,
     DialogModule,
-    TextareaModule,
     CommonModule
     ],
     template: ` 
-    <p-dialog header="Orçamento Aprovado" [modal]="true" [(visible)]="aprovadaDialogVisible" [closable]="false">
-        <div class="text-xl mb-4">Serviço Aprovado no Valor de {{orcamento.valor | currency: 'BRL'}}.</div>
+    <p-dialog header="Pagamento Aprovado" [modal]="true" [(visible)]="pagaDialogVisible" [closable]="false">
+        <div class="text-xl mb-4">Pagamento registrado no valor de {{orcamento.valor | currency: 'BRL'}}.</div>
         <p-button class="flex justify-end" label="OK" (onClick)="router.navigate(['/cliente/solicitacoes'])" />
     </p-dialog>
-
-    <p-dialog header="Rejeitar serviço" [modal]="true" [(visible)]="rejeitadaDialogVisible" [style]="{ width: '50rem'}" [closable]="true">
-        <form [formGroup]="rejeitarForm" class="w-full">
-            <label for="motivoRejeicao" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Motivo da rejeição</label>
-            <textarea rows="3" pTextarea class="w-full md:w-120 mb-2" fluid=true [autoResize]="true" formControlName="motivoRejeicao"></textarea>
-            @if (rejeitarForm.controls.motivoRejeicao.touched && rejeitarForm.controls.motivoRejeicao.invalid) {
-                <p-message severity="error" size="small" variant="simple">Insira um motivo</p-message>
-            }
-            <div class="flex justify-end gap-2">
-                <p-button label="Cancelar" severity="secondary" (click)="rejeitadaDialogVisible = false; this.rejeitarForm.reset()" />
-                <p-button label="Rejeitar" (click)="onRejeitar()"/>
-            </div>
-        </form>
-    </p-dialog>
-
     <div class="flex flex-col h-full items-center justify-center">
         <div class="card w-full md:w-250 visualizar-solicitacao-card">
             <div class="flex align-items-center justify-content-between mb-4">
                 <p-button label="Voltar" (onClick)="voltar()" icon="pi pi-arrow-left" variant="text" severity="secondary"></p-button>
             </div>
-                        <div class="font-semibold text-xl mb-6">Visualizar Orçamento</div>
+            <div class="font-semibold text-xl mb-6">Pagar Serviço</div>
             <div class="font-bold block text-5xl mb-4">{{ request.descricaoEquipamento }}</div>
             <div class="block font-light text-xl mb-8">Solicitado em {{request.dataHoraAbertura | date:'dd/MM/yyyy'}} às {{request.dataHoraAbertura | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
             <div class="mb-12">
@@ -80,36 +59,34 @@ interface Orcamento {
                 <div class="text-xl font-semibold mb-4">Descrição do Problema</div>
                 <div class="block text-xl rounded-border border border-surface p-4">{{ request.descricaoProblema }}</div>
             </div>
-            <div class="mb-4">
-                <div class="text-2xl font-bold mb-4 flex justify-center">Valor Orçado</div>
+            <div class="mb-12">
+                <div class="text-xl font-semibold mb-2">Descrição da Manutenção</div>
+                <div class="text-xl rounded-border border border-surface p-4 block">{{ request.descricaoManutencao }}</div>
+            </div>
+                        <div class="mb-12">
+                <div class="text-xl font-semibold mb-2">Orientações ao cliente</div>
+                <div class="text-xl rounded-border border border-surface p-4 block">{{ request.orientacoesCliente }}</div>
+            </div>
+            <div class="mb-12">
+                <div class="text-2xl font-bold mb-4 flex justify-center">Valor Devido</div>
                 <div class="block text-2xl flex justify-center rounded-border border border-surface p-4 p-tag-finalizada">{{ orcamento.valor | currency: 'BRL' }}</div>
             </div>
-            <div class="block font-light text-xl mb-12">Orçado em {{orcamento.dataHora | date:'dd/MM/yyyy'}} às {{orcamento.dataHora | date:'HH:mm:ss'}} por {{orcamento.funcionario}}</div>
-            <div class="flex justify-end gap-5">
-                <p-button size="large" label="Rejeitar Serviço" severity="secondary" (click)="rejeitadaDialogVisible = true"/>
-                <p-button size="large" label="Aprovar Serviço" (click)="onAprovar()"/>
-            </div>
+
+            <p-button size="large" label="Pagar Serviço" (click)="onPagar()" fluid="true" icon="pi pi-dollar"/>
         </div>
     </div>`
 })
 
-export class MostrarOrcamento implements OnInit {
+export class PagarServico implements OnInit {
     requestId?: number;
     request!: Request;
     orcamento!: Orcamento;
 
-    aprovadaDialogVisible: boolean = false;
-    rejeitadaDialogVisible: boolean = false;
-
+    pagaDialogVisible: boolean = false;
     route = inject(ActivatedRoute);
     router = inject(Router);
     location = inject(Location);
     requestService = inject(RequestService);
-    private fb = inject(FormBuilder);
-
-    rejeitarForm = this.fb.group({
-        motivoRejeicao: ['', [Validators.required]],
-    });
 
     ngOnInit(): void {
         this.requestId = parseInt(this.route.snapshot.paramMap.get('id') || '-1');
@@ -143,13 +120,8 @@ export class MostrarOrcamento implements OnInit {
         }
     }
 
-    onAprovar()  {
-        this.requestService.aprovarOrcamento(this.request.id, {clienteId: this.request.clienteId}).subscribe();
-        this.aprovadaDialogVisible = true;
-    }
-
-    onRejeitar() {
-        this.requestService.rejeitarOrcamento(this.request.id, {motivo: this.rejeitarForm.value.motivoRejeicao!, clienteId: this.request.clienteId}).subscribe();
-        this.router.navigate(['/cliente/solicitacoes'])
+    onPagar()  {
+        this.requestService.pagar(this.request.id, {clienteId: this.request.clienteId, valorPago: this.orcamento.valor}).subscribe();
+        this.pagaDialogVisible = true;
     }
 }

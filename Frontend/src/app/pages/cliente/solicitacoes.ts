@@ -15,11 +15,17 @@ import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 
 interface Request {
-    id?: string;
-    dataHoraAbertura?: string;
-    descricaoEquipamento?: string;
-    descricaoProblema?: string;
-    status?: string;
+    id?: number;
+    clienteId: number;
+    status: string;
+    categoria: string;
+    funcionarioAtualId?: number;
+    dataHoraAbertura: string;
+    descricaoEquipamento: string;
+    descricaoProblema: string;
+    descricaoManutencao?: string;
+    orientacoesCliente?: string;
+    dataHoraFechamento?: string;
 }
 
 interface Column {
@@ -125,7 +131,7 @@ interface Column {
                                     }
 
                                     @else if (rowData['status'] === 'ARRUMADA') {    
-                                        <p-button class="block" label="Pagar" icon="pi pi-dollar" styleClass="p-button-text"/>
+                                        <p-button class="block" label="Pagar" icon="pi pi-dollar" (onClick)="router.navigate(['/cliente/solicitacoes', rowData.id, 'pagar'], { state: { fromList: true } })" styleClass="p-button-text"/>
                                     }
                                 </td>
                             }
@@ -186,7 +192,7 @@ export class Solicitacoes implements OnInit {
     };
     
     onRescue(id: number) {
-    this.requestService.rescueRequest(id).subscribe((updatedRequest) => {
+    this.requestService.rescueRequest(id, {clienteId: this.currentUser.id}).subscribe((updatedRequest) => {
         const index = this.requests.findIndex(r => r.id === updatedRequest.id);
         if (index > -1) {
         this.requests[index] = updatedRequest;
@@ -196,16 +202,13 @@ export class Solicitacoes implements OnInit {
 
     onCreate() {
         if (this.newRequestForm.valid) {
-            const newRequest = {
-                clienteId: 1,
-	            funcionarioId: 2,
-                descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento,
-                descricaoProblema: this.newRequestForm.value.descricaoProblema,
-                categoria: this.newRequestForm.value.categoria,
+            const newRequest: Request = {
+                clienteId: this.currentUser.id,
                 status: 'ABERTA',
-                valorOrcado: 0,
-	            valorPago: 0,
-                dataHora: new Date().toISOString()
+                categoria: this.newRequestForm.value.categoria!,
+                dataHoraAbertura: new Date().toISOString(),
+                descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento!,
+                descricaoProblema: this.newRequestForm.value.descricaoProblema!,
             };
             this.requestService.createRequest(newRequest).subscribe((request) => {
                 this.requests = [...this.requests, request];

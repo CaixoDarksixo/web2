@@ -72,7 +72,7 @@ interface History {
             </div>
             <div class="mb-16">
                 @if (request.status === 'ORÇADA') {
-                    <p-button label="Aprovar/Rejeitar Orçamento" size="large" fluid="true" icon="pi pi-check-square"/>
+                    <p-button label="Aprovar/Rejeitar Orçamento" (onClick)="router.navigate(['/cliente/solicitacoes', request.id, 'orcamento'], { state: { fromList: true } })" size="large" fluid="true" icon="pi pi-check-square"/>
                 }
 
                 @else if (request.status === 'REJEITADA') {    
@@ -80,7 +80,7 @@ interface History {
                 }
 
                 @else if (request.status === 'ARRUMADA') {    
-                    <p-button label="Pagar" size="large" fluid="true" icon="pi pi-dollar"/>
+                    <p-button label="Pagar" size="large" fluid="true" (onClick)="router.navigate(['/cliente/solicitacoes', request.id, 'pagar'], { state: { fromList: true } })" icon="pi pi-dollar"/>
                 }
             </div>
             <div class="font-semibold text-xl mb-4">Histórico</div>
@@ -148,8 +148,11 @@ export class VisualizarSolicitacao implements OnInit {
     }
 
     onRescue() {
-        this.requestService.rescueRequest(this.request.id).subscribe((updatedRequest: Request) => {
+        this.requestService.rescueRequest(this.request.id, {clienteId: this.request.clienteId}).subscribe((updatedRequest: Request) => {
             this.request = updatedRequest;
+            this.requestService.getHistory(this.request.id).subscribe((data: History[]) => {
+                this.events = data;
+            })
         });
     }
 
