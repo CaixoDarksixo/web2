@@ -21,8 +21,7 @@ import { CommonModule } from '@angular/common';
     FormsModule
   ],
   standalone: true,
-  templateUrl: './funcionario.component.html',
-  styleUrls: ['./funcionario.component.css']
+  templateUrl: './funcionario.component.html'
 })
 export class FuncionarioComponent implements OnInit {
 

@@ -2,17 +2,17 @@ import { Component, Renderer2, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { AppTopbar } from './app.topbar';
-import { AppSidebar } from './app.sidebar';
+import { FuncionarioTopbar } from './funcionario.topbar';
+import { FuncionarioSidebar } from './funcionario.sidebar';
 import { LayoutService } from '../service/layout.service';
 
 @Component({
-    selector: 'app-layout',
+    selector: 'funcionario-layout',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule],
+    imports: [CommonModule, FuncionarioTopbar, FuncionarioSidebar, RouterModule],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
-        <app-topbar></app-topbar>
-        <app-sidebar></app-sidebar>
+        <funcionario-topbar></funcionario-topbar>
+        <funcionario-sidebar></funcionario-sidebar>
         <div class="layout-main-container">
             <div class="layout-main">
                 <router-outlet></router-outlet>
@@ -21,14 +21,14 @@ import { LayoutService } from '../service/layout.service';
         <div class="layout-mask animate-fadein"></div>
     </div> `
 })
-export class AppLayout {
+export class FuncionarioLayout {
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;
 
-    @ViewChild(AppSidebar) appSidebar!: AppSidebar;
+    @ViewChild(FuncionarioSidebar) appSidebar!: FuncionarioSidebar;
 
-    @ViewChild(AppTopbar) appTopBar!: AppTopbar;
+    @ViewChild(FuncionarioTopbar) appTopBar!: FuncionarioTopbar;
 
     constructor(
         public layoutService: LayoutService,

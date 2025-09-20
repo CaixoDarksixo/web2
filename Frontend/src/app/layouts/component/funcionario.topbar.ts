@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
+import { Button } from "primeng/button"
 import { LayoutService } from '../service/layout.service';
+import { AuthService } from '../../pages/service/auth.service';
 
 @Component({
-    selector: 'app-topbar',
+    selector: 'funcionario-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, Button],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -44,27 +46,25 @@ import { LayoutService } from '../service/layout.service';
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
+                    <p-button type="button" class="layout-topbar-action-text" label={{currentUser.nome}} icon="pi pi-user" iconPos="right" styleClass="p-button-text p-button-plain"/>
                 </div>
             </div>
         </div>
     </div>`
 })
-export class AppTopbar {
+export class FuncionarioTopbar implements OnInit {
     items!: MenuItem[];
+    currentUser: any;
 
-    constructor(public layoutService: LayoutService) {}
+    layoutService = inject(LayoutService);
+    authService = inject(AuthService);
+
+    ngOnInit() {
+        this.currentUser = this.authService.getAuthenticatedUser().subscribe(user => {
+            this.currentUser = user;
+        }
+        );
+    }
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
