@@ -169,10 +169,10 @@ export class Solicitacoes implements OnInit {
     newRequestVisible: boolean = false;
     currentUser: any;
     categorias = [
-        { label: 'Hardware', value: 'hardware' },
-        { label: 'Software', value: 'software' },
-        { label: 'Redes', value: 'redes' },
-        { label: 'Outros', value: 'outros' }
+        { label: 'Hardware', value: 'Hardware' },
+        { label: 'Software', value: 'Software' },
+        { label: 'Redes', value: 'Redes' },
+        { label: 'Outros', value: 'Outros' }
     ];
 
     requestService = inject(RequestService);

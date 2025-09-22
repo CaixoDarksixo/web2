@@ -5,6 +5,8 @@
       "nome": "João da Silva",
       "email": "joao@email.com",
       "password": "123456",
+      "endereco": "Rua A, 123, São Paulo, SP",
+      "telefone": "(11) 91234-5678",
       "roles": [
         "CLIENTE"
       ]
@@ -14,6 +16,8 @@
       "nome": "José Pereira",
       "email": "jose@email.com",
       "password": "123456",
+      "endereco": "Rua B, 456, Rio de Janeiro, RJ",
+      "telefone": "(21) 92345-6789",
       "roles": [
         "CLIENTE"
       ]
@@ -23,6 +27,8 @@
       "nome": "Joana Lima",
       "email": "joana@email.com",
       "password": "123456",
+      "endereco": "Rua C, 789, Belo Horizonte, MG",
+      "telefone": "(31) 93456-7890",
       "roles": [
         "CLIENTE"
       ]
@@ -32,6 +38,8 @@
       "nome": "Joaquina Souza",
       "email": "joaquina@email.com",
       "password": "123456",
+      "endereco": "Rua D, 101, Curitiba, PR",
+      "telefone": "(41) 94567-8901",
       "roles": [
         "CLIENTE"
       ]
@@ -526,6 +534,27 @@
       "funcionarioDestino": null,
       "dataHora": "2025-09-06T14:00:00",
       "observacao": "Solicitação fechada",
+      "motivoRejeicao": null
+    },
+    {
+      "id": 1758574327587,
+      "solicitacaoId": 7,
+      "statusAnterior": "ABERTA",
+      "statusAtual": "ORÇADA",
+      "funcionarioDestino": null,
+      "dataHora": "2025-09-22T20:52:07.139Z",
+      "observacao": null,
+      "motivoRejeicao": null
+    },
+    {
+      "id": 1758575098309,
+      "solicitacaoId": 7,
+      "statusAnterior": "ABERTA",
+      "statusAtual": "ORÇADA",
+      "funcionarioDestino": null,
+      "autor": "Mário Santos",
+      "dataHora": "2025-09-22T21:04:57.921Z",
+      "observacao": null,
       "motivoRejeicao": null
     }
   ],

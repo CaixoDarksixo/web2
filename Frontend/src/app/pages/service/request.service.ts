@@ -1,6 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -31,8 +33,28 @@ export class RequestService {
         if (params.length > 0) {
         url += `?${params.join('&')}`;
         }
+        return this.http.get<any[]>(url).pipe(
+            switchMap((requests: any[]) => {
+            if (!requests.length) return of([]);
+            const clienteIds = Array.from(new Set(requests.map(r => r.clienteId)));
+            const clienteRequests = clienteIds.map(id =>
+                this.http.get<any>(`http://localhost:3000/usuarios/${id}`)
+            );
+            return forkJoin(clienteRequests).pipe(
+                map(clientes => {
+                const clienteMap = Object.fromEntries(clientes.map(c => [c.id, c.nome]));
+                return requests.map(r => ({
+                    ...r,
+                    clienteNome: clienteMap[r.clienteId] || ''
+                }));
+                })
+            );
+            })
+        );
+    }
 
-        return this.http.get<any[]>(url);
+    public getUserById(id: number): Observable<any> {
+        return this.http.get<any>(`http://localhost:3000/usuarios/${id}`);
     }
 
     public getRequestById(id: number): Observable<any> {
@@ -59,7 +81,7 @@ export class RequestService {
     }
 
     public criarOrcamento(requestId: number, body: {
-        funcionarioId: number;
+        funcionario: string;
         valor: number;
         observacao?: string;
     }): Observable<any> {
@@ -89,7 +111,7 @@ export class RequestService {
 
     public manutencao(requestId: number, body: {
         funcionarioId: number;
-        observacao: string;
+        observacao?: string;
     }): Observable<any> {
         return this.http.post<any>(`${this.API}/${requestId}/manutencao`, body);
     }
@@ -111,6 +133,10 @@ export class RequestService {
         clienteId: number;
     }): Observable<any> {
         return this.http.post<any>(`${this.API}/${requestId}/resgatar`, body);
+    }
+
+    public getFuncionarios(): Observable<any[]> {
+        return this.http.get<any[]>(`http://localhost:3000/usuarios?roles=FUNCIONARIO`);
     }
 
     public getTagClass(status: string) {

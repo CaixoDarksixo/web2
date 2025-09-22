@@ -100,7 +100,7 @@ server.post("/solicitacoes/:id/orcamento", (req, res) => {
   const orcamento = {
     id: Date.now(),
     solicitacaoId,
-    funcionarioId: req.body.funcionarioId,
+    funcionario: req.body.funcionario,
     valor: req.body.valor,
     observacao: req.body.observacao || null,
     dataHora: new Date().toISOString()
@@ -113,7 +113,7 @@ server.post("/solicitacoes/:id/orcamento", (req, res) => {
   const statusAtual = "ORÇADA";
 
   db.get("solicitacoes").find({ id: solicitacaoId }).assign({ status: statusAtual }).write();
-  addHistory(solicitacaoId, statusAnterior, null, statusAtual, req.body.funcionarioId, req.body.observacao, null);
+  addHistory(solicitacaoId, statusAnterior, null, statusAtual, req.body.funcionario, req.body.observacao, null);
 
   res.json(orcamento);
 });
