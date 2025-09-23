@@ -26,6 +26,7 @@ export class FuncionarioMenu {
             {
                 label: 'Principal',
                 items: [
+                    { label: 'Todas as Solicitações', icon: 'pi pi-fw pi-th-large', routerLink: ['/funcionario/solicitacoes'] },
                     { label: 'Relatórios', icon: 'pi pi-fw pi-file', routerLink: ['/funcionario/relatorios'] },
                 ]
             },

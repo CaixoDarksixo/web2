@@ -10,6 +10,8 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext'; 
 import { AuthService } from '../service/auth.service';
 import { Table } from 'primeng/table';
+import { SelectModule } from 'primeng/select'; 
+import { FormsModule } from '@angular/forms';
 
 interface Request {
     id?: number;
@@ -36,23 +38,29 @@ interface Request {
     ButtonModule,
     InputIconModule,
     IconFieldModule,
-    InputTextModule
+    InputTextModule,
+    SelectModule,
+    FormsModule  
     ],
+
     template: ` 
     <div class="card">
         <div class="font-semibold text-xl mb-4">Visualizar Solicitações</div>
-            <p-iconfield iconPosition="left" class="mb-8">
-                <p-inputicon>
-                    <i class="pi pi-search"></i>
-                </p-inputicon>
-                <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" pSize="large" class="w-full md:w-100" placeholder="Insira uma palavra-chave para buscar" />
-            </p-iconfield>
+            <div class="flex justify-between mb-8">
+                <p-iconfield iconPosition="left">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" pSize="large" class="w-full md:w-100" placeholder="Insira uma palavra-chave para buscar" />
+                </p-iconfield>
+                <p-select [options]="filtros" optionLabel="label" optionValue="value" placeholder="Selecione um filtro"(onChange)="onFiltroChange($event)"></p-select>
+            </div>
 
             <p-table 
                 #dt1
                 sortField="dataHoraAbertura" 
                 [sortOrder]="1"
-                [columns]="cols" 
+                [columns]="cols"
                 [value]="requests"
                 [paginator]="true"
                 [rows]="8"
@@ -112,7 +120,7 @@ interface Request {
             </p-table>
     </div>`
 })
-export class Solicitacoes {
+export class Solicitacoes implements OnInit {
     requests!: Request[];
     newRequestVisible: boolean = false;
     currentUser: any;
@@ -124,6 +132,13 @@ export class Solicitacoes {
             { field: 'status', header: 'Status' },
             { field: 'Ações', header: 'Ações' }
         ];
+
+    filtros = [
+        { label: 'Todas', value: 'todas' },
+        { label: 'Hoje', value: 'hoje' },
+        { label: 'Selecionar período', value: 'periodo' }
+    ];
+
 
     requestService = inject(RequestService);
     router = inject(Router);
@@ -151,4 +166,21 @@ export class Solicitacoes {
         }
     });
     }
+
+    onFiltroChange(event: any) {
+    const filtro = event.value;
+
+    if (filtro === 'todas') {
+        this.requestService.getRequests(1).subscribe((data: Request[]) => this.requests = data);
+    }
+    else if (filtro === 'hoje') {
+        this.requests = this.requests.filter(req =>
+        new Date(req.dataHoraAbertura).toDateString() === new Date().toDateString()
+        );
+    }
+    else if (filtro === 'periodo') {
+        console.log("Selecionar período");
+    }
+    }
+
 }

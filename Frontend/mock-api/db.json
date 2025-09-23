@@ -66,23 +66,28 @@
   "categorias": [
     {
       "id": 1,
-      "nome": "Notebook"
+      "nome": "Notebook",
+      "ativo": true
     },
     {
       "id": 2,
-      "nome": "Desktop"
+      "nome": "Desktop",
+      "ativo": true
     },
     {
       "id": 3,
-      "nome": "Impressora"
+      "nome": "Impressora",
+      "ativo": true
     },
     {
       "id": 4,
-      "nome": "Mouse"
+      "nome": "Mouse",
+      "ativo": true
     },
     {
       "id": 5,
-      "nome": "Teclado"
+      "nome": "Teclado",
+      "ativo": true
     }
   ],
   "solicitacoes": [

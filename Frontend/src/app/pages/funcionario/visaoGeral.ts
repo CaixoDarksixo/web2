@@ -85,7 +85,7 @@ interface Request {
 
                             @else if (col.header === 'Ação') {
                                 <td style="width: 15%">
-                                    <p-button label="Realizar Orçamento" icon="pi pi-file" (click)="router.navigate(['/cliente/solicitacoes', rowData.id], { state: { fromList: true } })" styleClass="p-button-text"></p-button>
+                                    <p-button label="Realizar Orçamento" icon="pi pi-file" (click)="router.navigate(['/funcionario/solicitacoes/', rowData.id, 'orcamento'], { state: { fromList: true } })" styleClass="p-button-text"></p-button>
                                 </td>
                             }
 
