@@ -1,4 +1,4 @@
-package com.web2.manutencaoBackend.service;
+package com.web2.manutencaoBackend.entity;
 
 public class EnderecoDTO {
     private String logradouro;

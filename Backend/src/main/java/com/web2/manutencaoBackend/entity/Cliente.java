@@ -4,46 +4,34 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "clientes")
-public class Cliente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@DiscriminatorValue("CLIENTE")
+public class Cliente extends User {
     private String cpf;
     private String nome;
     private String email;
     private String endereco;
-    private String senha;
     private String telefone;
+
     @CreationTimestamp
     private LocalDateTime dataRegistro;
 
     public Cliente() {
     }
 
-    public Cliente(String cpf, String nome, String email, String endereco, String senha, String telefone, LocalDateTime dataRegistro) {
+    public Cliente(String email, String senha, UserRole role,
+                   String cpf, String nome, String endereco,
+                   String telefone, LocalDateTime dataRegistro) {
+        super(email, senha, role);
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
-        this.senha = senha;
         this.telefone = telefone;
         this.dataRegistro = dataRegistro;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCpf() {
@@ -76,14 +64,6 @@ public class Cliente {
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 
     public String getTelefone() {
