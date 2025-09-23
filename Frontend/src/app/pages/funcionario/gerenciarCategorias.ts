@@ -35,7 +35,7 @@ interface Categoria {
             <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
             <input fluid="true" pInputText id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
             @if (newCategoriaForm.controls.nome.touched && newCategoriaForm.controls.nome.invalid) {
-                <p-message severity="error" size="small" variant="simple">Informe seu nome.</p-message>
+                <p-message severity="error" size="small" variant="simple">Informe o nome.</p-message>
             }
 
             <div class="flex justify-end gap-2 mt-4">

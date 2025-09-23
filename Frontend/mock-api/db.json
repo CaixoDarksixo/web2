@@ -49,6 +49,7 @@
       "nome": "Maria Oliveira",
       "email": "maria@fixsys.com",
       "password": "123456",
+      "dataNascimento": "1990-05-15",
       "roles": [
         "FUNCIONARIO"
       ]
@@ -58,6 +59,7 @@
       "nome": "Mário Santos",
       "email": "mario@fixsys.com",
       "password": "123456",
+      "dataNascimento": "1985-08-22",
       "roles": [
         "FUNCIONARIO"
       ]

@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { DatePipe } from '@angular/common';
 
 interface Funcionario {
     id: number;
@@ -27,7 +28,8 @@ interface Funcionario {
     DialogModule,
     InputTextModule,
     ReactiveFormsModule,
-    MessageModule
+    MessageModule,
+    DatePipe
     ],
     providers: [MessageService, ConfirmationService],
     template: `
@@ -87,6 +89,8 @@ interface Funcionario {
                 </th>
                 <th>ID</th>
                 <th>Nome</th>
+                <th>E-mail</th>
+                <th>Data de Nascimento</th>
             </tr>
         </ng-template>
         <ng-template #body let-rowData let-columns="columns">
@@ -95,9 +99,16 @@ interface Funcionario {
                 <p-tableCheckbox [value]="rowData" />
             </td>
             @for (col of columns; track col) {
-                <td>
-                    {{ rowData[col.field] }}
-                </td>
+                @if (col.header === 'Data de Nascimento') {
+                    <td>
+                        {{ rowData[col.field] | date:'dd/MM/yyyy' }}
+                    </td>
+                }
+                @else {
+                    <td>
+                        {{ rowData[col.field] }}
+                    </td>
+                }
             }
         </tr>
         </ng-template>
