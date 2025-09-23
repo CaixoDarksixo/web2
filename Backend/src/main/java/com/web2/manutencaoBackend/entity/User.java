@@ -1,22 +1,36 @@
 package com.web2.manutencaoBackend.entity;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
-
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails{
+@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
+public abstract class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String login;
     private String password;
-    private String role;
+    private UserRole role;
+
+    public User() {
+    }
+
+    public User(String login, String senha, UserRole role) {
+        this.login = login;
+        this.password = senha;
+        this.role = role;
+    }
 
     @Override
     public String getUsername() {
@@ -28,17 +42,25 @@ public class User implements UserDetails{
         return password;
     }
 
-    public String getRole(){
-        return role;
+    public void setRole(UserRole role){
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
     public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN.getRole()){
-            return java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN"),
-             new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == UserRole.ADMIN) {
+            return java.util.List.of(
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN"),
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")
+            );
         } else {
-            return java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER"));
+            return java.util.List.of(
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")
+            );
         }
     }
 

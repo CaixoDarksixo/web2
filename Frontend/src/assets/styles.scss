@@ -2,7 +2,6 @@
 @use './tailwind.css';
 @use './layout/layout.scss';
 @use 'primeicons/primeicons.css';
-@use './demo/demo.scss';
 
 :root {
   --p-tag-icon-size: 1.25rem;
@@ -90,8 +89,8 @@
 }
 
 .app-dark .p-tag-paga {
-  background: color-mix(in srgb,var(--p-orange-500),transparent 84%) !important;
-  color: var(--p-orange-300) !important;
+  background: color-mix(in srgb,#a76100,transparent 84%) !important;
+  color: #ffa84c !important;
 }
 
 .p-tag-finalizada {
@@ -105,9 +104,21 @@
 }
 
 .p-button-orcada .p-ripple {
-  color:#642913 !important
+  color:#642913 !important;
+  background: #642913 !important;
 }
 
 .app-dark .p-button-orcada .p-ripple {
-  color:#c9785b !important
+  color:#c9785b !important;
+  background: #642913 !important;
+}
+
+.p-button-orcada .p-ripple .p-button-text {
+  color:#642913 !important;
+  background: "" !important;
+}
+
+.app-dark .p-button-orcada .p-ripple .p-button-text {
+  color:#c9785b !important;
+  background: "" !important;
 }

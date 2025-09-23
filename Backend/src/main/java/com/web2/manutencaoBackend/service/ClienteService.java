@@ -1,6 +1,5 @@
 package com.web2.manutencaoBackend.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.web2.manutencaoBackend.entity.Cliente;
 import com.web2.manutencaoBackend.entity.Servico;
+import com.web2.manutencaoBackend.entity.UserRole;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +25,8 @@ public class ClienteService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired MailService mailService;
+
     @Autowired
     public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;    }
@@ -37,11 +39,12 @@ public class ClienteService {
         return restTemplate.getForObject(url, EnderecoDTO.class);
     }
 */
+
     public Cliente save(Cliente cliente) {
         String senha = String.format("%04d", (int)(Math.random() * 10000));
-        EmailService.enviarSenha(cliente.getEmail(), senha);
-        cliente.setSenha(passwordEncoder.encode(senha));
-        cliente.setDataRegistro(LocalDateTime.now());
+        mailService.enviarSenha(cliente.getEmail(), senha);
+        cliente.setPassword(passwordEncoder.encode(senha));
+        cliente.setRole(UserRole.CLIENTE);
         return clienteRepository.save(cliente);
     }
 
@@ -67,7 +70,7 @@ public class ClienteService {
     public Cliente update(Long id, Cliente cliente) {
         Cliente c = clienteRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
-        c.setSenha(passwordEncoder.encode(cliente.getSenha()));
+        c.setPassword(passwordEncoder.encode(cliente.getPassword()));
         c.setCpf(cliente.getCpf());
         c.setEmail(cliente.getEmail());
         c.setEndereco(cliente.getEndereco());

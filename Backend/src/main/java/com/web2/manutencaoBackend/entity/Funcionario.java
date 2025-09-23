@@ -2,11 +2,8 @@ package com.web2.manutencaoBackend.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,21 +14,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "funcionarios") // Adiciona o mapeamento para a tabela 'funcionarios'
-public class Funcionario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@DiscriminatorValue("FUNCIONARIO")
+public class Funcionario extends User {
     private String nome;
     private String email;
-    private String senha; // Adicionado o campo 'senha'
-    private LocalDate dataNascimento; // Corrigido o tipo para LocalDate
+    private LocalDate dataNascimento;
 
-    // Construtor sem o ID
-    public Funcionario(String nome, String email, String senha, LocalDate dataNascimento) {
+    public Funcionario(String email, String password, UserRole role, String nome,
+                       LocalDate dataNascimento) {
+        super(email, password, role);
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
         this.dataNascimento = dataNascimento;
     }
 }

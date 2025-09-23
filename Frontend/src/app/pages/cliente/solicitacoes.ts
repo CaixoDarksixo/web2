@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { RequestService } from '../service/request.service';
 import { AuthService } from '../../pages/service/auth.service';
@@ -12,14 +12,21 @@ import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { InputIconModule } from 'primeng/inputicon';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 
 interface Request {
-    id?: string;
-    dataHoraAbertura?: string;
-    descricaoEquipamento?: string;
-    descricaoProblema?: string;
-    status?: string;
+    id?: number;
+    clienteId: number;
+    status: string;
+    categoria: string;
+    funcionarioAtualId?: number;
+    dataHoraAbertura: string;
+    descricaoEquipamento: string;
+    descricaoProblema: string;
+    descricaoManutencao?: string;
+    orientacoesCliente?: string;
+    dataHoraFechamento?: string;
 }
 
 interface Column {
@@ -36,6 +43,7 @@ interface Column {
     ButtonModule,
     TagModule,
     MessageModule,
+    InputIconModule,
     DialogModule,
     ReactiveFormsModule,
     InputTextModule,
@@ -49,7 +57,15 @@ interface Column {
         <div class="card">
             <div class="flex justify-between items-center mb-4">
                 <div class="font-semibold text-xl mb-4 mr-5">Minhas Solicitações</div>
-                <p-button label="Nova Solicitação" icon="pi pi-plus" size="large" (click)="newRequestVisible = true;"/>
+                <div class="flex gap-5">
+                    <p-iconfield iconPosition="left" class="mb-8">
+                        <p-inputicon>
+                            <i class="pi pi-search"></i>
+                        </p-inputicon>
+                        <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" pSize="large" class="w-full md:w-100" placeholder="Insira uma palavra-chave para buscar" />
+                    </p-iconfield>
+                    <p-button label="Nova Solicitação" icon="pi pi-plus" size="large" (click)="newRequestVisible = true;"/>
+                </div>
             </div>
             <p-dialog header="Nova Solicitação de Manutenção" [modal]="true" [(visible)]="newRequestVisible" [style]="{ width: '50rem'}" [closable]="false">
                 <form [formGroup]="newRequestForm" class="w-full">
@@ -73,12 +89,14 @@ interface Column {
 
                     <div class="flex justify-end gap-2">
                         <p-button label="Cancelar" severity="secondary" (click)="newRequestVisible = false; this.newRequestForm.reset()" />
-                        <p-button label="Solicitar" (click)="createRequest()" />
+                        <p-button label="Solicitar" (click)="onCreate()" />
                     </div>
                 </form>
             </p-dialog>
             <p-table 
                 #dt1
+                sortField="dataHoraAbertura" 
+                [sortOrder]="1"
                 [columns]="cols" 
                 [value]="requests"
                 [paginator]="true"
@@ -89,11 +107,11 @@ interface Column {
                 class="request-table">
                 <ng-template #header let-columns>
                     <tr class>
-                        <th class="mt-20 mb-8">ID</th>
-                        <th class="mt-20 mb-8">Data/Hora de Abertura</th>
+                        <th pSortableColumn="id" class="mt-20 mb-8">ID <p-sortIcon field="id" /></th>
+                        <th pSortableColumn="dataHoraAbertura" class="mt-20 mb-8">Data/Hora de Abertura <p-sortIcon field="dataHoraAbertura" /></th>
                         <th class="mt-20 mb-8">Descrição do Equipamento</th>
-                        <th class="mt-20 mb-8">Estado</th>
-                        <th class="mt-20 mb-8">Ações</th>
+                        <th pSortableColumn="status" class="mt-20 mb-8">Estado <p-sortIcon field="status" /></th>
+                        <th class="mt-20 mb-8">Ações </th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-rowData let-columns="columns">
@@ -112,20 +130,20 @@ interface Column {
                             }
 
                             @else if (col.header === 'Ações') {
-                                <td style="width: 17%">
+                                <td style="width: 15%">
                                     
-                                    <p-button label="Visualizar" icon="pi pi-eye" (onClick)="router.navigate(['/cliente/solicitacoes', rowData['id']], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
+                                    <p-button label="Visualizar" icon="pi pi-eye" (click)="router.navigate(['/cliente/solicitacoes', rowData.id], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
                 
                                     @if (rowData['status'] === 'ORÇADA') {
-                                        <p-button label="Aprovar/Rejeitar" class="p-button-orcada" icon="pi pi-check-square" styleClass="p-button-text"/>
+                                        <p-button class="block" label="Aprovar/Rejeitar Orçamento" icon="pi pi-check-square" (click)="router.navigate(['/cliente/solicitacoes', rowData.id, 'orcamento'], { state: { fromList: true } })" styleClass="p-button-text"/>
                                     }
 
                                     @else if (rowData['status'] === 'REJEITADA') {    
-                                        <p-button label="Resgatar" severity="danger" icon="pi pi-reply" styleClass="p-button-text"/>
+                                        <p-button class="block" (click)="onRescue(rowData['id'])" label="Resgatar" icon="pi pi-reply" styleClass="p-button-text"/>
                                     }
 
                                     @else if (rowData['status'] === 'ARRUMADA') {    
-                                        <p-button label="Pagar" severity="info" icon="pi pi-dollar" styleClass="p-button-text"/>
+                                        <p-button class="block" label="Pagar" icon="pi pi-dollar" (click)="router.navigate(['/cliente/solicitacoes', rowData.id, 'pagar'], { state: { fromList: true } })" styleClass="p-button-text"/>
                                     }
                                 </td>
                             }
@@ -151,10 +169,10 @@ export class Solicitacoes implements OnInit {
     newRequestVisible: boolean = false;
     currentUser: any;
     categorias = [
-        { label: 'Hardware', value: 'hardware' },
-        { label: 'Software', value: 'software' },
-        { label: 'Redes', value: 'redes' },
-        { label: 'Outros', value: 'outros' }
+        { label: 'Hardware', value: 'Hardware' },
+        { label: 'Software', value: 'Software' },
+        { label: 'Redes', value: 'Redes' },
+        { label: 'Outros', value: 'Outros' }
     ];
 
     requestService = inject(RequestService);
@@ -184,19 +202,30 @@ export class Solicitacoes implements OnInit {
             { field: 'Ações', header: 'Ações' }
         ];
     };
+    
+    onGlobalFilter(table: Table, event: Event) {
+        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    }
 
-    createRequest() {
+    onRescue(id: number) {
+    this.requestService.rescueRequest(id, {clienteId: this.currentUser.id}).subscribe((updatedRequest) => {
+        const index = this.requests.findIndex(r => r.id === updatedRequest.id);
+        if (index > -1) {
+            this.requests[index] = updatedRequest;
+            this.requests = [...this.requests];
+        }
+    });
+    }
+
+    onCreate() {
         if (this.newRequestForm.valid) {
-            const newRequest = {
-                clienteId: 1,
-	            funcionarioId: 2,
-                descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento,
-                descricaoProblema: this.newRequestForm.value.descricaoProblema,
-                categoria: this.newRequestForm.value.categoria,
+            const newRequest: Request = {
+                clienteId: this.currentUser.id,
                 status: 'ABERTA',
-                valorOrcado: 0,
-	            valorPago: 0,
-                dataHora: new Date().toISOString()
+                categoria: this.newRequestForm.value.categoria!,
+                dataHoraAbertura: new Date().toISOString(),
+                descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento!,
+                descricaoProblema: this.newRequestForm.value.descricaoProblema!,
             };
             this.requestService.createRequest(newRequest).subscribe((request) => {
                 this.requests = [...this.requests, request];
