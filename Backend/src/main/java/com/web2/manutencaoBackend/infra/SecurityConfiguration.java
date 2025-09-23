@@ -34,7 +34,7 @@ public class SecurityConfiguration {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // autenticação aberta
+            //    .requestMatchers("/auth/**").permitAll() // autenticação aberta
                 .requestMatchers("/api/clientes/autocadastro").permitAll() // autocadastro sem login
                 .requestMatchers("/servicos/**").hasAnyRole("USER", "ADMIN") // controle por role
                 .requestMatchers("/users/**").hasRole("ADMIN") // só admin

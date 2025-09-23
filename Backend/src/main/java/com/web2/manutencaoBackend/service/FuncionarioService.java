@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.web2.manutencaoBackend.entity.Funcionario;
+import com.web2.manutencaoBackend.entity.UserRole;
 import com.web2.manutencaoBackend.repository.FuncionarioRepository;
 
 import jakarta.transaction.Transactional;
@@ -27,6 +28,7 @@ public class FuncionarioService {
     }
 
     public Funcionario save(Funcionario funcionario) {
+        funcionario.setRole(UserRole.FUNCIONARIO);
         return funcionarioRepository.save(funcionario);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.web2.manutencaoBackend.entity.Cliente;
 import com.web2.manutencaoBackend.entity.Servico;
+import com.web2.manutencaoBackend.entity.UserRole;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
 
 import jakarta.transaction.Transactional;
@@ -42,7 +43,8 @@ public class ClienteService {
     public Cliente save(Cliente cliente) {
         String senha = String.format("%04d", (int)(Math.random() * 10000));
         mailService.enviarSenha(cliente.getEmail(), senha);
-        cliente.setSenha(passwordEncoder.encode(senha));
+        cliente.setPassword(passwordEncoder.encode(senha));
+        cliente.setRole(UserRole.CLIENTE);
         return clienteRepository.save(cliente);
     }
 
@@ -68,7 +70,7 @@ public class ClienteService {
     public Cliente update(Long id, Cliente cliente) {
         Cliente c = clienteRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
-        c.setSenha(passwordEncoder.encode(cliente.getSenha()));
+        c.setPassword(passwordEncoder.encode(cliente.getPassword()));
         c.setCpf(cliente.getCpf());
         c.setEmail(cliente.getEmail());
         c.setEndereco(cliente.getEndereco());
