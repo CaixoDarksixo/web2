@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.web2.manutencaoBackend.entity.Cliente;
-import com.web2.manutencaoBackend.entity.Servico;
 import com.web2.manutencaoBackend.entity.UserRole;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
 
@@ -77,25 +76,5 @@ public class ClienteService {
         c.setNome(cliente.getNome());
         c.setTelefone(cliente.getTelefone());
         return clienteRepository.save(c);
-    }
-
-    public Servico solicitaServico(){
-        return null;
-    }
-
-    public Servico aprovaServico(){
-        return null;
-    }
-
-    public Servico rejeitaServico(){
-        return null;
-    }
-
-    public Servico resgataServico(){
-        return null;
-    }
-
-    public Servico pagaServico(){
-        return null;
     }
 }
