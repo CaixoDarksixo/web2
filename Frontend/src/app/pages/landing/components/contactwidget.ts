@@ -7,10 +7,10 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-<section class="py-16 bg-[#27272a]">
+<section class="py-8">
     <div class="max-w-4xl mx-auto text-center mb-10">
-    <h2 class="text-3xl font-bold text-gray-800">Fale Conosco</h2>
-    <p class="text-gray-600 mt-2">Envie uma mensagem e entraremos em contato com você.</p>
+    <h2 class="text-3xl font-bold">Fale Conosco</h2>
+    <p class="mt-2">Envie uma mensagem e entraremos em contato com você.</p>
     </div>
 
 <form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg space-y-6">
