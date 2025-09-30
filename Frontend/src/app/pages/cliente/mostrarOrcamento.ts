@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MessageModule } from 'primeng/message';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 interface Request {
     id: number;
@@ -44,6 +45,7 @@ interface Orcamento {
     TextareaModule,
     CommonModule
     ],
+    providers: [ConfirmationService],
     template: ` 
     <p-dialog header="Orçamento Aprovado" [modal]="true" [(visible)]="aprovadaDialogVisible" [closable]="false">
         <div class="text-xl mb-4">Serviço Aprovado no Valor de {{orcamento.valor | currency: 'BRL'}}.</div>
@@ -106,6 +108,8 @@ export class MostrarOrcamento implements OnInit {
     location = inject(Location);
     requestService = inject(RequestService);
     private fb = inject(FormBuilder);
+    private messageService = inject(MessageService);
+    private confirmationService = inject(ConfirmationService);
 
     rejeitarForm = this.fb.group({
         motivoRejeicao: ['', [Validators.required]],
@@ -145,10 +149,26 @@ export class MostrarOrcamento implements OnInit {
 
     onAprovar()  {
         this.requestService.aprovarOrcamento(this.request.id, {clienteId: this.request.clienteId}).subscribe();
-        this.aprovadaDialogVisible = true;
+        //this.aprovadaDialogVisible = true;
+        this.confirmationService.confirm({
+            message: 'Are you sure you want to delete the selected products?',
+            header: 'Confirm',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {               
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Sucesso',
+                        detail: 'Orçamento aprovado com sucesso!'
+                    });
+                }
+        });
     }
 
     onRejeitar() {
+          if (this.rejeitarForm.invalid) {
+            this.rejeitarForm.markAllAsTouched();
+            return;
+        }
         this.requestService.rejeitarOrcamento(this.request.id, {motivo: this.rejeitarForm.value.motivoRejeicao!, clienteId: this.request.clienteId}).subscribe();
         this.router.navigate(['/cliente/solicitacoes'])
     }
