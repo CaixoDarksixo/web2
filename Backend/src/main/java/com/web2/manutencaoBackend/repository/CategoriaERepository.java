@@ -8,6 +8,5 @@ import com.web2.manutencaoBackend.entity.CategoriaE;
 
 public interface CategoriaERepository extends JpaRepository<CategoriaE, Long>{
     // Declaração do método para buscar uma categoria pelo nome
-    Optional<CategoriaERepository> findByNome(String nome);
-
+    Optional<CategoriaE> findByNome(String nome);
 }

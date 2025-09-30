@@ -14,26 +14,27 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @Entity
-@Table(name = "servicos")
-public class Servico {
+@Table(name = "historicos")
+public class Historicos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long SolicitacaoId;
 
     @CreationTimestamp
     private LocalDateTime datahora;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status statusAnterior;
 
-    private String descEquipamento;
+    @Enumerated(EnumType.STRING)
+    private Status statusAtual;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
@@ -49,27 +50,26 @@ public class Servico {
 
     private String descManutencao;
 
+    private String observacao;
+
     @ManyToOne
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
-    public Servico(LocalDateTime datahora, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
-        this.datahora = datahora;
-        this.status = status;
-        this.descEquipamento = descEquipamento;
+    public Historicos() {}
+
+    public Historicos(Long SolicitacaoId, Status statusAnterior, Status statusAtual, CategoriaE categoriaEquipamento,
+                      String descDefeito, Cliente cliente, String descRejeicao, String descManutencao, String observacao, Funcionario funcionario) {
+        this.SolicitacaoId = SolicitacaoId;
+        this.statusAnterior = statusAnterior;
+        this.statusAtual = statusAtual;
         this.categoriaEquipamento = categoriaEquipamento;
         this.descDefeito = descDefeito;
         this.cliente = cliente;
-        this.descRejeicao = "Não Rejeitada";
-        this.funcionario = null;
+        this.descRejeicao = descRejeicao;
+        this.descManutencao = descManutencao;
+        this.observacao = observacao;
+        this.funcionario = funcionario;
     }
-
-    public void rejeitar(String desc) {
-        this.setDescRejeicao(desc);
-        this.setStatus(Status.REJEITADA);
-    }
-
-    public void encaminhar(Funcionario funcionario) {
-        this.setFuncionario(funcionario);
-    }
+    
 }

@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.web2.manutencaoBackend.entity.Funcionario;
 import com.web2.manutencaoBackend.entity.Servico;
+import com.web2.manutencaoBackend.entity.Status;
 import com.web2.manutencaoBackend.repository.ServicoRepository;
 
 import jakarta.transaction.Transactional;
@@ -16,9 +18,17 @@ import jakarta.transaction.Transactional;
 public class ServicoService {
 
     private final ServicoRepository servicoRepository;
+    private final HistoricosService historicosService;
 
-    public ServicoService(ServicoRepository servicoRepository) {
+    public ServicoService(ServicoRepository servicoRepository, HistoricosService historicosService){
         this.servicoRepository = servicoRepository;
+        this.historicosService = historicosService;
+    }
+
+    public Servico findById(Long id){
+        Servico s = servicoRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Servico não encontrado"));
+        return s;
     }
 
     public List<Servico> getAll(){
@@ -50,21 +60,108 @@ public class ServicoService {
         return servicoRepository.save(s);
     }
 
-    public Servico orcamentaServico(){
-        return null;
+    public Servico aprovaServico(Long id, String observacao) {
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.APROVADA);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+
+        return atualizado;
     }
 
-    public Servico manutencaoServico(){
-        return null;
+    public Servico rejeitaServico(Long id, String observacao) {
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.REJEITADA);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+
+        return atualizado;
     }
 
-    public Servico redirecionarManutencaoServico(){
-        return null;
+    public Servico resgataServico(Long id, String observacao) {
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.APROVADA);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+
+        return atualizado;
     }
 
-    public Servico finalizarServico(){
-        return null;
+    public Servico pagaServico(Long id, String observacao) {
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.PAGA);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+
+        return atualizado;
     }
 
+    public Servico orcarServico(Long id, String observacao){ /////////////////////////////////
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.ORCADA);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+        
+        return atualizado;
+    }
+
+    public Servico efetuarManutencao(Long id, String manutencao, String observacao){
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.ARRUMADA);
+        servico.setDescManutencao(manutencao);
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+        
+        return atualizado;
+    }
+
+    public Servico redirecionarServico(Long id, Funcionario funcionario, String observacao){
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.FINALIZADA);
+        servico.setFuncionario(funcionario);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+        
+        return atualizado;
+    }    
+
+    public Servico finalizarServico(Long id, String observacao){
+        Servico servico = servicoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+
+        Status anterior = servico.getStatus();
+        servico.setStatus(Status.FINALIZADA);
+
+        Servico atualizado = servicoRepository.save(servico);
+        historicosService.save(atualizado, anterior, observacao);
+        
+        return atualizado;
+    }
 }
