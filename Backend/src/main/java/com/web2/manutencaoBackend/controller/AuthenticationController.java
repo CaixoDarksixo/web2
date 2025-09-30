@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")   
 public class AuthenticationController {
     
- // @Autowired
- // private PasswordEncoder passwordEncoder;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
- // @Autowired
- // private UserRepository repository;
+  @Autowired
+  private UserRepository repository;
 
     @PostMapping("/login")
         public ResponseEntity<String> login(@RequestBody AuthenticationDTO request) {
@@ -32,8 +32,8 @@ public class AuthenticationController {
         );
         return ResponseEntity.ok().build();
     }
-
-    /*@PostMapping("/register")
+   
+    @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterDTO data){
         if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
         
@@ -44,8 +44,5 @@ public class AuthenticationController {
 
         return ResponseEntity.ok().build();
         
-    }*/
-
+    }
 }
-
-
