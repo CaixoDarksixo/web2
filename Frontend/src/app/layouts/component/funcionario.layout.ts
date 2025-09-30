@@ -5,14 +5,20 @@ import { filter, Subscription } from 'rxjs';
 import { FuncionarioTopbar } from './funcionario.topbar';
 import { FuncionarioSidebar } from './funcionario.sidebar';
 import { LayoutService } from '../service/layout.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
     selector: 'funcionario-layout',
     standalone: true,
-    imports: [CommonModule, FuncionarioTopbar, FuncionarioSidebar, RouterModule],
+    imports: [CommonModule, FuncionarioTopbar, FuncionarioSidebar, RouterModule, ToastModule, ConfirmDialogModule],
+    providers: [MessageService, ConfirmationService],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
         <funcionario-topbar></funcionario-topbar>
         <funcionario-sidebar></funcionario-sidebar>
+        <p-toast></p-toast>
         <div class="layout-main-container">
             <div class="layout-main">
                 <router-outlet></router-outlet>

@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { InputIconModule } from 'primeng/inputicon';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 interface Request {
     id?: number;
@@ -165,6 +166,7 @@ interface Column {
 
 export class Solicitacoes implements OnInit {
     private fb = inject(FormBuilder);
+    private messageService = inject(MessageService);
     requests!: Request[];
     cols!: Column[];
     newRequestVisible: boolean = false;
@@ -215,6 +217,12 @@ export class Solicitacoes implements OnInit {
             this.requests[index] = updatedRequest;
             this.requests = [...this.requests];
         }
+          this.messageService.add({
+                severity: 'success',
+                summary: 'Solicitação Resgatada',
+                detail: 'A solicitação foi resgatada e está aberta novamente.',
+                life: 5000
+            });
     });
     }
 

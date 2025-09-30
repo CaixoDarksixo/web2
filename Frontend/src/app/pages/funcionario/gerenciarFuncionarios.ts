@@ -24,15 +24,15 @@ interface Funcionario {
     TableModule,
     ToolbarModule,
     ButtonModule,
-    ConfirmDialogModule,
     DialogModule,
     InputTextModule,
     ReactiveFormsModule,
     MessageModule,
+    ConfirmDialogModule,
     DatePipe
     ],
-    providers: [MessageService, ConfirmationService],
     template: `
+    <p-confirmDialog></p-confirmDialog>
     <p-dialog header="Novo Funcionário" [modal]="true" [(visible)]="newFuncionarioVisible" [style]="{ width: '50rem'}" [closable]="false">
         <form [formGroup]="newFuncionarioForm" class="w-full">
             <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 after:ml-0.5 after:text-red-600 after:content-['*']" >E-mail</label>
@@ -155,16 +155,27 @@ export class GerenciarFuncionarios {
     onExcluir() {
         console.log(this.funcionariosSelecionados);
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected products?',
-            header: 'Confirm',
+            closable: true,
+            closeOnEscape: true,
+            message: 'Você tem certeza que deseja excluir o(s) funcionário(s) selecionado(s)?',
+            header: 'Confirmação',
             icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancelar',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Excluir',
+                severity: 'danger'
+            },
             accept: () => {
                 this.funcionariosSelecionados = null;
                 this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Products Deleted',
-                    life: 3000
+                    severity: 'info',
+                    summary: 'Funcionários Excluídos',
+                    detail: 'Os funcionários selecionados foram excluídos.',
+                    life: 5000
                 });
             }
         });

@@ -5,9 +5,8 @@ import { Notfound } from './app/pages/notfound/notfound';
 import { ClienteLayout } from './app/layouts/component/cliente.layout';
 
 export const appRoutes: Routes = [
-    { path: '', component: Landing, pathMatch: 'full' },
-    
-    { path: 'notfound', component: Notfound },
+    { path: '', loadComponent: () => import('./app/pages/landing/landing').then(m => m.Landing), pathMatch: 'full' },
+
     { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
 
     {   
@@ -17,6 +16,7 @@ export const appRoutes: Routes = [
             { path: '', loadChildren: () => import('./app/pages/cliente/cliente.routes') }
         ]
     },
+
     {   
         path: 'funcionario', 
         component: FuncionarioLayout, 
@@ -24,6 +24,7 @@ export const appRoutes: Routes = [
             { path: '', loadChildren: () => import('./app/pages/funcionario/funcionario.routes') }
         ]
     },
-    { path: '**', redirectTo: '/notfound' },
+    
+    { path: '**', loadComponent: () => import('./app/pages/notfound/notfound').then(m => m.Notfound) },
 
 ];

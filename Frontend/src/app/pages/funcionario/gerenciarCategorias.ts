@@ -26,10 +26,11 @@ interface Categoria {
     DialogModule,
     InputTextModule,
     ReactiveFormsModule,
-    MessageModule
+    MessageModule,
+    ConfirmDialogModule
     ],
-    providers: [MessageService, ConfirmationService],
     template: ` 
+    <p-confirmDialog></p-confirmDialog>
     <p-dialog header="Nova Categoria" [modal]="true" [(visible)]="newCategoriaVisible" [style]="{ width: '50rem'}" [closable]="false">
         <form [formGroup]="newCategoriaForm" class="w-full">
             <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
@@ -119,16 +120,27 @@ export class GerenciarCategorias implements OnInit {
     onExcluir() {
         console.log(this.categoriasSelecionadas);
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected products?',
-            header: 'Confirm',
+            closable: true,
+            closeOnEscape: true,
+            message: 'Você tem certeza que deseja excluir a(s) categoria(s) selecionadas?',
+            header: 'Confirmação',
             icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancelar',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Excluir',
+                severity: 'danger'
+            },
             accept: () => {
                 this.categoriasSelecionadas = null;
                 this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Products Deleted',
-                    life: 3000
+                    severity: 'info',
+                    summary: 'Categorias Excluídas',
+                    detail: 'As categorias selecionadas foram excluídas.',
+                    life: 5000
                 });
             }
         });
