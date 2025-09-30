@@ -82,7 +82,7 @@ interface Orcamento {
             </div>
             <div class="mb-4">
                 <div class="text-2xl font-bold mb-4 flex justify-center">Valor Orçado</div>
-                <div class="block text-2xl flex justify-center rounded-border border border-surface p-4 p-tag-finalizada">{{ orcamento.valor | currency: 'BRL' }}</div>
+                <div class="block text-2xl flex justify-center rounded-border border border-surface p-4 p-tag-finalizada">{{ orcamento.valor | currency:'BRL':'symbol':'1.2-2':'pt' }}</div>
             </div>
             <div class="block font-light text-xl mb-12">Orçado em {{orcamento.dataHora | date:'dd/MM/yyyy'}} às {{orcamento.dataHora | date:'HH:mm:ss'}} por {{orcamento.funcionario}}</div>
             <div class="flex justify-end gap-5">

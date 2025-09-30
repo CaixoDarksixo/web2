@@ -102,6 +102,7 @@ interface Column {
                 [paginator]="true"
                 [rows]="8"
                 tableLayout="auto" 
+                [rowHover]="true"
                 size="large" 
                 [tableStyle]="{ 'min-width': '50rem' }" 
                 class="request-table">

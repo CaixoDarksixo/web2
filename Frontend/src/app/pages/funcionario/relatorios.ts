@@ -9,7 +9,7 @@ import autoTable from 'jspdf-autotable';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-<div class="card p-6 space-y-6">
+<div class="card">
   <div class="font-semibold text-2xl mb-6">Relatórios</div>
 
   <!--Filtros -->
@@ -38,7 +38,7 @@ import autoTable from 'jspdf-autotable';
   <div class="mt-6">
     <h3 class="font-semibold text-lg mb-2">Prévia dos Dados</h3>
     <table class="min-w-full border border-gray-300 rounded-lg">
-      <thead class="bg-gray-100">
+      <thead class="bg-surface-200 dark:bg-surface-800">
         <tr>
           <th class="px-4 py-2 border">Data</th>
           <th class="px-4 py-2 border">Valor</th>
@@ -70,11 +70,6 @@ import autoTable from 'jspdf-autotable';
 </div>
   `,
   styles: [`
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
     table {
       border-collapse: collapse;
       width: 100%;

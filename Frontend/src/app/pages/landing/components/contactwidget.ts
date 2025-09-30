@@ -1,56 +1,81 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'contact-widget',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    MessageModule,
+    InputTextModule,
+    TextareaModule,
+    ButtonModule
+  ],
   template: `
 <section class="py-8">
     <div class="max-w-4xl mx-auto text-center mb-10">
-    <h2 class="text-3xl font-bold">Fale Conosco</h2>
-    <p class="mt-2">Envie uma mensagem e entraremos em contato com você.</p>
+    <div class="text-5xl font-normal mb-6">Fale Conosco</div>
+    <p class="text-muted-color text-2xl">Envie uma mensagem e entraremos em contato com você.</p>
     </div>
+      <div class="flex flex-col items-center justify-center">
+        <div class="shadow-xl" style="border-radius:56px;padding:0.3rem;background:linear-gradient(180deg,var(--primary-color) 10%, rgba(233, 195, 250, 1) 100%);">
+          <div class="w-full bg-surface-800 py-20 px-8 sm:px-20" style="border-radius:53px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgba(194, 175, 239, 1) 0%, rgba(233, 195, 250, 1) 100%);">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-full">
+              <div>
+                <label for="nome" class="block text-surface-900 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
+                <input pInputText id="text" placeholder="Insira o nome" pSize="large" class="w-full text-gray-700 md:w-160 mb-2" style="color:#000000; background:rgba(255, 255, 255, 0.5)" formControlName="nome" />
+                @if (form.controls.nome.touched && form.controls.nome.invalid) {
+                    <p-message severity="error" size="small" variant="simple">Informe seu nome.</p-message>
+                }
+              </div>
+              <div>
+                <label for="email1" class="block text-surface-900 text-xl font-medium mb-2 after:ml-0.5 after:text-red-600 after:content-['*']" >E-mail</label>
+                <input pInputText id="email1" type="email" placeholder="Insira o e-mail" pSize="large" class="w-full text-gray-700 md:w-160 mb-2" style="color:#000000; background:rgba(255, 255, 255, 0.5)" formControlName="email" />
+                @if (form.controls.email.touched && form.controls.email.invalid) {
+                    <p-message severity="error" size="small" variant="simple">Informe um email válido.</p-message>
+                }
+              </div>
 
-<form (ngSubmit)="onSubmit()" #contactForm="ngForm" class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg space-y-6">
+              <div>
+                <label for="mensagem" class="block text-surface-900 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Mensagem</label>
+                <textarea rows="4" pSize="large" pTextarea class="w-full md:w-160 mb-2" fluid=true [autoResize]="true" style="color:#000000; background:rgba(255, 255, 255, 0.5)" formControlName="mensagem"></textarea>
+                @if (form.controls.mensagem.touched && form.controls.mensagem.invalid) {
+                    <p-message severity="error" size="small" variant="simple">Insira uma mensagem</p-message>
+                }
+              </div>
 
-<div>
-    <label class="block text-left text-gray-700 font-medium">Nome</label>
-    <input type="text" name="name" [(ngModel)]="formData.name"
-    required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"/>
-</div>
-
-<div>
-    <label class="block text-left text-gray-700 font-medium">Email</label>
-    <input type="email" name="email" [(ngModel)]="formData.email"
-    required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"/>
-</div>
-
-<div>
-    <label class="block text-left text-gray-700 font-medium">Mensagem</label>
-    <textarea name="message" [(ngModel)]="formData.message" rows="4"
-    required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
-</div>
-
-<button type="submit"
-    class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-    Enviar Mensagem
-</button>
-</form>
+              <p-button type="submit" class="block mt-8" size="large" styleClass="w-full" [disabled]="form.invalid" label="Enviar Mensagem" icon="pi pi-send"></p-button>
+            </form>
+          </div>
+        </div>
+      </div>
 </section>
   `,
 })
 export class ContactWidget {
-formData = {
-name: '',
-email: '',
-message: ''
-  };
+  formData = {
+  name: '',
+  email: '',
+  message: ''
+    };
+  
+  private fb = new FormBuilder();
 
-onSubmit() {
-console.log('Mensagem enviada:', this.formData);
-alert('Mensagem enviada com sucesso!');
-this.formData = { name: '', email: '', message: '' }; // reseta
+  form = this.fb.group({
+    nome: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    mensagem: ['', Validators.required]
+  });
+
+  onSubmit() {
+    console.log('Mensagem enviada:', this.formData);
+    alert('Mensagem enviada com sucesso!');
+    this.formData = { name: '', email: '', message: '' }; // reseta
   }
 }

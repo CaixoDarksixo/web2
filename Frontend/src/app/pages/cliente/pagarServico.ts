@@ -69,7 +69,7 @@ interface Orcamento {
             </div>
             <div class="mb-12">
                 <div class="text-2xl font-bold mb-4 flex justify-center">Valor Devido</div>
-                <div class="block text-2xl flex justify-center rounded-border border border-surface p-4 p-tag-finalizada">{{ orcamento.valor | currency: 'BRL' }}</div>
+                <div class="block text-2xl flex justify-center rounded-border border border-surface p-4 p-tag-finalizada">{{ orcamento.valor | currency:'BRL':'symbol':'1.2-2':'pt' }}</div>
             </div>
 
             <p-button size="large" label="Pagar Serviço" (click)="onPagar()" fluid="true" icon="pi pi-dollar"/>
