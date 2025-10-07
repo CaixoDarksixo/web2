@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { VisaoGeral } from './visaoGeral';
-import { GerenciarCategorias } from './gerenciarCategorias';
+import { GerenciarCategorias } from './gerenciarCategorias/gerenciarCategorias';
 import { GerenciarFuncionarios } from './gerenciarFuncionarios';
 import { Solicitacoes } from './solicitacoes';
 import { Relatorios } from './relatorios';

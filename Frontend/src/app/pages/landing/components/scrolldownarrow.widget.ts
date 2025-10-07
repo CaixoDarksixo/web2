@@ -20,7 +20,7 @@ a seta havia sumido após a atualização do contactwidget */
  @if (isVisible) {
   <div class="fixed bottom-10 left-0 right-0 z-40 flex justify-center">
     <button (click)="scrollTo(targetId)"
-    class="animate-pulse bg-blue-600 text-white p-3 rounded-full shadow-xl hover:bg-blue-700 transition duration-300 ease-in-out border-2 border-white">
+    class="animate-pulse bg-primary-600 text-white p-3 rounded-full shadow-xl hover:bg-primary-700 transition duration-300 ease-in-out" style="backdrop-filter: blur(2px);">
       <i class="pi pi-arrow-down text-xl"></i>
     </button>
   </div>
