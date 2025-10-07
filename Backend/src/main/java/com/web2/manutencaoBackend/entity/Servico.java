@@ -53,15 +53,20 @@ public class Servico {
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
+    private Orcamento orcamento;
+    private Pagamento pagamento;
+
     public Servico(LocalDateTime datahora, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
         this.datahora = datahora;
-        this.status = status;
+        this.status = Status.ABERTA;
         this.descEquipamento = descEquipamento;
         this.categoriaEquipamento = categoriaEquipamento;
         this.descDefeito = descDefeito;
         this.cliente = cliente;
         this.descRejeicao = "Não Rejeitada";
         this.funcionario = null;
+        this.orcamento = null;
+        this.pagamento = null;
     }
 
     public void rejeitar(String desc) {
@@ -71,5 +76,9 @@ public class Servico {
 
     public void encaminhar(Funcionario funcionario) {
         this.setFuncionario(funcionario);
+    }
+
+    public Status getStatus() {
+        return this.status;
     }
 }

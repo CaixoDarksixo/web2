@@ -1,24 +1,17 @@
 package com.web2.manutencaoBackend.controller;
+
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.web2.manutencaoBackend.entity.Funcionario;
 import com.web2.manutencaoBackend.service.FuncionarioService;
-;
-
 
 @RestController
-@RequestMapping("/funcionario")
+@RequestMapping("/funcionarios")
 public class FuncionarioController {
 
     private final FuncionarioService funcionarioService;
@@ -28,32 +21,49 @@ public class FuncionarioController {
     }
 
     @GetMapping
-    public List<Funcionario> getAll() {
-        return funcionarioService.getAll();
+    public ResponseEntity<List<Funcionario>> getAll() {
+        List<Funcionario> funcionarios = funcionarioService.getAll();
+        return ResponseEntity.ok(funcionarios);
+    }
+
+    @GetMapping("/ativos")
+    public ResponseEntity<List<Funcionario>> getAllActive() {
+        List<Funcionario> ativos = funcionarioService.getAllActive();
+        return ResponseEntity.ok(ativos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Funcionario> getById(@PathVariable Long id) {
+        Optional<Funcionario> funcionario = funcionarioService.findById(id);
+        return funcionario.map(ResponseEntity::ok)
+                          .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<Funcionario> getByEmail(@RequestParam String email) {
+        Optional<Funcionario> funcionario = funcionarioService.findByEmail(email);
+        return funcionario.map(ResponseEntity::ok)
+                          .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Funcionario> post(@RequestBody Funcionario funcionario) {
+    public ResponseEntity<Funcionario> create(@RequestBody Funcionario funcionario) {
         if (funcionarioService.findByEmail(funcionario.getEmail()).isPresent()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        try {
-            Funcionario novoFuncionario = funcionarioService.save(funcionario);
-            return new ResponseEntity<>(novoFuncionario, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        funcionarioService.delete(id);
+        Funcionario novo = funcionarioService.save(funcionario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novo);
     }
 
     @PutMapping("/{id}")
-    public Funcionario put(@PathVariable Long id, @RequestBody Funcionario funcionario){
-        return funcionarioService.update(id, funcionario);
+    public ResponseEntity<Funcionario> update(@PathVariable Long id, @RequestBody Funcionario funcionario) {
+        Funcionario atualizado = funcionarioService.update(id, funcionario);
+        return ResponseEntity.ok(atualizado);
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        funcionarioService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

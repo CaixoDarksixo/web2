@@ -5,7 +5,6 @@ import { GerenciarFuncionarios } from './gerenciarFuncionarios';
 import { Solicitacoes } from './solicitacoes';
 import { Relatorios } from './relatorios';
 import { RealizarOrcamento } from './realizarOrcamento';
-import { EfetuarManutencao } from './efetuarManutencao';
 
 export default [
     { path: '', pathMatch: 'full', component: VisaoGeral },
@@ -14,5 +13,4 @@ export default [
     { path: 'funcionarios', component: GerenciarFuncionarios},
     { path: 'relatorios', component: Relatorios},
     { path: 'solicitacoes/:id/orcamento', component: RealizarOrcamento},
-    { path: 'solicitacoes/:id/manutencao', component: EfetuarManutencao}
 ] as Routes;

@@ -39,8 +39,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/clientes/autocadastro").permitAll() // autocadastro sem login
                 .requestMatchers("/servicos/**").hasAnyRole("USER", "ADMIN") // controle por role
                 .requestMatchers("/users/**").hasRole("ADMIN") // só admin
-                //.anyRequest().authenticated() // todo o resto precisa de login
-                .anyRequest().permitAll()
+                .anyRequest().authenticated() // todo o resto precisa de login
+                //.anyRequest().permitAll() //ative pra testar
             )
             // autenticação Basic no padrão novo
             .httpBasic(Customizer.withDefaults())

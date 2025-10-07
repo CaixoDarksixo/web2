@@ -1,5 +1,8 @@
 package com.web2.manutencaoBackend.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.DiscriminatorColumn;
@@ -22,6 +25,9 @@ public abstract class User implements UserDetails {
     private String login;
     private String password;
     private UserRole role;
+    private boolean ativo;
+    @CreationTimestamp
+    private LocalDateTime dataRegistro;
 
     public User() {
     }
@@ -30,6 +36,7 @@ public abstract class User implements UserDetails {
         this.login = login;
         this.password = senha;
         this.role = role;
+        this.ativo = true;
     }
 
     @Override
@@ -46,8 +53,24 @@ public abstract class User implements UserDetails {
         this.role = role;
     }
 
+    public LocalDateTime getDataRegistro(){
+        return this.dataRegistro;
+    }
+
+    public void setDataRegistro(LocalDateTime data){
+        this.dataRegistro = data;
+    }
+
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean getAtivo(){
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativ){
+        this.ativo = ativ;
     }
 
     @Override
