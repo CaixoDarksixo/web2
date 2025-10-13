@@ -22,7 +22,6 @@ interface Categoria {
     TableModule,
     ToolbarModule,
     ButtonModule,
-    ConfirmDialogModule,
     DialogModule,
     InputTextModule,
     ReactiveFormsModule,

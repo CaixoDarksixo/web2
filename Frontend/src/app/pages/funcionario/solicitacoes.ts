@@ -12,6 +12,9 @@ import { AuthService } from '../service/auth.service';
 import { Table } from 'primeng/table';
 import { SelectModule } from 'primeng/select'; 
 import { FormsModule } from '@angular/forms';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MessageService } from 'primeng/api';
 
 interface Request {
     id?: number;
@@ -40,10 +43,12 @@ interface Request {
     IconFieldModule,
     InputTextModule,
     SelectModule,
-    FormsModule  
+    FormsModule,
+    ConfirmDialogModule
     ],
 
     template: ` 
+    <p-confirmDialog></p-confirmDialog>
     <div class="card">
         <div class="font-semibold text-xl mb-4">Visualizar Solicitações</div>
             <div class="flex justify-between mb-8">
@@ -139,7 +144,8 @@ export class Solicitacoes implements OnInit {
         { label: 'Selecionar período', value: 'periodo' }
     ];
 
-
+    messageService = inject(MessageService);
+    confirmationService = inject(ConfirmationService);
     requestService = inject(RequestService);
     router = inject(Router);
     authService = inject(AuthService);
@@ -158,13 +164,36 @@ export class Solicitacoes implements OnInit {
     }
 
     onFinalizar(requestId: number) {
-        this.requestService.finalizar(requestId, {funcionarioId: this.currentUser.id}).subscribe((updatedRequest) => {
-        const index = this.requests.findIndex(r => r.id === updatedRequest.id);
-        if (index > -1) {
-            this.requests[index] = updatedRequest;
-            this.requests = [...this.requests];
-        }
-    });
+         this.confirmationService.confirm({
+            closable: true,
+            closeOnEscape: true,
+            message: 'Você tem certeza que deseja finalizar esta solicitação?',
+            header: 'Confirmação',
+            icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancelar',
+                severity: 'secondary',
+                outlined: true,
+            },
+            acceptButtonProps: {
+                label: 'Finalizar'
+            },
+            accept: () => {
+                this.requestService.finalizar(requestId, {funcionarioId: this.currentUser.id}).subscribe((updatedRequest) => {
+                    const index = this.requests.findIndex(r => r.id === updatedRequest.id);
+                    if (index > -1) {
+                        this.requests[index] = updatedRequest;
+                        this.requests = [...this.requests];
+                    }
+                    this.messageService.add({
+                        severity: 'info',
+                        summary: 'Solicitação Finalizada',
+                        detail: 'A solicitação foi finalizada com sucesso.',
+                        life: 5000
+                    });
+                });
+            }
+        });
     }
 
     onFiltroChange(event: any) {
