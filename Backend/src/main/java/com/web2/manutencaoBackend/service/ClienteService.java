@@ -59,11 +59,12 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public void delete(Long id) {
-        if(!clienteRepository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-        }
-        clienteRepository.deleteById(id);
+    public boolean delete(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        cliente.setAtivo(false);
+        clienteRepository.save(cliente);
+        return true;
     }
 
     public Cliente update(Long id, Cliente cliente) {

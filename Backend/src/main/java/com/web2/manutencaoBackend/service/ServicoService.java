@@ -11,8 +11,6 @@ import com.web2.manutencaoBackend.entity.Orcamento;
 import com.web2.manutencaoBackend.entity.Pagamento;
 import com.web2.manutencaoBackend.entity.Servico;
 import com.web2.manutencaoBackend.entity.Status;
-import com.web2.manutencaoBackend.repository.OrcamentoRepository;
-import com.web2.manutencaoBackend.repository.PagamentoRepository;
 import com.web2.manutencaoBackend.repository.ServicoRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,17 +18,14 @@ import jakarta.transaction.Transactional;
 @Transactional
 @Service
 public class ServicoService {
-
+    
     private final ServicoRepository servicoRepository;
     private final HistoricosService historicosService;
-    private final OrcamentoRepository orcamentoRepository;
-    private final PagamentoRepository pagamentoRepository;
 
-    public ServicoService(ServicoRepository servicoRepository, HistoricosService historicosService, PagamentoRepository pagamentoRepository, OrcamentoRepository orcamentoRepository){
+    public ServicoService(ServicoRepository servicoRepository, HistoricosService historicosService, PagamentoService pagamentoService, OrcamentoService orcamentoService){
         this.servicoRepository = servicoRepository;
         this.historicosService = historicosService;
-        this.orcamentoRepository = orcamentoRepository;
-        this.pagamentoRepository = pagamentoRepository;
+
     }
 
     public Servico findById(Long id){
@@ -47,11 +42,12 @@ public class ServicoService {
         return servicoRepository.save(servico);
     }
 
-    public void delete(Long id) {
-        if(!servicoRepository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Servico não encontrado");
-        }
-        servicoRepository.deleteById(id);
+    public boolean delete(Long id) {
+        Servico servico = servicoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        servico.setAtivo(false);
+        servicoRepository.save(servico);
+        return true;
     }
 
     public Servico update(Long id, Servico servico) {

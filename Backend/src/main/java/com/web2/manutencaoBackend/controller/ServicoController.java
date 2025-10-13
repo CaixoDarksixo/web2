@@ -21,6 +21,8 @@ import com.web2.manutencaoBackend.entity.Servico;
 import com.web2.manutencaoBackend.entity.Status;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
 import com.web2.manutencaoBackend.service.HistoricosService;
+import com.web2.manutencaoBackend.service.OrcamentoService;
+import com.web2.manutencaoBackend.service.PagamentoService;
 import com.web2.manutencaoBackend.service.ServicoService;
 
 
@@ -31,11 +33,16 @@ public class ServicoController {
     private final ServicoService servicoService;
     private final HistoricosService historicosService;
     private final ClienteRepository clienteRepository;
+    private final OrcamentoService orcamentoService;
+    private final PagamentoService pagamentoService;
 
-    public ServicoController(ServicoService servicoService, HistoricosService historicosService, ClienteRepository clienteRepository) {
+    public ServicoController(ServicoService servicoService, HistoricosService historicosService, 
+                            ClienteRepository clienteRepository, OrcamentoService orcamentoService, PagamentoService pagamentoService) {
         this.servicoService = servicoService;
         this.historicosService = historicosService;
         this.clienteRepository = clienteRepository;
+        this.orcamentoService = orcamentoService;
+        this.pagamentoService = pagamentoService;
     }
 
     @GetMapping
@@ -89,6 +96,7 @@ public class ServicoController {
     public Servico pagaServico(@PathVariable Long id,
                                @RequestParam String observacao,
                                @RequestBody Pagamento pagamento) {
+        pagamentoService.save(pagamento, servicoService.findById(id).getOrcamento());
         return servicoService.pagaServico(id, observacao, pagamento);
     }
 
@@ -96,6 +104,7 @@ public class ServicoController {
     public Servico orcarServico(@PathVariable Long id,
                                 @RequestParam String observacao,
                                 @RequestBody Orcamento orcamento) {
+        orcamentoService.save(orcamento, servicoService.findById(id), orcamento.getValor());
         return servicoService.orcarServico(id, observacao, orcamento);
     }
 

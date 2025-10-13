@@ -55,6 +55,7 @@ public class Servico {
 
     private Orcamento orcamento;
     private Pagamento pagamento;
+    private Boolean ativo;
 
     public Servico(LocalDateTime datahora, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
         this.datahora = datahora;
@@ -67,6 +68,7 @@ public class Servico {
         this.funcionario = null;
         this.orcamento = null;
         this.pagamento = null;
+        this.ativo = true;
     }
 
     public void rejeitar(String desc) {

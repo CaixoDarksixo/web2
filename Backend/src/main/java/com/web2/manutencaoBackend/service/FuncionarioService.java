@@ -45,7 +45,7 @@ public class FuncionarioService {
 
     public Funcionario save(Funcionario funcionario) {
         funcionario.setRole(UserRole.FUNCIONARIO);
-        funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
+        funcionario.setPassword(passwordEncoder.encode(funcionario.getPassword()));
         funcionario.setDataRegistro(LocalDateTime.now());
         funcionario.setAtivo(true);
         return funcionarioRepository.save(funcionario);
@@ -57,8 +57,8 @@ public class FuncionarioService {
         existente.setNome(funcionario.getNome());
         existente.setEmail(funcionario.getEmail());
         existente.setDataNascimento(funcionario.getDataNascimento());
-        if (funcionario.getSenha() != null && !funcionario.getSenha().isEmpty()) {
-            existente.setSenha(passwordEncoder.encode(funcionario.getSenha()));
+        if (funcionario.getPassword() != null && !funcionario.getPassword().isEmpty()) {
+            existente.setPassword(passwordEncoder.encode(funcionario.getPassword()));
         }
         return funcionarioRepository.save(existente);
     }

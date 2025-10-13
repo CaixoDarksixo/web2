@@ -23,11 +23,9 @@ public class Pagamento {
     @CreationTimestamp
     private LocalDateTime dataHoraPagamento;
 
-    public Pagamento(Long id, Orcamento orcamento, Double valorPago, LocalDateTime dataHoraPagamento) {
+    public Pagamento(Long id, Orcamento orcamento, LocalDateTime dataHoraPagamento) {
         this.orcamento = orcamento;
-        this.valorPago = valorPago;
+        this.valorPago = orcamento.getValor();
         this.dataHoraPagamento = dataHoraPagamento;
     }
-
-
 }

@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.web2.manutencaoBackend.entity.CategoriaE;
 import com.web2.manutencaoBackend.repository.CategoriaERepository;
@@ -40,11 +42,11 @@ public class CategoriaService {
         throw new IllegalArgumentException("Categoria não encontrada para o ID: " + id);
     }
 
-    public void delete(Long id) {
-        if (categoriaERepository.existsById(id)) {
-            categoriaERepository.deleteById(id);
-        } else {
-            throw new IllegalArgumentException("Categoria não encontrada para o ID: " + id);
-        }
+    public boolean delete(Long id) {
+        CategoriaE categoriaE = categoriaERepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "categoria não encontrada"));
+        categoriaE.setAtivo(false);
+        categoriaERepository.save(categoriaE);
+        return true;
     }
 }
