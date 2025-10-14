@@ -1,30 +1,42 @@
 package com.web2.manutencaoBackend.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Getter
-@Setter
+import lombok.AllArgsConstructor;
+import lombok.Data; 
+import lombok.NoArgsConstructor;
+
+
+@Entity
+@Table(name = "tb_funcionario")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@DiscriminatorValue("FUNCIONARIO")
-public class Funcionario extends User {
+public class Funcionario {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id; 
+    
     private String nome;
     private String email;
-    private LocalDate dataNascimento;
+    private String password; 
+    
+    private LocalDateTime dataNascimento; 
+    private LocalDateTime dataRegistro;
 
-    public Funcionario(String email, String password, UserRole role, String nome,
-                       LocalDate dataNascimento) {
-        super(email, password, role);
-        this.nome = nome;
-        this.email = email;
-        this.dataNascimento = dataNascimento;
-    }
+    private boolean ativo; 
+    
+    @Enumerated(EnumType.STRING)
+    private UserRole role; 
+    
+
 }
