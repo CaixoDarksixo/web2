@@ -1,16 +1,11 @@
 import { Injectable,inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LoginResponse, Usuario } from '@/models/auth';
 
-export interface LoginCredentials {
+interface LoginCredentials {
   email: string;
   password: string;
-}
-
-export interface LoginResponse {
-  token?: string;
-  message?: string;
-  user?: any;
 }
 
 @Injectable({
@@ -43,7 +38,7 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  getAuthenticatedUser(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/me`, {headers: { Authorization: `Bearer ${this.getToken()}` }});
+  getAuthenticatedUser(): Observable<Usuario> {
+    return this.http.get<Usuario>(`${this.apiUrl}/me`, {headers: { Authorization: `Bearer ${this.getToken()}` }});
   }
 }

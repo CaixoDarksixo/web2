@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { Access } from './access';
+import { Access } from './access/access';
 import { Login } from './login/login';
-import { Error } from './error';
+import { Error } from './error/error';
 import { Registration } from './registration/registration';
 
 export default [

@@ -1,6 +1,7 @@
+import { debounceTime } from 'rxjs/operators';
 import { Component, inject, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
-import { RequestService } from '../service/request.service';
+import { RequestService } from '@/services/request.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -15,6 +16,8 @@ interface Funcionario {
     id: number;
     nome: string;
     email: string;
+    dataNascimento: string;
+    password?: string;
 }
 
 @Component({
@@ -33,44 +36,81 @@ interface Funcionario {
     ],
     template: `
     <p-confirmDialog></p-confirmDialog>
+    
     <p-dialog header="Novo Funcionário" [modal]="true" [(visible)]="newFuncionarioVisible" [style]="{ width: '50rem'}" [closable]="false">
         <form [formGroup]="newFuncionarioForm" class="w-full">
             <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 after:ml-0.5 after:text-red-600 after:content-['*']" >E-mail</label>
-            <input fluid="true" pInputText id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
+            <input autocomplete="new-email" pInputText fluid="true" id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
             @if (newFuncionarioForm.controls.email.touched && newFuncionarioForm.controls.email.invalid) {
                 <p-message severity="error" size="small" variant="simple">Informe um email válido.</p-message>
             }
 
             <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
-            <input fluid="true" pInputText id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
+            <input pInputText autocomplete="off" fluid="true" id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
             @if (newFuncionarioForm.controls.nome.touched && newFuncionarioForm.controls.nome.invalid) {
                 <p-message severity="error" size="small" variant="simple">Informe seu nome.</p-message>
             }
 
             <label for="senha" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Senha</label>
-            <input fluid="true" pInputText id="senha" type="password" placeholder="Insira a senha" class="w-full md:w-120 mb-2" formControlName="senha" />
+            <input pInputText id="senha" autocomplete="new-password" fluid="true" type="password" placeholder="Insira a senha" class="w-full md:w-120 mb-2" formControlName="senha" />
             @if (newFuncionarioForm.controls.senha.touched && newFuncionarioForm.controls.senha.invalid) {
                 <p-message severity="error" size="small" variant="simple">A senha deve ter entre 6 e 100 caracteres.</p-message>
             }
 
             <label for="dataNascimento" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Data de Nascimento</label>
-            <input fluid="true" pInputText id="dataNascimento" type="date" placeholder="Insira a data de nascimento" class="w-full md:w-120 mb-2" formControlName="dataNascimento" />
+            <input pInputText autocomplete="off" fluid="true" id="dataNascimento" type="date" placeholder="Insira a data de nascimento" class="w-full md:w-120 mb-2" formControlName="dataNascimento" />
             @if (newFuncionarioForm.controls.dataNascimento.touched && newFuncionarioForm.controls.dataNascimento.invalid) {
                 <p-message severity="error" size="small" variant="simple">Informe uma data de nascimento válida.</p-message>
             }
 
             <div class="flex justify-end gap-2 mt-4">
                 <p-button label="Cancelar" severity="secondary" (click)="newFuncionarioVisible = false; this.newFuncionarioForm.reset()" />
-                <p-button label="Criar" (click)="onCreate()" />
+                <p-button label="Criar" (click)="criarFuncionario()" [disabled]="newFuncionarioForm.invalid" />
             </div>
         </form>
     </p-dialog>
+
+    <p-dialog header="Editar Funcionário" [modal]="true" [(visible)]="editarFuncionarioVisible" [style]="{ width: '50rem'}" [closable]="false">
+        <form [formGroup]="editarFuncionarioForm" class="w-full">
+            <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 after:ml-0.5 after:text-red-600 after:content-['*']" >E-mail</label>
+            <input pInputText autocomplete="off" fluid="true" id="email1" type="email" placeholder="Insira o e-mail" class="w-full md:w-120 mb-2" formControlName="email" />
+            @if (editarFuncionarioForm.controls.email.touched && editarFuncionarioForm.controls.email.invalid) {
+                <p-message severity="error" size="small" variant="simple">Informe um email válido.</p-message>
+            }
+
+            <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
+            <input pInputText autocomplete="off" fluid="true" id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
+            @if (editarFuncionarioForm.controls.nome.touched && editarFuncionarioForm.controls.nome.invalid) {
+                <p-message severity="error" size="small" variant="simple">Informe seu nome.</p-message>
+            }
+            <div class="mt-4 mb-2">
+            <label for="senha" class="block text-surface-900 dark:text-surface-0 text-xl font-medium" >Senha</label>
+            <span class="text-sm text-surface-600 dark:text-surface-400">Deixe em branco para manter a senha atual.</span>
+            </div>
+            <input pInputText id="senha" autocomplete="off" fluid="true" type="password" placeholder="Insira a senha" class="w-full md:w-120 mb-2" formControlName="senha" />
+            @if (editarFuncionarioForm.controls.senha.touched && editarFuncionarioForm.controls.senha.invalid) {
+                <p-message severity="error" size="small" variant="simple">A senha deve ter entre 6 e 100 caracteres.</p-message>
+            }
+
+            <label for="dataNascimento" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Data de Nascimento</label>
+            <input pInputText autocomplete="off" fluid="true" id="dataNascimento" type="date" placeholder="Insira a data de nascimento" class="w-full md:w-120 mb-2" formControlName="dataNascimento" />
+            @if (editarFuncionarioForm.controls.dataNascimento.touched && editarFuncionarioForm.controls.dataNascimento.invalid) {
+                <p-message severity="error" size="small" variant="simple">Informe uma data de nascimento válida.</p-message>
+            }
+
+            <div class="flex justify-end gap-2 mt-4">
+                <p-button label="Cancelar" severity="secondary" (click)="editarFuncionarioVisible = false; this.newFuncionarioForm.reset()" />
+                <p-button label="Editar" (click)="editarFuncionario()" [disabled]="editarFuncionarioForm.invalid || editarFuncionarioForm.pristine" />
+            </div>
+        </form>
+    </p-dialog>
+
     <div class="card">
-        <div class="font-semibold text-xl mb-4">Gerenciar Categorias</div>
+        <div class="font-semibold text-xl mb-4">Gerenciar Funcionários</div>
         <p-toolbar styleClass="mb-6">
             <ng-template #start>
                 <p-button label="Novo" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="newFuncionarioVisible = true" />
-                <p-button label="Editar" icon="pi pi-pencil" severity="secondary" outlined class="mr-2" [disabled]="!funcionariosSelecionados || funcionariosSelecionados.length != 1" />
+                <p-button label="Editar" icon="pi pi-pencil" severity="secondary" outlined (onClick)="onEditar()"class="mr-2" [disabled]="!funcionariosSelecionados || funcionariosSelecionados.length != 1" />
                 <p-button severity="secondary" label="Excluir" icon="pi pi-trash" outlined (onClick)="onExcluir()" [disabled]="!funcionariosSelecionados || !funcionariosSelecionados.length" />
             </ng-template>
         </p-toolbar>
@@ -121,15 +161,24 @@ export class GerenciarFuncionarios {
     requestService = inject(RequestService);
     messageService = inject(MessageService);
     confirmationService = inject(ConfirmationService);
+
     newFuncionarioVisible: boolean = false;
+    editarFuncionarioVisible: boolean = false;
 
     private fb = inject(FormBuilder);
 
     newFuncionarioForm = this.fb.group({
-        nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-        email: [null, [Validators.required, Validators.email]],
-        senha: [null, [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
-        dataNascimento: [null, [Validators.required]],
+        nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+        email: ['', [Validators.required, Validators.email]],
+        senha: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+        dataNascimento: ['', [Validators.required]],
+    });
+
+    editarFuncionarioForm = this.fb.group({
+        nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+        email: ['', [Validators.required, Validators.email]],
+        senha: ['', [Validators.minLength(6), Validators.maxLength(100)]],
+        dataNascimento: ['', [Validators.required]],
     });
 
     funcionariosSelecionados!: Funcionario[] | null;
@@ -148,8 +197,20 @@ export class GerenciarFuncionarios {
         });
     }
 
-    onCreate() {
-        
+    criarFuncionario() {
+        this.newFuncionarioForm.markAllAsTouched();
+        if (this.newFuncionarioForm.invalid) return;
+
+        this.newFuncionarioVisible = false; 
+        this.newFuncionarioForm.reset()
+    }
+
+    editarFuncionario() {
+        this.editarFuncionarioForm.markAllAsTouched();
+        if (this.editarFuncionarioForm.invalid) return;
+
+        this.editarFuncionarioVisible = false;
+        this.editarFuncionarioForm.reset();
     }
 
     onExcluir() {
@@ -178,6 +239,15 @@ export class GerenciarFuncionarios {
                     life: 5000
                 });
             }
+        });
+    }
+
+    onEditar() {
+        this.editarFuncionarioVisible = true;
+        this.editarFuncionarioForm.patchValue({
+            nome: this.funcionariosSelecionados![0].nome,
+            email: this.funcionariosSelecionados![0].email,
+            dataNascimento: this.funcionariosSelecionados![0].dataNascimento,
         });
     }
 }

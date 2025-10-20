@@ -10,6 +10,7 @@ description: string;
 details: string;
 icon: string;
 colorClass: string;
+textColor: string;
 bgColor: string;
 }
 
@@ -68,7 +69,7 @@ class="py-20 px-6 lg:px-20 mt-16 mb-16 mx-0 lg:mx-20 min-h-[80vh] flex flex-col 
             [class]="feature.bgColor"
             style="width: 3.5rem; height: 3.5rem; border-radius: 10px"
         >
-            <i [class]="feature.icon" class="pi pi-fw text-2xl" [ngClass]="feature.colorClass.split('-')[1]"></i>
+            <i [class]="feature.icon" class="pi pi-fw text-2xl" [ngClass]="feature.textColor"></i>
         </div>
 
         
@@ -143,6 +144,7 @@ description: 'Gerencie solicitações abertas, crie orçamentos e finalize manut
 details: 'O painel do funcionário oferece uma visão organizada de todas as tarefas pendentes e concluídas.',
 icon: 'pi-users',
 colorClass: 'bg-gradient-to-br from-emerald-100 to-emerald-50 ring-emerald-400',
+textColor: 'text-green-700',
 bgColor: 'bg-emerald-200',
 },
 {
@@ -152,6 +154,7 @@ description: 'Layout responsivo, modo escuro e usabilidade em qualquer dispositi
 details: 'O sistema se adapta perfeitamente a desktops, tablets e smartphones. O modo escuro reduz a fadiga ocular e aumenta o conforto visual.',
 icon: 'pi-palette',
 colorClass: 'bg-gradient-to-br from-blue-100 to-indigo-50 ring-blue-400',
+textColor: 'text-blue-700',
 bgColor: 'bg-blue-200',
 },
 {
@@ -161,6 +164,7 @@ description: 'Acompanhe os valores propostos e aprove ou rejeite em poucos cliqu
 details: 'O processo de solicitação é intuitivo e permite que o cliente anexe fotos e descrições detalhadas.',
 icon: 'pi-star',
 colorClass: 'bg-gradient-to-br from-purple-100 to-pink-50 ring-purple-400',
+textColor: 'text-purple-700',
 bgColor: 'bg-purple-200',
 },
 ];

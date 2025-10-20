@@ -6,13 +6,16 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { Button } from "primeng/button"
-import { AuthService } from '../../pages/service/auth.service';
+import { AuthService } from '@/services/auth.service';
+import { MenuModule } from 'primeng/menu';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'cliente-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, Button],
-    template: ` <div class="layout-topbar">
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, Button, MenuModule],
+    template: ` 
+    <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <a class="layout-topbar-logo" routerLink="/">
                 <svg viewBox="0 0 78 78" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,16 +40,23 @@ import { AuthService } from '../../pages/service/auth.service';
                 </button>
                 <app-configurator />
             </div>
+            
+            <p-menu #menu [model]="items" [popup]="true" styleClass="w-full md:w-80">
+                <ng-template #start>
+                    <div class="relative w-full border-0 flex items-start p-4">
+                        <span class="inline-flex flex-col items-start ml-2">
+                            <span class="font-bold">{{currentUser.nome}}</span>
+                            <span class="text-sm">Cliente</span>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template #item let-item>
+                    <p-button type="button" label="{{ item.label }}" icon="{{item.icon}}" (click)="item.command()" class="flex justify-start w-full p-menu-item cursor-pointer" fluid="true" variant="text" severity="danger">
+                    </p-button>
+                </ng-template>
+            </p-menu>
 
-            <div class="layout-topbar-menu hidden lg:block">
-                <div class="layout-topbar-menu-content">
-                    <p-button type="button" class="layout-topbar-action-text" label={{currentUser.nome}} icon="pi pi-user" iconPos="right" styleClass="p-button-text p-button-plain"/>
-                </div>
-            </div>
-
-            <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
-            </button>
+            <p-button type="button" (click)="menu.toggle($event)" class="layout-topbar-action-text" label={{currentUser.nome}} icon="pi pi-user" iconPos="right" styleClass="p-button-text p-button-plain"/>
         </div>
     </div>`
 })
@@ -56,12 +66,26 @@ export class ClienteTopbar implements OnInit {
 
     layoutService = inject(LayoutService);
     authService = inject(AuthService);
+    private router = inject(Router);
 
     ngOnInit() {
         this.currentUser = this.authService.getAuthenticatedUser().subscribe(user => {
             this.currentUser = user;
         }
         );
+
+        this.items = [
+        {
+                separator: true
+            },
+            {
+                label: 'Sair',
+                icon: 'pi pi-sign-out',
+                command: () => {
+                    this.router.navigate(['/']);
+                }
+            }
+        ];
     }
 
     toggleDarkMode() {

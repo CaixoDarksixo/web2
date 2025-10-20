@@ -2,12 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute} from '@angular/router';
 import { CommonModule, DatePipe, Location } from '@angular/common';
-import { RequestService } from '../service/request.service';
+import { RequestService } from '@/services/request.service';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { AuthService } from '../service/auth.service';
+import { AuthService } from '@/services/auth.service';
 
 interface Request {
     id: number;

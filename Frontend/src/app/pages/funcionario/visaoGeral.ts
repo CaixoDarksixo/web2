@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
-import { RequestService } from '../service/request.service';
+import { RequestService } from '@/services/request.service';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { InputIconModule } from 'primeng/inputicon';

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
-import { RequestService } from '../../service/request.service';
+import { RequestService } from '@/services/request.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 interface Categoria {
     id: number;
     nome: string;
+    ativo: boolean;
 }
 
 @Component({
@@ -32,18 +33,20 @@ interface Categoria {
 })
 export class GerenciarCategorias implements OnInit {
     categorias!: Categoria[];
-    categoria!: Categoria;
+    categoriaEditar!: Categoria;
     requestService = inject(RequestService);
     messageService = inject(MessageService);
     confirmationService = inject(ConfirmationService);
+
     newCategoriaVisible: boolean = false;
+    editarCategoriaVisible: boolean = false;
 
     categoriasSelecionadas!: Categoria[] | null;
 
     private fb = inject(FormBuilder);
 
-    newCategoriaForm = this.fb.group({
-        nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(100)]]
+    categoriaForm = this.fb.group({
+        nome: ['', [Validators.required, Validators.maxLength(100)]]
     });
 
     cols = [
@@ -57,8 +60,14 @@ export class GerenciarCategorias implements OnInit {
         });
     }
 
-    onCreate() {
-        
+    criarCategoria() {
+        this.newCategoriaVisible = false; 
+        this.categoriaForm.reset()
+    }
+
+    editarCategoria() {
+        this.editarCategoriaVisible = false;
+        this.categoriaForm.reset();
     }
 
     onExcluir() {
@@ -87,6 +96,13 @@ export class GerenciarCategorias implements OnInit {
                     life: 5000
                 });
             }
+        });
+    }
+
+    onEditar() {
+        this.editarCategoriaVisible = true;
+        this.categoriaForm.patchValue({
+            nome: this.categoriasSelecionadas![0].nome
         });
     }
 }

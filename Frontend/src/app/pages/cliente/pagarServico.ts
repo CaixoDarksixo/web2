@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute, Data } from '@angular/router';
-import { RequestService } from '../service/request.service';
+import { RequestService } from '@/services/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 

@@ -1,24 +1,40 @@
 <p-confirmDialog></p-confirmDialog>
 <p-dialog header="Nova Categoria" [modal]="true" [(visible)]="newCategoriaVisible" [style]="{ width: '50rem'}" [closable]="false">
-    <form [formGroup]="newCategoriaForm" class="w-full">
+    <form [formGroup]="categoriaForm" class="w-full">
         <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
-        <input fluid="true" pInputText id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
-        @if (newCategoriaForm.controls.nome.touched && newCategoriaForm.controls.nome.invalid) {
+        <input pInputText autocomplete="off" fluid="true" id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
+        @if (categoriaForm.controls.nome.touched && categoriaForm.controls.nome.invalid) {
             <p-message severity="error" size="small" variant="simple">Informe o nome.</p-message>
         }
 
         <div class="flex justify-end gap-2 mt-4">
-            <p-button label="Cancelar" severity="secondary" (click)="newCategoriaVisible = false; this.newCategoriaForm.reset()" />
-            <p-button label="Criar" (click)="onCreate()" />
+            <p-button label="Cancelar" severity="secondary" (click)="newCategoriaVisible = false; categoriaForm.reset()" />
+            <p-button label="Criar" (click)="criarCategoria()" [disabled]="categoriaForm.invalid" />
         </div>
     </form>
 </p-dialog>
+
+<p-dialog header="Editar Categoria" [modal]="true" [(visible)]="editarCategoriaVisible" [style]="{ width: '50rem'}" [closable]="false">
+    <form [formGroup]="categoriaForm" class="w-full">
+        <label for="nome" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Nome</label>
+        <input pInputText autocomplete="off" fluid="true" id="text" placeholder="Insira o nome" class="w-full md:w-120 mb-2" formControlName="nome" />
+        @if (categoriaForm.controls.nome.touched && categoriaForm.controls.nome.invalid) {
+            <p-message severity="error" size="small" variant="simple">Informe o nome.</p-message>
+        }
+
+        <div class="flex justify-end gap-2 mt-4">
+            <p-button label="Cancelar" severity="secondary" (click)="editarCategoriaVisible = false; categoriaForm.reset()" />
+            <p-button label="Editar" (click)="editarCategoria()" [disabled]="categoriaForm.invalid || categoriaForm.pristine" />
+        </div>
+    </form>
+</p-dialog>
+
 <div class="card">
     <div class="font-semibold text-xl mb-4">Gerenciar Categorias</div>
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
             <p-button label="Novo" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="newCategoriaVisible = true" />
-            <p-button label="Editar" icon="pi pi-pencil" severity="secondary" outlined class="mr-2" [disabled]="!categoriasSelecionadas || categoriasSelecionadas.length != 1" />
+            <p-button label="Editar" icon="pi pi-pencil" severity="secondary" outlined (onClick)="onEditar()" class="mr-2" [disabled]="!categoriasSelecionadas || categoriasSelecionadas.length != 1" />
             <p-button severity="secondary" label="Excluir" icon="pi pi-trash" outlined (onClick)="onExcluir()" [disabled]="!categoriasSelecionadas || !categoriasSelecionadas.length" />
         </ng-template>
     </p-toolbar>
