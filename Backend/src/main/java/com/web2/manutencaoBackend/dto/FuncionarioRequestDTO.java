@@ -1,5 +1,7 @@
 package com.web2.manutencaoBackend.dto;
 
+import com.web2.manutencaoBackend.entity.Funcionario;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -25,5 +27,11 @@ public class FuncionarioRequestDTO {
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String password; 
     
-
+    public Funcionario getFuncionario() {
+        Funcionario funcionario = new Funcionario();
+        funcionario.setNome(this.nome);
+        funcionario.setEmail(this.email);
+        funcionario.setPassword(this.password);
+        return funcionario;
+    }
 }
