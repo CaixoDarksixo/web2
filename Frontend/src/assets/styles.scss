@@ -126,3 +126,57 @@
   color:#c9785b !important;
   background: "" !important;
 }
+
+
+.p-button-action-outlined {
+    border: 2px solid var(--p-primary-color) !important;
+    color: var(--p-primary-color) !important;
+    background-color: transparent !important;
+    font-weight: 500;
+}
+
+
+.app-dark .p-button-action-outlined {
+    border: 2px solid var(--p-primary-light-color) !important;
+    color: var(--p-primary-light-color) !important;
+}
+
+
+.p-datatable-header-icon {
+    font-size: 1rem;
+    color: var(--p-text-color-secondary);
+    transition: color 0.2s;
+}
+
+
+.p-datatable-header-icon:hover {
+    color: var(--p-primary-color);
+}
+
+
+.p-inputtext:focus, .p-inputtextarea:focus {
+    box-shadow: 0 0 0 0.2rem var(--p-primary-50) !important;
+    border-color: var(--p-primary-color) !important;
+}
+
+
+.p-datatable-center-align {
+    text-align: center;
+}
+
+
+@media screen and (max-width: 991px) {
+    .p-card.responsive-padding {
+        padding: 1rem !important;
+    }
+}
+
+
+.shadow-float {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+
+.app-dark .shadow-float {
+    box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.05), 0 2px 4px -2px rgba(255, 255, 255, 0.02);
+}
