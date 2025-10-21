@@ -1,6 +1,8 @@
 package com.web2.manutencaoBackend.controller;
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,9 +48,17 @@ public class ServicoController {
     }
 
     @GetMapping
-    public List<Servico> getAll() {
-        return servicoService.getAll();
+    public ResponseEntity<List<Servico>> filtrarServicos(
+            @RequestParam(required = false) Long clienteId,
+            @RequestParam(required = false) Long funcionarioId,
+            @RequestParam(required = false) Status estado,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim
+    ) {
+        List<Servico> servicos = servicoService.filtrarServicos(clienteId, funcionarioId, estado, dataInicio, dataFim);
+        return ResponseEntity.ok(servicos);
     }
+
 
     @PostMapping
     public ResponseEntity<Servico> post(@RequestBody Servico servico, Authentication authentication) {

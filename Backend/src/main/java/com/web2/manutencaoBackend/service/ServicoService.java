@@ -1,5 +1,6 @@
 package com.web2.manutencaoBackend.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -171,4 +172,11 @@ public class ServicoService {
         
         return atualizado;
     }
+
+    
+    public List<Servico> filtrarServicos(Long clienteId, Long funcionarioId, Status estado,
+                                     LocalDate dataInicio, LocalDate dataFim) {
+    return servicoRepository.filtrarServicos(clienteId, funcionarioId, estado, dataInicio, dataFim);
+}
+
 }
