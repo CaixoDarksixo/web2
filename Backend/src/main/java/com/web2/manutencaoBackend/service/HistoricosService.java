@@ -26,7 +26,7 @@ public class HistoricosService {
 
     public Historicos save(Servico s, Status anterior, String observacao){
         Historicos historico = new Historicos(
-            s.getId(), 
+            s, 
             anterior, 
             s.getStatus(), 
             s.getCategoriaEquipamento(),

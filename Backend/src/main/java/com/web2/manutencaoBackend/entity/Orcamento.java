@@ -20,6 +20,8 @@ public class Orcamento {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "servico_Id")
     private Servico servico;
     @ManyToOne
     @JoinColumn(name = "funcionario_Id")

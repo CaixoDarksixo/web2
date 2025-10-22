@@ -53,7 +53,12 @@ public class Servico {
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
 
+    @ManyToOne
+    @JoinColumn(name = "orcamento_id")
     private Orcamento orcamento;
+
+    @ManyToOne
+    @JoinColumn(name = "pagamento_id")
     private Pagamento pagamento;
     private Boolean ativo;
 

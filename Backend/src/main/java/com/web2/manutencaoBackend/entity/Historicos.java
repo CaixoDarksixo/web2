@@ -25,7 +25,9 @@ public class Historicos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long SolicitacaoId;
+    @ManyToOne
+    @JoinColumn(name = "servico_id")
+    private Servico solicitacao;
 
     @CreationTimestamp
     private LocalDateTime datahora;
@@ -58,9 +60,9 @@ public class Historicos {
 
     public Historicos() {}
 
-    public Historicos(Long SolicitacaoId, Status statusAnterior, Status statusAtual, CategoriaE categoriaEquipamento,
+    public Historicos(Servico solicitacao, Status statusAnterior, Status statusAtual, CategoriaE categoriaEquipamento,
                       String descDefeito, Cliente cliente, String descRejeicao, String descManutencao, String observacao, Funcionario funcionario) {
-        this.SolicitacaoId = SolicitacaoId;
+        this.solicitacao = solicitacao;
         this.statusAnterior = statusAnterior;
         this.statusAtual = statusAtual;
         this.categoriaEquipamento = categoriaEquipamento;

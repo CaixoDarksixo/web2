@@ -41,11 +41,18 @@ public class FuncionarioService {
                 .toList();
     }
 
+    public Optional<Funcionario> findById(Long id) {
+        return funcionarioRepository.findById(id);
+    }
+
+    /*
     public FuncionarioResponseDTO findById(Long id) {
         Funcionario funcionario = funcionarioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionário não encontrado"));
-        return convertToResponse(funcionario);
+        return funcionario);
     }
+
+     */
 
     public Optional<Funcionario> findByEmail(String email) {
         return funcionarioRepository.findByEmail(email);

@@ -2,6 +2,9 @@ package com.web2.manutencaoBackend.entity;
 
 import java.time.LocalDateTime;
 
+import com.web2.manutencaoBackend.dto.FuncionarioRequestDTO;
+import com.web2.manutencaoBackend.dto.FuncionarioResponseDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,6 +40,23 @@ public class Funcionario {
     
     @Enumerated(EnumType.STRING)
     private UserRole role; 
+
+    public FuncionarioRequestDTO getRequestDTO() {
+        FuncionarioRequestDTO dto = new FuncionarioRequestDTO();
+        dto.setNome(this.nome);
+        dto.setEmail(this.email);
+        return dto;
+    }
+
+    public FuncionarioResponseDTO getResponseDTO() {
+        FuncionarioResponseDTO dto = new FuncionarioResponseDTO();
+        dto.setId(this.id);
+        dto.setNome(this.nome);
+        dto.setEmail(this.email);
+        dto.setDataRegistro(this.dataRegistro);
+        dto.setAtivo(this.ativo);
+        return dto;
+    }
     
 
 }
