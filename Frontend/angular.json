@@ -26,8 +26,9 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "src/assets"
+              },
+              "src/assets/favicon.ico"
             ],
             "styles": [
               "src/assets/styles.scss"
@@ -84,8 +85,9 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
-              }
+                "input": "src/assets"
+              },
+              "src/assets/favicon.ico"
             ],
             "styles": [
               "src/assets/styles.scss"

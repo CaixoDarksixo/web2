@@ -9,7 +9,6 @@ import { forkJoin } from 'rxjs';
 })
 
 export class RequestService {
-    http = inject(HttpClient);
     private readonly API = 'http://localhost:3000/solicitacoes';
 
     private statusIcons: Record<string, string> = {
@@ -21,7 +20,8 @@ export class RequestService {
         PAGA: 'pi pi-money-bill',
         FINALIZADA: 'pi pi-thumbs-up'
         };
-
+    
+    http = inject(HttpClient);
 
     public getRequests(clienteId?: number, status?: string): Observable<any[]> {
         let url = this.API;
@@ -51,10 +51,6 @@ export class RequestService {
             );
             })
         );
-    }
-
-    public getUserById(id: number): Observable<any> {
-        return this.http.get<any>(`http://localhost:3000/usuarios/${id}`);
     }
 
     public getRequestById(id: number): Observable<any> {
@@ -133,26 +129,6 @@ export class RequestService {
         clienteId: number;
     }): Observable<any> {
         return this.http.post<any>(`${this.API}/${requestId}/resgatar`, body);
-    }
-
-    public getFuncionarios(): Observable<any[]> {
-        return this.http.get<any[]>(`http://localhost:3000/usuarios?roles=FUNCIONARIO`);
-    }
-
-    public getCategorias(): Observable<any[]> {
-        return this.http.get<any[]>(`http://localhost:3000/categorias`);
-    }
-
-    public createCategoria(body: { nome: string; descricao?: string }): Observable<any> {
-        return this.http.post<any>(`http://localhost:3000/categorias`, body);
-    } 
-
-    public updateCategoria(id: number, body: { nome: string; descricao?: string }): Observable<any> {
-        return this.http.put<any>(`http://localhost:3000/categorias/${id}`, body);
-    }
-
-    public deleteCategoria(id: number): Observable<any> {
-        return this.http.delete<any>(`http://localhost:3000/categorias/${id}`);
     }
 
     public getTagClass(status: string) {

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
-import { RequestService } from '@/services/request.service';
+import { TableModule } from 'primeng/table';
+import { CategoriaService } from '../services/categoria.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -29,12 +29,12 @@ interface Categoria {
     MessageModule,
     ConfirmDialogModule
     ],
-    templateUrl: './gerenciarCategorias.html'
+    templateUrl: './gerenciar-categorias.html'
 })
 export class GerenciarCategorias implements OnInit {
     categorias!: Categoria[];
     categoriaEditar!: Categoria;
-    requestService = inject(RequestService);
+    categoriaService = inject(CategoriaService);
     messageService = inject(MessageService);
     confirmationService = inject(ConfirmationService);
 
@@ -55,7 +55,7 @@ export class GerenciarCategorias implements OnInit {
     ];
 
     ngOnInit() {
-        this.requestService.getCategorias().subscribe((data: Categoria[]) => {
+        this.categoriaService.getCategorias().subscribe((data: Categoria[]) => {
             this.categorias = data;
         });
     }
@@ -71,7 +71,6 @@ export class GerenciarCategorias implements OnInit {
     }
 
     onExcluir() {
-        console.log(this.categoriasSelecionadas);
         this.confirmationService.confirm({
             closable: true,
             closeOnEscape: true,

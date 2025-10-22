@@ -2,7 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { DatePipe } from '@angular/common';
-import { RequestService } from '@/services/request.service';
+import { TruncatePipe } from '@/shared/pipes/truncate-pipe';
+import { RequestService } from '@/core/services/request.service';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { InputIconModule } from 'primeng/inputicon';
@@ -31,6 +32,7 @@ interface Request {
     TableModule,
     TagModule,
     DatePipe,
+    TruncatePipe,
     ButtonModule,
     InputIconModule,
     IconFieldModule,
@@ -56,6 +58,7 @@ interface Request {
                 [value]="requests"
                 [paginator]="true"
                 [rows]="8"
+                rowHover="true"
                 tableLayout="auto" 
                 size="large" 
                 [tableStyle]="{ 'min-width': '50rem' }" 
@@ -91,7 +94,7 @@ interface Request {
 
                             @else {
                             <td>
-                                {{ rowData[col.field] }}
+                                {{ rowData[col.field] | truncate:30 }}
                             </td>
                             }
                         }

@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { VisaoGeral } from './visaoGeral';
-import { GerenciarCategorias } from './gerenciarCategorias/gerenciarCategorias';
-import { GerenciarFuncionarios } from './gerenciarFuncionarios';
+import { GerenciarCategorias } from './gerenciar-categorias/gerenciar-categorias';
+import { GerenciarFuncionarios } from './gerenciar-funcionarios/gerenciar-funcionarios';
 import { Solicitacoes } from './solicitacoes';
 import { Relatorios } from './relatorios';
 import { RealizarOrcamento } from './realizarOrcamento';

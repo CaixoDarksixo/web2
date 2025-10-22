@@ -6,8 +6,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
-import { AppFloatingConfigurator } from '@/layouts/component/app.floatingconfigurator';
-import { CepService } from '@/services/cep.service';
+import { AppFloatingConfigurator } from '@/shared/components/app.floatingconfigurator';
+import { CepService } from '../cep.service';
 import { debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 
 

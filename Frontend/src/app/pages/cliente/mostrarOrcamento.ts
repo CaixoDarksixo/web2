@@ -1,12 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute} from '@angular/router';
-import { RequestService } from '@/services/request.service';
+import { RequestService } from '@/core/services/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 interface Request {
     id: number;
@@ -105,6 +106,7 @@ export class MostrarOrcamento implements OnInit {
     router = inject(Router);
     location = inject(Location);
     requestService = inject(RequestService);
+    messageService = inject(MessageService);
     private fb = inject(FormBuilder);
 
     rejeitarForm = this.fb.group({
@@ -154,6 +156,12 @@ export class MostrarOrcamento implements OnInit {
             return;
         }
         this.requestService.rejeitarOrcamento(this.request.id, {motivo: this.rejeitarForm.value.motivoRejeicao!, clienteId: this.request.clienteId}).subscribe();
+        this.messageService.add({
+                severity: 'info',
+                summary: 'Orçamento Rejeitado',
+                detail: 'Você rejeitou o orçamento com sucesso.',
+                life: 5000
+            });
         this.router.navigate(['/cliente/solicitacoes'])
     }
 }

@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
-import { RequestService } from '@/services/request.service';
-import { AuthService } from '@/services/auth.service';
+import { RequestService } from '@/core/services/request.service';
+import { AuthService } from '@/core/services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
@@ -11,12 +11,13 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
 import { DatePipe } from '@angular/common';
+import { TruncatePipe } from '@/shared/pipes/truncate-pipe';
 import { RouterModule, Router } from '@angular/router';
 import { InputIconModule } from 'primeng/inputicon';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
-import { Request } from '@/models/request';
+import { Request } from '@/core/models/request.model';
 
 interface Column {
     field: string;
@@ -39,6 +40,7 @@ interface Column {
     TextareaModule,
     SelectModule,
     DatePipe,
+    TruncatePipe,
     RouterModule,
     SkeletonModule
 ],
@@ -177,7 +179,7 @@ interface Column {
 
                                 @else {
                                 <td>
-                                    {{ rowData[col.field] }}
+                                    {{ rowData[col.field] | truncate:30 }}
                                 </td>
                                 }
                             }
@@ -210,8 +212,8 @@ export class Solicitacoes implements OnInit {
     authService = inject(AuthService);
 
     newRequestForm = this.fb.group({
-        descricaoEquipamento: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-        descricaoProblema: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
+        descricaoEquipamento: ['', [Validators.required, Validators.maxLength(50)]],
+        descricaoProblema: ['', [Validators.required, Validators.maxLength(500)]],
         categoria: ['', [Validators.required]],
     });
 
@@ -262,20 +264,33 @@ export class Solicitacoes implements OnInit {
     }
 
     onCreate() {
-        if (this.newRequestForm.valid) {
-            const newRequest: Request = {
-                clienteId: this.currentUser.id,
-                status: 'ABERTA',
-                categoria: this.newRequestForm.value.categoria!,
-                dataHoraAbertura: new Date().toISOString(),
-                descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento!,
-                descricaoProblema: this.newRequestForm.value.descricaoProblema!,
-            };
-            this.requestService.createRequest(newRequest).subscribe((request) => {
-                this.requests = [...this.requests, request];
-                this.newRequestForm.reset();
-                this.newRequestVisible = false;
+        this.newRequestForm.markAllAsTouched();
+
+        if (this.newRequestForm.invalid) {
+            return;
+        };
+        
+        //montar no service
+        const newRequest: Request = {
+            clienteId: this.currentUser.id,
+            status: 'ABERTA',
+            categoria: this.newRequestForm.value.categoria!,
+            dataHoraAbertura: new Date().toISOString(),
+            descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento!,
+            descricaoProblema: this.newRequestForm.value.descricaoProblema!,
+        };
+
+        this.requestService.createRequest(newRequest).subscribe((request) => {
+            this.requests = [...this.requests, request];
+            this.newRequestForm.reset();
+            this.newRequestVisible = false;
+        });
+
+        this.messageService.add({
+                severity: 'success',
+                summary: 'Solicitação Criada',
+                detail: 'Sua solicitação de manutenção foi criada com sucesso.',
+                life: 5000
             });
-        }
     }
 }

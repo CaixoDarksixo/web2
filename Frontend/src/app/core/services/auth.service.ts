@@ -1,7 +1,7 @@
 import { Injectable,inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoginResponse, Usuario } from '@/models/auth';
+import { LoginResponse, Usuario } from '@/core/models/auth.model';
 
 interface LoginCredentials {
   email: string;

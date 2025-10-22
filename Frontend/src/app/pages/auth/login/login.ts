@@ -9,9 +9,9 @@ import { RippleModule } from 'primeng/ripple';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { AppFloatingConfigurator } from '@/layouts/component/app.floatingconfigurator';
-import { AuthService } from '@/services/auth.service';
-import { LoginResponse } from '@/models/auth';
+import { AppFloatingConfigurator } from '@/shared/components/app.floatingconfigurator';
+import { AuthService } from '@/core/services/auth.service';
+import { LoginResponse } from '@/core/models/auth.model';
 
 interface LoginError {
   error?: {

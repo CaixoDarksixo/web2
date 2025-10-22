@@ -2,12 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute} from '@angular/router';
 import { CommonModule, DatePipe, Location } from '@angular/common';
-import { RequestService } from '@/services/request.service';
+import { RequestService } from '@/core/services/request.service';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { AuthService } from '@/services/auth.service';
+import { AuthService } from '@/core/services/auth.service';
+import { UserService } from '@/core/services/user.service';
 
 interface Request {
     id: number;
@@ -101,7 +102,8 @@ export class RealizarOrcamento implements OnInit {
     router = inject(Router);
     location = inject(Location);
     private fb = inject(FormBuilder);
-    authService = inject(AuthService);
+    private authService = inject(AuthService);
+    private userService = inject(UserService);
 
     orcamentoForm = this.fb.group({
         valor: [null, [Validators.required]],
@@ -126,7 +128,7 @@ export class RealizarOrcamento implements OnInit {
                 return;
             }
 
-            this.requestService.getUserById(this.request.clienteId).subscribe((data: Cliente) => {
+            this.userService.getUserById(this.request.clienteId).subscribe((data: Cliente) => {
                 this.cliente = data;
             });
         });

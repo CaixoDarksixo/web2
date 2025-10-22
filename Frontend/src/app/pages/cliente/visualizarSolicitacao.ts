@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute, Data } from '@angular/router';
-import { RequestService } from '@/services/request.service';
+import { RequestService } from '@/core/services/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { TagModule } from 'primeng/tag'; 
 import { TimelineModule } from 'primeng/timeline';
 import { SkeletonModule } from 'primeng/skeleton';
 import { Card } from 'primeng/card';
-import { Request } from '@/models/request';
+import { Request } from '@/core/models/request.model';
 
 interface History {
     id: number;

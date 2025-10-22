@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute, Data } from '@angular/router';
-import { RequestService } from '@/services/request.service';
+import { RequestService } from '@/core/services/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { MessageService } from 'primeng/api';
 
 interface Request {
     id: number;
@@ -87,6 +88,7 @@ export class PagarServico implements OnInit {
     router = inject(Router);
     location = inject(Location);
     requestService = inject(RequestService);
+    messageService = inject(MessageService);
 
     ngOnInit(): void {
         this.requestId = parseInt(this.route.snapshot.paramMap.get('id') || '-1');
@@ -123,5 +125,12 @@ export class PagarServico implements OnInit {
     onPagar()  {
         this.requestService.pagar(this.request.id, {clienteId: this.request.clienteId, valorPago: this.orcamento.valor}).subscribe();
         this.pagaDialogVisible = true;
+        this.messageService.add({
+                severity: 'success',
+                summary: 'Serviço Pago',
+                detail: 'O pagamento do serviço foi realizado com sucesso.',
+                life: 5000
+            });
+        this.router.navigate(['/cliente/solicitacoes'])
     }
 }

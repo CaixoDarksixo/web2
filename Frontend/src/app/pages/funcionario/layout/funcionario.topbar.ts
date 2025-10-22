@@ -3,10 +3,10 @@ import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
-import { AppConfigurator } from './app.configurator';
+import { AppConfigurator } from '@/shared/components/app.configurator';
 import { Button } from "primeng/button"
-import { LayoutService } from '../service/layout.service';
-import { AuthService } from '@/services/auth.service';
+import { LayoutService } from '@/core/services/layout.service';
+import { AuthService } from '@/core/services/auth.service';
 import { MenuModule } from 'primeng/menu';
 import { Router } from '@angular/router';
 

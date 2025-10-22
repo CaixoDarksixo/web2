@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { FuncionarioTopbar } from './funcionario.topbar';
 import { FuncionarioSidebar } from './funcionario.sidebar';
-import { LayoutService } from '../service/layout.service';
+import { LayoutService } from '@/core/services/layout.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
