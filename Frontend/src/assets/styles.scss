@@ -180,3 +180,88 @@
 .app-dark .shadow-float {
     box-shadow: 0 4px 6px -1px rgba(255, 255, 255, 0.05), 0 2px 4px -2px rgba(255, 255, 255, 0.02);
 }
+
+.z-tag-expirado {
+  background: var(--p-red-50) !important;
+  color: var(--p-red-600) !important;
+}
+
+.app-dark .z-tag-expirado {
+  background: color-mix(in srgb,var(--p-red-600),transparent 88%) !important;
+  color: var(--p-red-200) !important;
+}
+
+.z-tag-em-uso {
+  background: var(--p-blue-50) !important;
+  color: var(--p-blue-600) !important;
+}
+
+.app-dark .z-tag-em-uso {
+  background: color-mix(in srgb,var(--p-blue-600),transparent 88%) !important;
+  color: var(--p-blue-200) !important;
+}
+
+.z-tag-configurado {
+  background: var(--p-green-50) !important;
+  color: var(--p-green-600) !important;
+}
+
+.app-dark .z-tag-configurado {
+  background: color-mix(in srgb,var(--p-green-600),transparent 88%) !important;
+  color: var(--p-green-200) !important;
+}
+
+.z-tag-pendente-revisao {
+  background: var(--p-yellow-50) !important;
+  color: var(--p-yellow-600) !important;
+}
+
+.app-dark .z-tag-pendente-revisao {
+  background: color-mix(in srgb,var(--p-yellow-600),transparent 88%) !important;
+  color: var(--p-yellow-200) !important;
+}
+
+.z-tag-arquivado {
+  background: var(--p-gray-50) !important;
+  color: var(--p-gray-600) !important;
+}
+
+.app-dark .z-tag-arquivado {
+  background: color-mix(in srgb,var(--p-gray-600),transparent 88%) !important;
+  color: var(--p-gray-200) !important;
+}
+
+.z-tag-bloqueado {
+  background: #333333 !important;
+  color: #cccccc !important;
+}
+
+.app-dark .z-tag-bloqueado {
+  background: color-mix(in srgb,#111111,transparent 80%) !important;
+  color: #eeeeee !important;
+}
+
+.z-tag-reativado {
+  background: var(--p-pink-100) !important;
+  color: var(--p-pink-700) !important;
+}
+
+.app-dark .z-tag-reativado {
+  background: color-mix(in srgb,var(--p-pink-500),transparent 84%) !important;
+  color: var(--p-pink-300) !important;
+}
+
+.z-tag-excluido {
+  background: var(--p-red-500) !important;
+  color: var(--p-white) !important;
+}
+
+.app-dark .z-tag-excluido {
+  background: color-mix(in srgb,var(--p-red-700),transparent 8%) !important;
+  color: var(--p-white) !important;
+}
+
+.z-tag-em-teste {
+  background: var(--p-cyan-100) !important;
+  color: var(--p-cyan-700) !important;
+}
