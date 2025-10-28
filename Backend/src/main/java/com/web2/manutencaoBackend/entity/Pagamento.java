@@ -27,6 +27,8 @@ public class Pagamento {
     @CreationTimestamp
     private LocalDateTime dataHoraPagamento;
 
+    public Pagamento() {}
+
     public Pagamento(Long id, Orcamento orcamento, LocalDateTime dataHoraPagamento) {
         this.orcamento = orcamento;
         this.valorPago = orcamento.getValor();

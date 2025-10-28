@@ -30,6 +30,9 @@ public class Orcamento {
     @CreationTimestamp
     private LocalDateTime dataHora;
 
+    private Orcamento() {}
+
+
     public Orcamento(Long id, Servico servico, Funcionario funcionario, Double valor, LocalDateTime dataHora) {
         this.servico = servico;
         this.funcionario = funcionario;

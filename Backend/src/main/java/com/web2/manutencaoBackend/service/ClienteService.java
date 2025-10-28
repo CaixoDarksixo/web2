@@ -44,6 +44,8 @@ public class ClienteService {
         mailService.enviarSenha(cliente.getEmail(), senha);
         cliente.setPassword(passwordEncoder.encode(senha));
         cliente.setRole(UserRole.CLIENTE);
+        cliente.setAtivo(true);
+        cliente.setLogin(cliente.getEmail());
         return clienteRepository.save(cliente);
     }
 

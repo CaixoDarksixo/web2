@@ -73,6 +73,10 @@ public abstract class User implements UserDetails {
         this.ativo = ativ;
     }
 
+    public void setLogin(String login){
+        this.login = login;
+    }
+
     @Override
     public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {
         if (this.role == UserRole.ADMIN) {
