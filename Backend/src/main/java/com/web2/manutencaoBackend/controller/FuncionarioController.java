@@ -1,13 +1,19 @@
 package com.web2.manutencaoBackend.controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.web2.manutencaoBackend.dto.FuncionarioResponseDTO;
 import com.web2.manutencaoBackend.entity.Funcionario;
 import com.web2.manutencaoBackend.service.FuncionarioService;
 
@@ -21,17 +27,17 @@ public class FuncionarioController {
         this.funcionarioService = funcionarioService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<FuncionarioResponseDTO>> getAll() {
-        List<FuncionarioResponseDTO> funcionarios = funcionarioService.getAll();
-        return ResponseEntity.ok(funcionarios);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<FuncionarioResponseDTO>> getAll() {
+//        List<FuncionarioResponseDTO> funcionarios = funcionarioService.getAll();
+//        return ResponseEntity.ok(funcionarios);
+//    }
 
-    @GetMapping("/ativos")
-    public ResponseEntity<List<FuncionarioResponseDTO>> getAllActive() {
-        List<FuncionarioResponseDTO> ativos = funcionarioService.getAllActive();
-        return ResponseEntity.ok(ativos);
-    }
+//    @GetMapping("/ativos")
+//    public ResponseEntity<List<FuncionarioResponseDTO>> getAllActive() {
+//        List<FuncionarioResponseDTO> ativos = funcionarioService.getAllActive();
+//        return ResponseEntity.ok(ativos);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Funcionario> getById(@PathVariable Long id) {
@@ -50,13 +56,13 @@ public class FuncionarioController {
         if (funcionarioService.findByEmail(funcionario.getEmail()).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        Funcionario novo = funcionarioService.save(funcionario.getRequestDTO()).getFuncionario();
+        Funcionario novo = funcionarioService.save(funcionario);
         return ResponseEntity.status(HttpStatus.CREATED).body(novo);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Funcionario> update(@PathVariable Long id, @RequestBody Funcionario funcionario) {
-        Funcionario atualizado = funcionarioService.update(id, funcionario.getRequestDTO()).getFuncionario();
+        Funcionario atualizado = funcionarioService.update(id, funcionario);
         return ResponseEntity.ok(atualizado);
     }
 

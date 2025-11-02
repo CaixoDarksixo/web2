@@ -23,7 +23,6 @@ public class FuncionarioResponseDTO {
 
     public Funcionario getFuncionario() {
         Funcionario funcionario = new Funcionario();
-        funcionario.setId(this.id);
         funcionario.setNome(this.nome);
         funcionario.setEmail(this.email);
         funcionario.setDataRegistro(this.dataRegistro);

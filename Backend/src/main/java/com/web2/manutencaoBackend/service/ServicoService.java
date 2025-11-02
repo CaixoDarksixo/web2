@@ -40,6 +40,7 @@ public class ServicoService {
     }
 
     public Servico save(Servico servico) {
+        servico.setDataInicio(LocalDate.now());
         return servicoRepository.save(servico);
     }
 
@@ -54,7 +55,8 @@ public class ServicoService {
     public Servico update(Long id, Servico servico) {
         Servico s = servicoRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Servico não encontrado"));
-        s.setDatahora(servico.getDatahora());
+        s.setDataInicio(servico.getDataInicio());
+        s.setDataFim(servico.getDataFim());
         s.setStatus(servico.getStatus());
         s.setDescEquipamento(servico.getDescEquipamento());
         s.setCategoriaEquipamento(servico.getCategoriaEquipamento());
@@ -175,8 +177,10 @@ public class ServicoService {
 
     
     public List<Servico> filtrarServicos(Long clienteId, Long funcionarioId, Status estado,
-                                     LocalDate dataInicio, LocalDate dataFim) {
-    return servicoRepository.filtrarServicos(clienteId, funcionarioId, estado, dataInicio, dataFim);
-}
+                                        LocalDate dataInicio, LocalDate dataFim) {
+
+        return servicoRepository.filtrarServicos(clienteId, funcionarioId, estado, dataInicio, dataFim);
+    }
+
 
 }

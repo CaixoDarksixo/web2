@@ -1,5 +1,6 @@
 package com.web2.manutencaoBackend.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,7 @@ public class ClienteService {
         cliente.setRole(UserRole.CLIENTE);
         cliente.setAtivo(true);
         cliente.setLogin(cliente.getEmail());
+        cliente.setDataRegistro(LocalDateTime.now());
         return clienteRepository.save(cliente);
     }
 

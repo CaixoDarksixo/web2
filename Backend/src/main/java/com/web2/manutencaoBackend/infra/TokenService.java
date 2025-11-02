@@ -15,25 +15,24 @@ import com.web2.manutencaoBackend.entity.User;
 
 @Service
 public class TokenService {
-
     @Value("${api.security.token.secret}")
-    
     private String secret;
 
-    public String generateToken(User user) {
-        try {
+    public String generateToken(User user){
+        try{
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            return JWT.create()
+            String token = JWT.create()
                     .withIssuer("auth-api")
-                    .withSubject(user.getUsername()) // melhor usar getUsername()
-                    .withExpiresAt(getExpirationDate())
+                    .withSubject(user.getUsername())
+                    .withExpiresAt(genExpirationDate())
                     .sign(algorithm);
+            return token;
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro ao gerar token", exception);
+            throw new RuntimeException("Error while generating token", exception);
         }
     }
 
-    public String validateToken(String token) {
+    public String validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -41,12 +40,12 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-        } catch (JWTVerificationException exception) {
-            return "";
+        } catch (JWTVerificationException exception){
+            return null;
         }
     }
 
-    private Instant getExpirationDate() {
+    private Instant genExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

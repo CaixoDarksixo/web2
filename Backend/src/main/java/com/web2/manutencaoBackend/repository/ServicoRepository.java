@@ -20,20 +20,21 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
     List<Servico> findByStatus(Status status);
 
 
-    @Query("""
-        SELECT s FROM Servico s
-        WHERE (:clienteId IS NULL OR s.cliente.id = :clienteId)
-          AND (:funcionarioId IS NULL OR s.funcionario.id = :funcionarioId)
-          AND (:estado IS NULL OR s.status = :estado)
-          AND (:dataInicio IS NULL OR s.datahora >= :dataInicio)
-          AND (:dataFim IS NULL OR s.datahora <= :dataFim)
-    """)
-    List<Servico> filtrarServicos(
-            @Param("clienteId") Long clienteId,
-            @Param("funcionarioId") Long funcionarioId,
-            @Param("estado") Status estado,
-            @Param("dataInicio") LocalDate dataInicio,
-            @Param("dataFim") LocalDate dataFim
-    );
+@Query("""
+    SELECT s FROM Servico s
+    WHERE (:clienteId IS NULL OR s.cliente.id = :clienteId)
+      AND (:funcionarioId IS NULL OR s.funcionario.id = :funcionarioId)
+      AND (:estado IS NULL OR s.status = :estado)
+      AND (:dataInicio IS NULL OR s.dataInicio >= :dataInicio)
+      AND (:dataFim IS NULL OR s.dataFim <= :dataFim)
+""")
+List<Servico> filtrarServicos(
+        @Param("clienteId") Long clienteId,
+        @Param("funcionarioId") Long funcionarioId,
+        @Param("estado") Status estado,
+        @Param("dataInicio") LocalDate dataInicio,
+        @Param("dataFim") LocalDate dataFim
+);
+
 
 }

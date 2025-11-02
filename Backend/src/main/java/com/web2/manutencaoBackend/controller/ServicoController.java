@@ -32,11 +32,11 @@ import com.web2.manutencaoBackend.service.ServicoService;
 @RequestMapping("/servico")
 public class ServicoController {
 
-    private final ServicoService servicoService;
+    private final ServicoService    servicoService;
     private final HistoricosService historicosService;
     private final ClienteRepository clienteRepository;
-    private final OrcamentoService orcamentoService;
-    private final PagamentoService pagamentoService;
+    private final OrcamentoService  orcamentoService;
+    private final PagamentoService  pagamentoService;
 
     public ServicoController(ServicoService servicoService, HistoricosService historicosService, 
                             ClienteRepository clienteRepository, OrcamentoService orcamentoService, PagamentoService pagamentoService) {
@@ -47,7 +47,7 @@ public class ServicoController {
         this.pagamentoService = pagamentoService;
     }
 
-    @GetMapping
+    @GetMapping("/servicos")
     public ResponseEntity<List<Servico>> filtrarServicos(
             @RequestParam(required = false) Long clienteId,
             @RequestParam(required = false) Long funcionarioId,
@@ -62,12 +62,12 @@ public class ServicoController {
 
     @PostMapping
     public ResponseEntity<Servico> post(@RequestBody Servico servico, Authentication authentication) {
-        String email = authentication.getName();        //pega o cliente logado
+        String email = authentication.getName();
         Cliente c = clienteRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         servico.setCliente(c);
-        historicosService.save(servico, null, null);
         servicoService.save(servico); 
+        historicosService.save(servico, null, null);
         return ResponseEntity.ok(servico);
     }
 

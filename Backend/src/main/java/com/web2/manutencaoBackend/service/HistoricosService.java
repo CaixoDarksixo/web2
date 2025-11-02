@@ -1,5 +1,6 @@
 package com.web2.manutencaoBackend.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class HistoricosService {
             observacao,
             s.getFuncionario()
         );
+        historico.setDatahora(LocalDateTime.now());
         return historicosRepository.save(historico);
     }
 }

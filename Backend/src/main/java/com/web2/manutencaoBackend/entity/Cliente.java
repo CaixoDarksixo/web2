@@ -2,8 +2,6 @@ package com.web2.manutencaoBackend.entity;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -16,8 +14,6 @@ public class Cliente extends User {
     private String endereco;
     private String telefone;
 
-    @CreationTimestamp
-    private LocalDateTime dataRegistro;
 
     public Cliente() {
     }
@@ -25,13 +21,12 @@ public class Cliente extends User {
     public Cliente(String email, String senha, UserRole role,
                    String cpf, String nome, String endereco,
                    String telefone, LocalDateTime dataRegistro) {
-        super(email, senha, role);
+        super(email, senha, role, dataRegistro);
         this.cpf = cpf;
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
         this.telefone = telefone;
-        this.dataRegistro = dataRegistro;
     }
 
     public String getCpf() {
@@ -72,13 +67,5 @@ public class Cliente extends User {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
-    }
-
-    public LocalDateTime getDataRegistro() {
-        return dataRegistro;
-    }
-
-    public void setDataRegistro(LocalDateTime dataRegistro) {
-        this.dataRegistro = dataRegistro;
     }
 }

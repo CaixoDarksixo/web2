@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type")
-public abstract class User implements UserDetails {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,11 +32,12 @@ public abstract class User implements UserDetails {
     public User() {
     }
 
-    public User(String login, String senha, UserRole role) {
+    public User(String login, String senha, UserRole role, LocalDateTime data) {
         this.login = login;
         this.password = senha;
         this.role = role;
         this.ativo = true;
+        this.dataRegistro = data;
     }
 
     @Override
@@ -51,6 +52,10 @@ public abstract class User implements UserDetails {
 
     public void setRole(UserRole role){
         this.role = role;
+    }
+
+    public UserRole getRole() {
+        return this.role;
     }
 
     public LocalDateTime getDataRegistro(){
@@ -69,8 +74,8 @@ public abstract class User implements UserDetails {
         return ativo;
     }
 
-    public void setAtivo(boolean ativ){
-        this.ativo = ativ;
+    public void setAtivo(boolean ativo){
+        this.ativo = ativo;
     }
 
     public void setLogin(String login){
@@ -82,13 +87,20 @@ public abstract class User implements UserDetails {
         if (this.role == UserRole.ADMIN) {
             return java.util.List.of(
                 new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN"),
-                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_CLIENTE"),
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_FUNCIONARIO")
             );
-        } else {
+        } else if (this.role == UserRole.FUNCIONARIO) {
             return java.util.List.of(
-                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_FUNCIONARIO"),
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_CLIENTE")
             );
         }
+            else {
+                return java.util.List.of(
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_CLIENTE")
+            );
+            }
     }
 
     @Override
@@ -108,6 +120,8 @@ public abstract class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        if (this.getAtivo() == false) { return false; }
+        else {
+        return true; }
     }
 }
