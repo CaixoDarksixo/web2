@@ -11,3 +11,12 @@ export interface Request {
     orientacoesCliente?: string;
     dataHoraFechamento?: string;
 }
+
+export interface Orcamento {
+    id: number;
+    solicitacaoId: number;
+    funcionario: string;
+    valor: number;
+    dataHora: string;
+}
+    

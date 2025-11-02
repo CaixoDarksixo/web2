@@ -9,20 +9,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { AuthService } from '@/core/services/auth.service';
 import { UserService } from '@/core/services/user.service';
-
-interface Request {
-    id: number;
-    clienteId: number;
-    status: string;
-    categoria: string;
-    funcionarioAtualId?: number;
-    dataHoraAbertura: string;
-    descricaoEquipamento: string;
-    descricaoProblema: string;
-    descricaoManutencao?: string;
-    orientacoesCliente?: string;
-    dataHoraFechamento?: string;
-}
+import { Request } from '@/core/models/request.model';
+import { MessageService } from 'primeng/api';
 
 interface Cliente {
   id: number;
@@ -30,14 +18,6 @@ interface Cliente {
   email: string;
   telefone?: string;
   endereco?: string;
-}
-
-interface Orcamento {
-  id: number;
-  solicitacaoId: number;
-  funcionario: string;
-  valor: number;
-  dataHora: string;
 }
 
 @Component({
@@ -104,6 +84,7 @@ export class RealizarOrcamento implements OnInit {
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private userService = inject(UserService);
+    messageService = inject(MessageService);
 
     orcamentoForm = this.fb.group({
         valor: [null, [Validators.required]],
@@ -148,8 +129,29 @@ export class RealizarOrcamento implements OnInit {
             return;
         }
 
-        this.requestService.criarOrcamento(this.request.id, {funcionario: this.currentUser.nome, valor: this.orcamentoForm.value.valor!}).subscribe((updatedRequest: Request) => {
-            this.router.navigate(['/funcionario/solicitacoes'])
+        this.requestService.criarOrcamento(
+            this.request.id!, 
+            this.currentUser.nome, 
+            this.orcamentoForm.value.valor!
+        ).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Orçamento Enviado',
+                    detail: 'O orçamento foi enviado com sucesso.',
+                    life: 5000
+                });
+
+                this.router.navigate(['/funcionario/solicitacoes'])
+            },
+            error: () => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erro ao Enviar Orçamento',
+                    detail: 'Ocorreu um erro ao enviar o orçamento. Tente novamente mais tarde.',
+                    life: 5000
+                });
+            }
         });
     }
 }

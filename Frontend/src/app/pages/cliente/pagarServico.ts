@@ -5,29 +5,7 @@ import { RequestService } from '@/core/services/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-
-interface Request {
-    id: number;
-    clienteId: number;
-    status: string;
-    categoria: string;
-    funcionarioAtualId?: number;
-    dataHoraAbertura: string;
-    descricaoEquipamento: string;
-    descricaoProblema: string;
-    descricaoManutencao?: string;
-    orientacoesCliente?: string;
-    dataHoraFechamento?: string;
-}
-
-interface Orcamento {
-  id: number;
-  solicitacaoId: number;
-  funcionario: string;
-  valor: number;
-  dataHora: string;
-}
-
+import { Request, Orcamento } from '@/core/models/request.model';
 
 @Component({
     selector: 'pagar-servico',
@@ -123,14 +101,27 @@ export class PagarServico implements OnInit {
     }
 
     onPagar()  {
-        this.requestService.pagar(this.request.id, {clienteId: this.request.clienteId, valorPago: this.orcamento.valor}).subscribe();
-        this.pagaDialogVisible = true;
-        this.messageService.add({
-                severity: 'success',
-                summary: 'Serviço Pago',
-                detail: 'O pagamento do serviço foi realizado com sucesso.',
-                life: 5000
-            });
-        this.router.navigate(['/cliente/solicitacoes'])
+        this.requestService.pagar(this.request.id!, this.request.clienteId, this.orcamento.valor).subscribe({
+            next: () => {
+                this.pagaDialogVisible = true;
+                this.messageService.add({
+                        severity: 'success',
+                        summary: 'Serviço Pago',
+                        detail: 'O pagamento do serviço foi realizado com sucesso.',
+                        life: 5000
+                    });
+                this.router.navigate(['/cliente/solicitacoes'])
+            },
+
+            error: () => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erro ao Pagar Serviço',
+                    detail: 'Ocorreu um erro ao processar o pagamento. Por favor, tente novamente mais tarde.',
+                    life: 5000
+                });
+            }
+        });
     }
+
 }

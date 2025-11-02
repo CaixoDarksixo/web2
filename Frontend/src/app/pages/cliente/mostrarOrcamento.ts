@@ -2,35 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule, Router, ActivatedRoute} from '@angular/router';
 import { RequestService } from '@/core/services/request.service';
+import { Request, Orcamento } from '@/core/models/request.model';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { TextareaModule } from 'primeng/textarea';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-
-interface Request {
-    id: number;
-    clienteId: number;
-    status: string;
-    categoria: string;
-    funcionarioAtualId?: number;
-    dataHoraAbertura: string;
-    descricaoEquipamento: string;
-    descricaoProblema: string;
-    descricaoManutencao?: string;
-    orientacoesCliente?: string;
-    dataHoraFechamento?: string;
-}
-
-interface Orcamento {
-  id: number;
-  solicitacaoId: number;
-  funcionario: string;
-  valor: number;
-  dataHora: string;
-}
-
 
 @Component({
     selector: 'mostrar-orcamento',
@@ -146,8 +124,11 @@ export class MostrarOrcamento implements OnInit {
     }
 
     onAprovar()  {
-        this.requestService.aprovarOrcamento(this.request.id, {clienteId: this.request.clienteId}).subscribe();
-        this.aprovadaDialogVisible = true;
+        this.requestService.aprovarOrcamento(this.request.id!, this.request.clienteId).subscribe(
+            () => {
+            this.aprovadaDialogVisible = true;
+            }
+        );
     }
 
     onRejeitar() {
@@ -155,13 +136,30 @@ export class MostrarOrcamento implements OnInit {
             this.rejeitarForm.markAllAsTouched();
             return;
         }
-        this.requestService.rejeitarOrcamento(this.request.id, {motivo: this.rejeitarForm.value.motivoRejeicao!, clienteId: this.request.clienteId}).subscribe();
-        this.messageService.add({
-                severity: 'info',
-                summary: 'Orçamento Rejeitado',
-                detail: 'Você rejeitou o orçamento com sucesso.',
-                life: 5000
-            });
-        this.router.navigate(['/cliente/solicitacoes'])
+
+        this.requestService.rejeitarOrcamento(
+            this.request.id!,
+            this.request.clienteId, 
+            this.rejeitarForm.value.motivoRejeicao!
+        ).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'Orçamento Rejeitado',
+                    detail: 'Você rejeitou o orçamento com sucesso.',
+                    life: 5000
+                });
+                this.router.navigate(['/cliente/solicitacoes']);
+            },
+
+            error: () => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erro',
+                    detail: 'Não foi possível rejeitar o orçamento. Tente novamente.',
+                    life: 5000
+                });
+            }
+        });
     }
 }

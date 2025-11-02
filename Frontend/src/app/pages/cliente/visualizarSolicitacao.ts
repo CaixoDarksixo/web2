@@ -174,7 +174,7 @@ export class VisualizarSolicitacao implements OnInit {
     }
 
     onRescue() {
-        this.requestService.rescueRequest(this.request.id!, {clienteId: this.request.clienteId}).subscribe((updatedRequest: Request) => {
+        this.requestService.rescueRequest(this.request.id!, this.request.clienteId).subscribe((updatedRequest: Request) => {
             this.request = updatedRequest;
             this.requestService.getHistory(this.request.id!).subscribe((data: History[]) => {
                 this.events = data;
@@ -183,7 +183,6 @@ export class VisualizarSolicitacao implements OnInit {
     }
 
     getHistoryDesc(history: History, request: Request): string {
-        console.log(history);
         switch (history.statusAtual) {
             case "ABERTA": 
                 return(`Solicitação aberta. Aguardando orçamento do funcionário responsável.`);

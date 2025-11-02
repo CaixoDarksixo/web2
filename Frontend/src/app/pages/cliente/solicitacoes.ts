@@ -248,19 +248,19 @@ export class Solicitacoes implements OnInit {
     }
 
     onRescue(id: number) {
-    this.requestService.rescueRequest(id, {clienteId: this.currentUser.id}).subscribe((updatedRequest) => {
-        const index = this.requests.findIndex(r => r.id === updatedRequest.id);
-        if (index > -1) {
-            this.requests[index] = updatedRequest;
-            this.requests = [...this.requests];
-        }
-          this.messageService.add({
-                severity: 'success',
-                summary: 'Solicitação Resgatada',
-                detail: 'A solicitação foi resgatada e está aberta novamente.',
-                life: 5000
-            });
-    });
+        this.requestService.rescueRequest(id, this.currentUser.id).subscribe((updatedRequest) => {
+            const index = this.requests.findIndex(r => r.id === updatedRequest.id);
+            if (index > -1) {
+                this.requests[index] = updatedRequest;
+                this.requests = [...this.requests];
+            }
+            this.messageService.add({
+                    severity: 'success',
+                    summary: 'Solicitação Resgatada',
+                    detail: 'A solicitação foi resgatada e está aberta novamente.',
+                    life: 5000
+                });
+        });
     }
 
     onCreate() {
@@ -269,28 +269,34 @@ export class Solicitacoes implements OnInit {
         if (this.newRequestForm.invalid) {
             return;
         };
-        
-        //montar no service
-        const newRequest: Request = {
+
+        this.requestService.createRequest({
             clienteId: this.currentUser.id,
-            status: 'ABERTA',
             categoria: this.newRequestForm.value.categoria!,
-            dataHoraAbertura: new Date().toISOString(),
             descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento!,
-            descricaoProblema: this.newRequestForm.value.descricaoProblema!,
-        };
+            descricaoProblema: this.newRequestForm.value.descricaoProblema!
+        }).subscribe({
+            next: (request) => {
+                this.requests = [...this.requests, request];
+                this.newRequestForm.reset();
+                this.newRequestVisible = false;
 
-        this.requestService.createRequest(newRequest).subscribe((request) => {
-            this.requests = [...this.requests, request];
-            this.newRequestForm.reset();
-            this.newRequestVisible = false;
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Solicitação Criada',
+                    detail: 'Sua solicitação de manutenção foi criada com sucesso.',
+                    life: 5000
+                })
+            },
+
+            error: () => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erro ao Criar Solicitação',
+                    detail: 'Não foi possível criar a solicitação. Tente novamente.',
+                    life: 5000
+                });
+            }
         });
-
-        this.messageService.add({
-                severity: 'success',
-                summary: 'Solicitação Criada',
-                detail: 'Sua solicitação de manutenção foi criada com sucesso.',
-                life: 5000
-            });
     }
 }

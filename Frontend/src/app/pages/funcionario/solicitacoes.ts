@@ -182,18 +182,28 @@ export class Solicitacoes implements OnInit {
                 label: 'Finalizar'
             },
             accept: () => {
-                this.requestService.finalizar(requestId, {funcionarioId: this.currentUser.id}).subscribe((updatedRequest) => {
-                    const index = this.requests.findIndex(r => r.id === updatedRequest.id);
-                    if (index > -1) {
-                        this.requests[index] = updatedRequest;
-                        this.requests = [...this.requests];
+                this.requestService.finalizar(requestId, this.currentUser.id).subscribe({
+                    next: (updatedRequest) => {
+                        const index = this.requests.findIndex(r => r.id === updatedRequest.id);
+                        if (index > -1) {
+                            this.requests[index] = updatedRequest;
+                            this.requests = [...this.requests];
+                        }
+                        this.messageService.add({
+                            severity: 'info',
+                            summary: 'Solicitação Finalizada',
+                            detail: 'A solicitação foi finalizada com sucesso.',
+                            life: 5000
+                        });
+                    },
+                    error: (err) => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Erro',
+                            detail: 'Ocorreu um erro ao finalizar a solicitação.',
+                            life: 5000
+                        });
                     }
-                    this.messageService.add({
-                        severity: 'info',
-                        summary: 'Solicitação Finalizada',
-                        detail: 'A solicitação foi finalizada com sucesso.',
-                        life: 5000
-                    });
                 });
             }
         });

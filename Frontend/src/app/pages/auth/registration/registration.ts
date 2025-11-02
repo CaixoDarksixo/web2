@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { AppFloatingConfigurator } from '@/shared/components/app.floatingconfigurator';
-import { CepService } from '../cep.service';
+import { CepService } from './cep.service';
 import { debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 
 
