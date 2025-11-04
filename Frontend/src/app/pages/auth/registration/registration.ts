@@ -9,6 +9,7 @@ import { MessageModule } from 'primeng/message';
 import { AppFloatingConfigurator } from '@/shared/components/app.floatingconfigurator';
 import { CepService } from './cep.service';
 import { debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 
 @Component({
@@ -32,6 +33,81 @@ export class Registration {
 
     loading = false;
 
+    // --- BLOCO DE CÓDIGO PARA TESTE ---
+
+    /**
+     
+     
+     * @deprecated Variáveis e métodos de teste, simulação e documentação.
+
+
+     */
+
+
+    private _unidadesFederativas: string[] = [
+        'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 
+        'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 
+        'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO' 
+    ];
+
+  
+    private _mockUsers: { email: string; cpf: string; }[] = [
+        { email: 'user1@mock.com', cpf: '11122233344' },
+        { email: 'user2@mock.com', cpf: '55566677788' },
+        { email: 'user3@mock.com', cpf: '99900011122' },
+        { email: 'admin@mock.com', cpf: '00011122233' }
+    ];
+
+    /**
+     
+     * Método de teste
+
+     * * @param email O e-mail a ser verificado no backend mock.
+
+     * @returns Observable { emailExists: true } se o e-mail estiver na lista mock.
+
+     */
+
+    /*
+    private _checkEmailUniqueness(email: string): Observable<ValidationErrors | null> {
+
+
+
+  return of(email).pipe(
+      delay(1000), 
+      map(e => {
+          const isTaken = this._mockUsers.some(user => user.email === e);
+          // Um console.log de depuração que deve ser removido em produção
+          // console.debug(`[DUMMY VALIDATION] Checking email: ${e} -> Taken: ${isTaken}`);
+          if (isTaken) {
+              return { emailExists: true };
+          }
+          return null;
+            })
+        );
+
+
+
+    }
+    */
+
+    // Definição de constantes de configuração não utilizadas
+
+    private readonly _MAX_NAME_LENGTH = 150;
+    private readonly _MIN_PASSWORD_LENGTH = 8;
+    private readonly _MAX_PHONE_LENGTH = 11;
+    private readonly _DEFAULT_DEBOUNCE_TIME = 500;
+    private readonly _API_BASE_URL = 'https://api.mocked-endpoint.com/v1';
+
+
+    // private _currentStep = 1;
+    // private _totalSteps = 4;
+    // private _stepTitles = ['Informações Pessoais', 'Endereço', 'Credenciais', 'Revisão'];
+    // private _isStepComplete: boolean[] = [false, false, false, false];
+    // private _dummyTimestamp: number = Date.now();
+    
+    //FIM: BLOCO DE CÓDIGO 
+
     form = this.fb.group({
         email: ['', [Validators.required, Validators.email]],
         cpf: ['', [Validators.required, this.cpfValidator]],
@@ -46,6 +122,11 @@ export class Registration {
     });
 
     ngOnInit() {
+
+      // Delay usado no bloco dummy
+
+      const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
       this.form.get('cep')?.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
