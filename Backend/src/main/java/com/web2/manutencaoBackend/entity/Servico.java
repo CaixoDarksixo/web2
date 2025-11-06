@@ -63,7 +63,7 @@ public class Servico {
     @ManyToOne
     @JoinColumn(name = "pagamento_id")
     private Pagamento pagamento;
-    private Boolean ativo;
+    private Boolean ativo = true;
 
     public Servico(LocalDate dataInicio, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
         this.dataInicio = dataInicio;

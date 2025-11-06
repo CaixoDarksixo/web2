@@ -2,6 +2,7 @@ package com.web2.manutencaoBackend.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,10 +23,12 @@ import com.web2.manutencaoBackend.entity.Pagamento;
 import com.web2.manutencaoBackend.entity.Servico;
 import com.web2.manutencaoBackend.entity.Status;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
+import com.web2.manutencaoBackend.service.CategoriaService;
 import com.web2.manutencaoBackend.service.HistoricosService;
 import com.web2.manutencaoBackend.service.OrcamentoService;
 import com.web2.manutencaoBackend.service.PagamentoService;
 import com.web2.manutencaoBackend.service.ServicoService;
+
 
 
 @RestController
@@ -37,6 +40,8 @@ public class ServicoController {
     private final ClienteRepository clienteRepository;
     private final OrcamentoService  orcamentoService;
     private final PagamentoService  pagamentoService;
+    @Autowired
+    CategoriaService categoriaService;
 
     public ServicoController(ServicoService servicoService, HistoricosService historicosService, 
                             ClienteRepository clienteRepository, OrcamentoService orcamentoService, PagamentoService pagamentoService) {
@@ -66,6 +71,12 @@ public class ServicoController {
         Cliente c = clienteRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
         servico.setCliente(c);
+
+        if (servico.getCategoriaEquipamento() != null && servico.getCategoriaEquipamento().getId() != null){
+            servico.setCategoriaEquipamento(categoriaService.findById(servico.getCategoriaEquipamento().getId())
+                                                .orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
+        }
+
         servicoService.save(servico); 
         historicosService.save(servico, null, null);
         return ResponseEntity.ok(servico);
