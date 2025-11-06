@@ -23,6 +23,7 @@ import com.web2.manutencaoBackend.entity.Pagamento;
 import com.web2.manutencaoBackend.entity.Servico;
 import com.web2.manutencaoBackend.entity.Status;
 import com.web2.manutencaoBackend.repository.ClienteRepository;
+import com.web2.manutencaoBackend.repository.FuncionarioRepository;
 import com.web2.manutencaoBackend.service.CategoriaService;
 import com.web2.manutencaoBackend.service.HistoricosService;
 import com.web2.manutencaoBackend.service.OrcamentoService;
@@ -42,6 +43,8 @@ public class ServicoController {
     private final PagamentoService  pagamentoService;
     @Autowired
     CategoriaService categoriaService;
+    @Autowired
+    FuncionarioRepository funcionarioRepository;
 
     public ServicoController(ServicoService servicoService, HistoricosService historicosService, 
                             ClienteRepository clienteRepository, OrcamentoService orcamentoService, PagamentoService pagamentoService) {
@@ -74,7 +77,7 @@ public class ServicoController {
 
         if (servico.getCategoriaEquipamento() != null && servico.getCategoriaEquipamento().getId() != null){
             servico.setCategoriaEquipamento(categoriaService.findById(servico.getCategoriaEquipamento().getId())
-                                                .orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
+                                                .orElseThrow(() -> new RuntimeException("Equipamento não encontrado")));
         }
 
         servicoService.save(servico); 
@@ -97,56 +100,88 @@ public class ServicoController {
     }
 
         @PutMapping("/aprovar/{id}")
-    public Servico aprovaServico(@PathVariable Long id, @RequestParam String observacao) {
-        return servicoService.aprovaServico(id, observacao);
+    public Servico aprovaServico(@PathVariable Long id,
+                                @RequestParam String observacao,
+                                Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        return servicoService.aprovaServico(id, observacao, f);
     }
 
     @PutMapping("/rejeitar/{id}")
     public Servico rejeitaServico(@PathVariable Long id,
                                   @RequestParam String observacao,
-                                  @RequestParam String desRejeicao) {
-        return servicoService.rejeitaServico(id, observacao, desRejeicao);
+                                  @RequestBody String desRejeicao,
+                                  Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        return servicoService.rejeitaServico(id, observacao, desRejeicao, f);
     }
 
     @PutMapping("/resgatar/{id}")
-    public Servico resgataServico(@PathVariable Long id, @RequestParam String observacao) {
-        return servicoService.resgataServico(id, observacao);
+    public Servico resgataServico(@PathVariable Long id,
+                                    @RequestParam String observacao,
+                                    Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        return servicoService.resgataServico(id, observacao, f);
     }
 
     @PutMapping("/pagar/{id}")
     public Servico pagaServico(@PathVariable Long id,
                                @RequestParam String observacao,
-                               @RequestBody Pagamento pagamento) {
+                               @RequestBody Pagamento pagamento,
+                                Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
         Pagamento pagSalvo = pagamentoService.save(pagamento, servicoService.findById(id).getOrcamento());
-        return servicoService.pagaServico(id, observacao, pagSalvo);
+        return servicoService.pagaServico(id, observacao, pagSalvo, f);
     }
 
     @PutMapping("/orcar/{id}")
     public Servico orcarServico(@PathVariable Long id,
                                 @RequestParam String observacao,
-                                @RequestBody Orcamento orcamento) {
+                                @RequestBody Orcamento orcamento,
+                                Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
         Servico servico = servicoService.findById(id);
-        orcamento.setServico(servico);                            
-        Orcamento orcSalvo = orcamentoService.save(orcamento, servico, orcamento.getValor());
-        return servicoService.orcarServico(id, observacao, orcSalvo);
+        Orcamento orcSalvo = orcamentoService.save(orcamento, orcamento.getValor());
+        return servicoService.orcarServico(id, observacao, orcSalvo, f);
     }
 
     @PutMapping("/manutencao/{id}")
     public Servico efetuarManutencao(@PathVariable Long id,
-                                     @RequestParam String manutencao,
-                                     @RequestParam String observacao) {
-        return servicoService.efetuarManutencao(id, manutencao, observacao);
+                                     @RequestBody String manutencao,
+                                     @RequestParam String observacao,
+                                    Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        return servicoService.efetuarManutencao(id, manutencao, observacao, f);
     }
 
     @PutMapping("/redirecionar/{id}")
     public Servico redirecionarServico(@PathVariable Long id,
-                                      @RequestBody Funcionario funcionario,
-                                      @RequestParam String observacao) {
-        return servicoService.redirecionarServico(id, funcionario, observacao);
+                                        @RequestBody Funcionario funcionario,
+                                        @RequestParam String observacao) {
+        Funcionario f = funcionarioRepository.findByEmail(funcionario.getEmail())
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        return servicoService.redirecionarServico(id, f, observacao);
     }
 
     @PutMapping("/finalizar/{id}")
-    public Servico finalizarServico(@PathVariable Long id, @RequestParam String observacao) {
-        return servicoService.finalizarServico(id, observacao);
+    public Servico finalizarServico(@PathVariable Long id,
+                                    @RequestParam String observacao,
+                                    Authentication authentication) {
+        String email = authentication.getName();
+        Funcionario f = funcionarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        return servicoService.finalizarServico(id, observacao, f);
     }
 }

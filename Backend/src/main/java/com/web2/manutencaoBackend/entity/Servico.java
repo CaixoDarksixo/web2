@@ -44,6 +44,8 @@ public class Servico {
 
     private String descDefeito;
 
+    private String observacao;
+
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

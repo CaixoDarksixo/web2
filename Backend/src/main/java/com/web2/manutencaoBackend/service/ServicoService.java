@@ -41,6 +41,7 @@ public class ServicoService {
 
     public Servico save(Servico servico) {
         servico.setDataInicio(LocalDate.now());
+        servico.setAtivo(true);
         return servicoRepository.save(servico);
     }
 
@@ -67,81 +68,88 @@ public class ServicoService {
         return servicoRepository.save(s);
     }
 
-    public Servico aprovaServico(Long id, String observacao) {
+    public Servico aprovaServico(Long id, String observacao, Funcionario f) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
+        servico.setFuncionario(f);
         servico.setStatus(Status.APROVADA);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
 
         return atualizado;
     }
 
-    public Servico rejeitaServico(Long id, String observacao, String desRejeicao) {
+    public Servico rejeitaServico(Long id, String observacao, String desRejeicao, Funcionario f) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
+        servico.setFuncionario(f);
         servico.setStatus(Status.REJEITADA);
         servico.setDescRejeicao(desRejeicao);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
 
         return atualizado;
     }
 
-    public Servico resgataServico(Long id, String observacao) {
+    public Servico resgataServico(Long id, String observacao, Funcionario f) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
+        servico.setFuncionario(f);
         servico.setStatus(Status.APROVADA);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
 
         return atualizado;
     }
 
-    public Servico pagaServico(Long id, String observacao, Pagamento pagamento) {
+    public Servico pagaServico(Long id, String observacao, Pagamento pagamento, Funcionario f) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
+        servico.setFuncionario(f);
         servico.setStatus(Status.PAGA);
         servico.setPagamento(pagamento);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
 
         return atualizado;
     }
 
-    public Servico orcarServico(Long id, String observacao, Orcamento orcamento){ /////////////////////////////////
+    public Servico orcarServico(Long id, String observacao, Orcamento orcamento, Funcionario f){ /////////////////////////////////
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
+        servico.setFuncionario(f);
         servico.setStatus(Status.ORCADA);
         servico.setOrcamento(orcamento);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
+
         historicosService.save(atualizado, anterior, observacao);
         
         return atualizado;
     }
 
-    public Servico efetuarManutencao(Long id, String manutencao, String observacao){
+    public Servico efetuarManutencao(Long id, String manutencao, String observacao, Funcionario f){
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
         servico.setStatus(Status.ARRUMADA);
         servico.setDescManutencao(manutencao);
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
         
@@ -155,20 +163,21 @@ public class ServicoService {
         Status anterior = servico.getStatus();
         servico.setStatus(Status.FINALIZADA);
         servico.setFuncionario(funcionario);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
         
         return atualizado;
     }    
 
-    public Servico finalizarServico(Long id, String observacao){
+    public Servico finalizarServico(Long id, String observacao, Funcionario f){
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
+        servico.setFuncionario(f);
         servico.setStatus(Status.FINALIZADA);
-
+        servico.setObservacao(observacao);
         Servico atualizado = servicoRepository.save(servico);
         historicosService.save(atualizado, anterior, observacao);
         

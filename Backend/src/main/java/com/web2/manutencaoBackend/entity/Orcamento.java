@@ -8,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,12 +18,6 @@ public class Orcamento {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "servico_Id")
-    private Servico servico;
-    @ManyToOne
-    @JoinColumn(name = "funcionario_Id")
-    private Funcionario funcionario;
     private Double valor;
     @CreationTimestamp
     private LocalDateTime dataHora;
@@ -33,9 +25,7 @@ public class Orcamento {
     private Orcamento() {}
 
 
-    public Orcamento(Long id, Servico servico, Funcionario funcionario, Double valor, LocalDateTime dataHora) {
-        this.servico = servico;
-        this.funcionario = funcionario;
+    public Orcamento(Long id, Double valor, LocalDateTime dataHora) {
         this.valor = valor;
         this.dataHora = dataHora;
     }
