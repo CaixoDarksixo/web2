@@ -117,16 +117,18 @@ public class ServicoController {
     public Servico pagaServico(@PathVariable Long id,
                                @RequestParam String observacao,
                                @RequestBody Pagamento pagamento) {
-        pagamentoService.save(pagamento, servicoService.findById(id).getOrcamento());
-        return servicoService.pagaServico(id, observacao, pagamento);
+        Pagamento pagSalvo = pagamentoService.save(pagamento, servicoService.findById(id).getOrcamento());
+        return servicoService.pagaServico(id, observacao, pagSalvo);
     }
 
     @PutMapping("/orcar/{id}")
     public Servico orcarServico(@PathVariable Long id,
                                 @RequestParam String observacao,
                                 @RequestBody Orcamento orcamento) {
-        orcamentoService.save(orcamento, servicoService.findById(id), orcamento.getValor());
-        return servicoService.orcarServico(id, observacao, orcamento);
+        Servico servico = servicoService.findById(id);
+        orcamento.setServico(servico);                            
+        Orcamento orcSalvo = orcamentoService.save(orcamento, servico, orcamento.getValor());
+        return servicoService.orcarServico(id, observacao, orcSalvo);
     }
 
     @PutMapping("/manutencao/{id}")
