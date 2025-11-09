@@ -43,7 +43,8 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll() // autenticação aberta
                 .requestMatchers("/auth/login").permitAll()
-            //    .requestMatchers("/api/clientes/autocadastro").permitAll() // autocadastro sem login
+                .requestMatchers("/auth/me").authenticated()
+                .requestMatchers("/api/clientes/autocadastro").permitAll() // autocadastro sem login
                 .requestMatchers("/servicos/**").hasAnyRole("CLIENTE", "ADMIN") // controle por role
                 .requestMatchers("/servicos").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers("/api/clientes").hasRole("ADMIN") // só admin

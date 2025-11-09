@@ -59,7 +59,7 @@ export class Login {
     const { email, password, remember } = this.form.getRawValue();
 
     this.auth.login({ 
-      email: String(email), 
+      login: String(email), 
       password: String(password) 
     }).subscribe({
       next: (res: LoginResponse) => {
@@ -72,12 +72,12 @@ export class Login {
         if (res?.token) {
           this.auth.storeToken(res.token, !!remember);
         }
-        console.log(res?.usuario?.roles[0]);
-        switch (res?.usuario?.roles[0]) {
-          case 'FUNCIONARIO':
+        console.log(res.role);
+        switch (res.role![0]) {
+          case 'ROLE_FUNCIONARIO':
             this.router.navigate(['/funcionario']);
             return;
-          case 'CLIENTE':
+          case 'ROLE_CLIENTE':
             this.router.navigate(['/cliente']);
             return;
         }

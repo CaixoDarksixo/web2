@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { LoginResponse, Usuario } from '@/core/models/auth.model';
 
 interface LoginCredentials {
-  email: string;
+  login: string;
   password: string;
 }
 
@@ -12,7 +12,7 @@ interface LoginCredentials {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth'; // LINK DA API
+  private apiUrl = 'http://localhost:8080/auth'; // LINK DA API
 
   private http = inject(HttpClient);
 
