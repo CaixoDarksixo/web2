@@ -86,3 +86,85 @@ public class AuthenticationController {
         return ResponseEntity.ok("Login bem-sucedido!");
     }
 } */
+/*   @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid AuthenticationDTO request) {
+
+        User user = userRepository.findByLogin(request.login())
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuário não encontrado");
+        }
+
+        boolean senhaCorreta = passwordEncoder.matches(request.password(), user.getPassword());
+
+        if (!senhaCorreta) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Senha incorreta");
+        }
+
+        return ResponseEntity.ok("Login bem-sucedido!");
+    }
+} */
+/*   @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid AuthenticationDTO request) {
+
+        User user = userRepository.findByLogin(request.login())
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuário não encontrado");
+        }
+
+        boolean senhaCorreta = passwordEncoder.matches(request.password(), user.getPassword());
+
+        if (!senhaCorreta) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Senha incorreta");
+        }
+
+        return ResponseEntity.ok("Login bem-sucedido!");
+    }
+} */
+/*   @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid AuthenticationDTO request) {
+
+        User user = userRepository.findByLogin(request.login())
+                .orElse(null);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuário não encontrado");
+        }
+
+        boolean senhaCorreta = passwordEncoder.matches(request.password(), user.getPassword());
+
+        if (!senhaCorreta) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Senha incorreta");
+        }
+
+        return ResponseEntity.ok("Login bem-sucedido!");
+    }
+} */
+
