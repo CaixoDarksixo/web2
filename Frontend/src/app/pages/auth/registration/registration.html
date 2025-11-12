@@ -28,7 +28,7 @@
                 
             <label for="cpf" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >CPF</label>
             <div class="w-full md:w-120 mb-2">
-                <p-inputmask mask="999.999.999-99" id="cpf" fluid="true" placeholder="Insira o CPF" formControlName="cpf" />
+                <p-inputmask mask="999.999.999-99" unmask="true" id="cpf" fluid="true" placeholder="Insira o CPF" formControlName="cpf" />
             </div>
             @if (form.controls.cpf.touched && form.controls.cpf.invalid) {
                     @if (form.controls.cpf.errors?.['required']) {
@@ -46,7 +46,7 @@
 
             <label for="telefone" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Telefone</label>
             <div class="w-full md:w-120 mb-2">
-            <p-inputmask mask="(99) 99999-9999" id="telefone" fluid="true" placeholder="Insira o telefone" class="w-full md:w-120 mb-2" formControlName="telefone" />
+            <p-inputmask mask="(99) 99999-9999" unmask="true" id="telefone" fluid="true" placeholder="Insira o telefone" class="w-full md:w-120 mb-2" formControlName="telefone" />
             </div>
             @if (form.controls.telefone.touched && form.controls.telefone.invalid) {
                 <p-message severity="error" size="small" variant="simple">Informe um telefone válido.</p-message>
@@ -54,7 +54,7 @@
             
             <label for="cep" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >CEP</label>
             <div class="w-full md:w-120 mb-2">
-                <p-inputmask mask="99.999-999" id="cep" fluid="true" placeholder="Insira o CEP" formControlName="cep" />
+                <p-inputmask mask="99.999-999" unmask="true" id="cep" fluid="true" placeholder="Insira o CEP" formControlName="cep" />
             </div>
             @if (form.controls.cep.touched && form.controls.cep.invalid) {
                     @if (form.controls.cep.errors?.['required']) {
@@ -79,12 +79,11 @@
             <label for="estado" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4" >Estado</label>
             <input pInputText id="estado" placeholder="Estado" class="w-full md:w-120 mb-12" formControlName="estado" readonly />
 
-            <p-button type="submit" [label]="loading ? 'Cadastrando...' : 'Cadastrar'" class="block" styleClass="w-full" [disabled]="form.invalid || loading" [loading]="loading"></p-button>
+            <p-button type="submit" (onClick)="form.valid && onSubmit()" [label]="loading ? 'Cadastrando...' : 'Cadastrar'" class="block" styleClass="w-full" [disabled]="form.invalid || loading" [loading]="loading"></p-button>
             <div class="mt-4 text-center">
                 <span class="text-muted-color">Já tem uma conta?</span>
                 <a routerLink="/auth/login" class="font-medium ml-2 text-primary-400 hover:text-primary-500 transition-colors duration-200">Faça login</a>
             </div>
-
         </form>
         </div>
     </div>

@@ -7,7 +7,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { MessageModule } from 'primeng/message';
 import { AppFloatingConfigurator } from '@/shared/components/app.floatingconfigurator';
-import { CepService } from './cep.service';
+import { CepService } from './services/cep.service';
+import { ClienteRegisterDTO } from './services/registration.service';
+import { RegistrationService } from './services/registration.service';
 import { debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
@@ -28,186 +30,134 @@ import { Observable, of } from 'rxjs';
     templateUrl: './registration.html',
 })
 export class Registration {
-    private fb = inject(FormBuilder);
-    private cepService = inject(CepService);
+  private fb = inject(FormBuilder);
+  private cepService = inject(CepService);
+  private registrationService = inject(RegistrationService);
 
-    loading = false;
+  loading = false;
 
-    // --- BLOCO DE CÓDIGO PARA TESTE ---
+  form = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      cpf: ['', [Validators.required, this.cpfValidator]],
+      nome: ['', Validators.required],
+      cep: ['', [Validators.required, this.cepValidator]],
+      logradouro: [{ value: '', disabled: true }],
+      numero: ['', [Validators.required, Validators.min(1)]],
+      bairro: [{ value: '', disabled: true }],
+      cidade: [{ value: '', disabled: true }],
+      estado: [{ value: '', disabled: true }],
+      telefone: ['', [Validators.required]]
+  });
 
-    /**
-     
-     
-     * @deprecated Variáveis e métodos de teste, simulação e documentação.
+  ngOnInit() {
 
-
-     */
-
-
-    private _unidadesFederativas: string[] = [
-        'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 
-        'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 
-        'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO' 
-    ];
-
-  
-    private _mockUsers: { email: string; cpf: string; }[] = [
-        { email: 'user1@mock.com', cpf: '11122233344' },
-        { email: 'user2@mock.com', cpf: '55566677788' },
-        { email: 'user3@mock.com', cpf: '99900011122' },
-        { email: 'admin@mock.com', cpf: '00011122233' }
-    ];
-
-    /**
-     
-     * Método de teste
-
-     * * @param email O e-mail a ser verificado no backend mock.
-
-     * @returns Observable { emailExists: true } se o e-mail estiver na lista mock.
-
-     */
-
-    /*
-    private _checkEmailUniqueness(email: string): Observable<ValidationErrors | null> {
-
-
-
-  return of(email).pipe(
-      delay(1000), 
-      map(e => {
-          const isTaken = this._mockUsers.some(user => user.email === e);
-          // Um console.log de depuração que deve ser removido em produção
-          // console.debug(`[DUMMY VALIDATION] Checking email: ${e} -> Taken: ${isTaken}`);
-          if (isTaken) {
-              return { emailExists: true };
-          }
-          return null;
-            })
-        );
-
-
-
-    }
-    */
-
-    // Definição de constantes de configuração não utilizadas
-
-    private readonly _MAX_NAME_LENGTH = 150;
-    private readonly _MIN_PASSWORD_LENGTH = 8;
-    private readonly _MAX_PHONE_LENGTH = 11;
-    private readonly _DEFAULT_DEBOUNCE_TIME = 500;
-    private readonly _API_BASE_URL = 'https://api.mocked-endpoint.com/v1';
-
-
-    // private _currentStep = 1;
-    // private _totalSteps = 4;
-    // private _stepTitles = ['Informações Pessoais', 'Endereço', 'Credenciais', 'Revisão'];
-    // private _isStepComplete: boolean[] = [false, false, false, false];
-    // private _dummyTimestamp: number = Date.now();
-    
-    //FIM: BLOCO DE CÓDIGO 
-
-    form = this.fb.group({
-        email: ['', [Validators.required, Validators.email]],
-        cpf: ['', [Validators.required, this.cpfValidator]],
-        nome: ['', Validators.required],
-        cep: ['', [Validators.required, this.cepValidator]],
-        logradouro: [{ value: '', disabled: true }],
-        numero: ['', [Validators.required, Validators.min(1)]],
-        bairro: [{ value: '', disabled: true }],
-        cidade: [{ value: '', disabled: true }],
-        estado: [{ value: '', disabled: true }],
-        telefone: ['', [Validators.required]]
+    this.form.get('cep')?.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter(() => this.form.get('cep')?.valid ?? false)
+    ).subscribe(cep => {
+      const cleanedCep = cep ? cep.replace(/[^\d]/g, '') : '';
+      this.cepService.getAddressByCep(cleanedCep).subscribe(address => {
+      if (address) {
+        this.form.patchValue({
+        logradouro: address.logradouro,
+        bairro: address.bairro,
+        cidade: address.localidade,
+        estado: address.uf
+        });
+      } else {
+        this.form.get('cep')?.markAsTouched();
+        this.form.get('cep')?.setErrors({ invalidCep: true });
+        this.form.patchValue({
+          logradouro: '',
+          bairro: '',
+          cidade: '',
+          estado: ''
+        });
+      }
     });
+    });
+  }
 
-    ngOnInit() {
+  onSubmit() {
+    console.log('Submitting registration form');
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
 
-      // Delay usado no bloco dummy
+    console.log('Submitting registration form', this.form.getRawValue());
+    this.loading = true;
 
-      const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+    const formData = this.form.getRawValue();
 
-      this.form.get('cep')?.valueChanges.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        filter(() => this.form.get('cep')?.valid ?? false)
-      ).subscribe(cep => {
-        const cleanedCep = cep ? cep.replace(/[^\d]/g, '') : '';
-        this.cepService.getAddressByCep(cleanedCep).subscribe(address => {
-        if (address) {
-          this.form.patchValue({
-          logradouro: address.logradouro,
-          bairro: address.bairro,
-          cidade: address.localidade,
-          estado: address.uf
-          });
-        } else {
-          this.form.get('cep')?.markAsTouched();
-          this.form.get('cep')?.setErrors({ invalidCep: true });
-          this.form.patchValue({
-            logradouro: '',
-            bairro: '',
-            cidade: '',
-            estado: ''
-          });
-        }
-      });
-      });
+    const payload: ClienteRegisterDTO = {
+      nome: formData.nome!,
+      email: formData.email!,
+      cpf: formData.cpf!,
+      telefone: formData.telefone!,
+      endereco: `${formData.logradouro}, ${formData.numero}, ` +
+      `${formData.bairro}, ${formData.cidade} - ${formData.estado}, CEP: ${formData.cep}`
+  }
+
+    this.registrationService.ClienteRegister(payload).subscribe({
+      next: () => {
+        this.loading = false;
+        alert('Cadastro realizado com sucesso! Verifique seu email para mais informações.');
+        this.form.reset();
+      },
+      error: (err) => {
+        this.loading = false;
+        const detail = err?.error?.message ?? 'Falha no cadastro. Verifique os dados informados.';
+        alert(`Erro: ${detail}`);
+      }
+    });
+  }
+
+  private cpfValidator(control: AbstractControl): ValidationErrors | null {
+    const cpf = control.value?.replace(/[^\d]/g, '');
+
+
+    if (!cpf || cpf.length !== 11) {
+        return { invalidCpf: true };
     }
 
-    onSubmit() {
-      this.form.markAllAsTouched();
-      if (this.form.invalid) return;
+    if (/^(\d)\1{10}$/.test(cpf)) {
+        return { invalidCpf: true };
+    }
+
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+        sum += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let firstDigit = (sum * 10) % 11;
+    if (firstDigit === 10 || firstDigit === 11) {
+        firstDigit = 0;
+    }
+    if (firstDigit !== parseInt(cpf.charAt(9))) {
+        return { invalidCpf: true };
+    }
+
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+        sum += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    let secondDigit = (sum * 10) % 11;
+    if (secondDigit === 10 || secondDigit === 11) {
+        secondDigit = 0;
+    }
+    if (secondDigit !== parseInt(cpf.charAt(10))) {
+        return { invalidCpf: true };
+    }
+
+    return null;
+  }
+
+  private cepValidator(control: AbstractControl): ValidationErrors | null {
+    const cep = control.value?.replace(/[^\d]/g, '');
+
+    if (!cep || cep.length !== 8) {
+        return { invalidCep: true };
+      }
     
-      this.loading = true;
-    } 
-
-    private cpfValidator(control: AbstractControl): ValidationErrors | null {
-      const cpf = control.value?.replace(/[^\d]/g, '');
-
-
-      if (!cpf || cpf.length !== 11) {
-          return { invalidCpf: true };
-      }
-
-      if (/^(\d)\1{10}$/.test(cpf)) {
-          return { invalidCpf: true };
-      }
-
-      let sum = 0;
-      for (let i = 0; i < 9; i++) {
-          sum += parseInt(cpf.charAt(i)) * (10 - i);
-      }
-      let firstDigit = (sum * 10) % 11;
-      if (firstDigit === 10 || firstDigit === 11) {
-          firstDigit = 0;
-      }
-      if (firstDigit !== parseInt(cpf.charAt(9))) {
-          return { invalidCpf: true };
-      }
-
-      sum = 0;
-      for (let i = 0; i < 10; i++) {
-          sum += parseInt(cpf.charAt(i)) * (11 - i);
-      }
-      let secondDigit = (sum * 10) % 11;
-      if (secondDigit === 10 || secondDigit === 11) {
-          secondDigit = 0;
-      }
-      if (secondDigit !== parseInt(cpf.charAt(10))) {
-          return { invalidCpf: true };
-      }
-
-      return null;
-    }
-
-    private cepValidator(control: AbstractControl): ValidationErrors | null {
-      const cep = control.value?.replace(/[^\d]/g, '');
-
-      if (!cep || cep.length !== 8) {
-          return { invalidCep: true };
-        }
-      
-      return null; 
-    }
+    return null; 
+  }
 }
