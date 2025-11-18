@@ -1,8 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+
+
+import { RelatorioService } from '../funcionario/relatorio.service';
+import { Receita, CategoriaAgrupada } from '../funcionario/receita.model';
 
 @Component({
   selector: 'relatorios',
@@ -23,9 +28,9 @@ import autoTable from 'jspdf-autotable';
       <input type="date" [(ngModel)]="filtro.dataFinal" class="w-full p-2 border rounded-lg"/>
     </div>
     <div class="flex items-end gap-2">
-      <button (click)="gerarRelatorioReceitas()" 
+      <button (click)="carregarReceitas()" 
         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition w-full">
-         Receitas (PDF)
+         Buscar
       </button>
       <button (click)="limparFiltros()" 
         class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition w-full">
@@ -37,7 +42,8 @@ import autoTable from 'jspdf-autotable';
   <!--Tabela com os dados filtrados-->
   <div class="mt-6">
     <h3 class="font-semibold text-lg mb-2">Prévia dos Dados</h3>
-    <table class="min-w-full border border-gray-300 rounded-lg">
+
+    <table class="min-w-full border border-gray-300 rounded-lg" *ngIf="receitas.length > 0; else vazio">
       <thead class="bg-surface-200 dark:bg-surface-800">
         <tr>
           <th class="px-4 py-2 border">Data</th>
@@ -46,18 +52,27 @@ import autoTable from 'jspdf-autotable';
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let r of getReceitasFiltradas()">
+        <tr *ngFor="let r of receitas">
           <td class="px-4 py-2 border">{{ r.data }}</td>
           <td class="px-4 py-2 border">R$ {{ r.valor.toFixed(2) }}</td>
           <td class="px-4 py-2 border">{{ r.categoria }}</td>
         </tr>
       </tbody>
     </table>
+
+    <ng-template #vazio>
+      <p class="text-gray-600 mt-3">Nenhum dado encontrado.</p>
+    </ng-template>
   </div>
 
   <!--Relatório categoria -->
   <div class="mt-8 flex gap-4">
-    <button (click)="gerarRelatorioCategorias()" 
+    <button (click)="gerarRelatorioReceitasPDF()" 
+      class="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition">
+       Receitas (PDF)
+    </button>
+
+    <button (click)="gerarRelatorioCategoriasPDF()" 
       class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
        Relatório por Categoria
     </button>
@@ -85,95 +100,124 @@ import autoTable from 'jspdf-autotable';
     }
   `]
 })
-export class Relatorios {
+export class Relatorios implements OnInit {
+
+  private relatorioService = inject(RelatorioService);
+
   filtro = {
     dataInicial: '',
     dataFinal: ''
   };
 
-  receitas = [
-    { data: '2025-09-01', valor: 500, categoria: 'Categoria A' },
-    { data: '2025-09-01', valor: 300, categoria: 'Categoria B' },
-    { data: '2025-09-02', valor: 700, categoria: 'Categoria C' },
-    { data: '2025-09-03', valor: 200, categoria: 'Categoria A' },
-  ];
+  receitas: Receita[] = [];
+  categorias: CategoriaAgrupada[] = [];
 
-  getReceitasFiltradas() {
-    let dados = this.receitas;
-    if (this.filtro.dataInicial) {
-      dados = dados.filter(r => r.data >= this.filtro.dataInicial);
-    }
-    if (this.filtro.dataFinal) {
-      dados = dados.filter(r => r.data <= this.filtro.dataFinal);
-    }
-    return dados;
+  ngOnInit() {
+    this.carregarReceitas();
   }
 
-  gerarRelatorioReceitas() {
-    const dadosFiltrados = this.getReceitasFiltradas();
-    const agrupado: { [data: string]: number } = {};
-    dadosFiltrados.forEach(r => {
-      agrupado[r.data] = (agrupado[r.data] || 0) + r.valor;
-    });
-
-    const rows = Object.entries(agrupado).map(([data, total]) => [data, `R$ ${total.toFixed(2)}`]);
-    const totalReceitas = dadosFiltrados.reduce((acc, r) => acc + r.valor, 0);
-
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text('Relatório de Receitas por Dia', 14, 15);
-    doc.setFontSize(11);
-    doc.text(`Data Inicial: ${this.filtro.dataInicial || '---'}`, 14, 25);
-    doc.text(`Data Final: ${this.filtro.dataFinal || '---'}`, 14, 32);
-    doc.text(`Total de Receitas: R$ ${totalReceitas.toFixed(2)}`, 14, 39);
-
-    autoTable(doc, {
-      head: [['Data', 'Total Receitas']],
-      body: rows,
-      startY: 50
-    });
-
-    doc.save('relatorio-receitas.pdf');
+  carregarReceitas() {
+    this.relatorioService
+      .getReceitas(this.filtro.dataInicial, this.filtro.dataFinal)
+      .subscribe({
+        next: (dados) => this.receitas = dados,
+        error: () => alert('Erro ao carregar receitas do servidor.')
+      });
   }
 
-  gerarRelatorioCategorias() {
-    const agrupado: { [cat: string]: number } = {};
-    this.receitas.forEach(r => {
-      agrupado[r.categoria] = (agrupado[r.categoria] || 0) + r.valor;
+  gerarRelatorioReceitasPDF() {
+  const dadosFiltrados = this.receitas;
+
+  const agrupado: { [data: string]: number } = {};
+  dadosFiltrados.forEach(r => {
+    agrupado[r.data] = (agrupado[r.data] || 0) + r.valor;
+  });
+
+  const rows = Object.entries(agrupado).map(([data, total]) => [data, `R$ ${total.toFixed(2)}`]);
+
+  const totalReceitas = dadosFiltrados.reduce((acc, r) => acc + r.valor, 0);
+
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text('Relatório de Receitas por Dia', 14, 15);
+
+  autoTable(doc, {
+    head: [['Data', 'Total']],
+    body: rows,
+    startY: 25
+  });
+
+
+  const finalY = (doc as any).lastAutoTable.finalY;
+
+  doc.text(`Total Geral: R$ ${totalReceitas.toFixed(2)}`, 14, finalY + 10);
+
+  doc.save('relatorio-receitas.pdf');
+}
+
+
+gerarRelatorioCategoriasPDF() {
+this.relatorioService.getReceitasAgrupadasPorCategoria().subscribe({
+next: dados => {
+  this.categorias = dados;
+
+  const rows = dados.map(c => [c.categoria, `R$ ${c.total.toFixed(2)}`]);
+  const total = dados.reduce((sum, c) => sum + c.total, 0);
+
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text('Relatório de Categorias', 14, 15);
+
+
+  autoTable(doc, {
+    head: [['Categoria', 'Total']],
+    body: rows,
+    startY: 25
     });
 
-    const rows = Object.entries(agrupado).map(([cat, total]) => [cat, `R$ ${total.toFixed(2)}`]);
-    const totalReceitas = this.receitas.reduce((acc, r) => acc + r.valor, 0);
+  const finalY = (doc as any).lastAutoTable.finalY;
 
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text('Relatório de Receitas por Categoria', 14, 15);
-    doc.setFontSize(11);
-    doc.text(`Total de Receitas: R$ ${totalReceitas.toFixed(2)}`, 14, 25);
+  doc.text(`Total Geral: R$ ${total.toFixed(2)}`, 14, finalY + 10);
 
-    autoTable(doc, {
-      head: [['Categoria', 'Total Receitas']],
-      body: rows,
-      startY: 35
-    });
+  doc.save('relatorio-categorias.pdf');
+},
+error: () => alert('Erro ao buscar categorias.')
+  });
+}
 
-    doc.save('relatorio-categorias.pdf');
+
+
+exportarCSV() {
+  if (this.receitas.length === 0) {
+    alert('Nenhum dado para exportar.');
+    return;
   }
 
-  exportarCSV() {
-    const linhas = this.receitas.map(r => `${r.data},${r.valor},${r.categoria}`);
-    const conteudo = "data,valor,categoria\n" + linhas.join("\n");
-    const blob = new Blob([conteudo], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'relatorio.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
+
+  const linhas = this.receitas
+    .map(r => `${r.data},${r.valor},${r.categoria}`);
+
+
+  const conteudo = "data,valor,categoria\n" + linhas.join("\n");
+  const blob = new Blob([conteudo], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'receitas.csv';
+  a.click();
+
+
+
+    URL.revokeObjectURL(url);
   }
+
 
   limparFiltros() {
-    this.filtro.dataInicial = '';
-    this.filtro.dataFinal = '';
+
+    this.filtro = { dataInicial: '', dataFinal: '' };
+    this.carregarReceitas();
+
   }
 }
