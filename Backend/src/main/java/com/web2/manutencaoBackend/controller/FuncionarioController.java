@@ -27,18 +27,6 @@ public class FuncionarioController {
         this.funcionarioService = funcionarioService;
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<FuncionarioResponseDTO>> getAll() {
-//        List<FuncionarioResponseDTO> funcionarios = funcionarioService.getAll();
-//        return ResponseEntity.ok(funcionarios);
-//    }
-
-//    @GetMapping("/ativos")
-//    public ResponseEntity<List<FuncionarioResponseDTO>> getAllActive() {
-//        List<FuncionarioResponseDTO> ativos = funcionarioService.getAllActive();
-//        return ResponseEntity.ok(ativos);
-//    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Funcionario> getById(@PathVariable Long id) {
         Optional<Funcionario> funcionario= funcionarioService.findById(id);
