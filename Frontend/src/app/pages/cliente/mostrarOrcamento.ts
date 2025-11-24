@@ -49,21 +49,21 @@ import { MessageService } from 'primeng/api';
                 <p-button label="Voltar" (onClick)="voltar()" icon="pi pi-arrow-left" variant="text" severity="secondary"></p-button>
             </div>
                         <div class="font-semibold text-xl mb-6">Visualizar Orçamento</div>
-            <div class="font-bold block text-5xl mb-4">{{ request.descricaoEquipamento }}</div>
-            <div class="block font-light text-xl mb-8">Solicitado em {{request.dataHoraAbertura | date:'dd/MM/yyyy'}} às {{request.dataHoraAbertura | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
+            <div class="font-bold block text-5xl mb-4">{{ request.descEquipamento }}</div>
+            <div class="block font-light text-xl mb-8">Solicitado em {{request.dataInicio | date:'dd/MM/yyyy'}} às {{request.dataInicio | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
             <div class="mb-12">
                 <div class="text-xl font-semibold mb-2">Categoria</div>
-                <div class="text-xl block">{{ request.categoria }}</div>
+                <div class="text-xl block">{{ request.categoriaEquipamento.nome }}</div>
             </div>
             <div class="mb-12">
                 <div class="text-xl font-semibold mb-4">Descrição do Problema</div>
-                <div class="block text-xl rounded-border border border-surface p-4">{{ request.descricaoProblema }}</div>
+                <div class="block text-xl rounded-border border border-surface p-4">{{ request.descDefeito }}</div>
             </div>
             <div class="mb-4">
                 <div class="text-2xl font-bold mb-4 flex justify-center">Valor Orçado</div>
                 <div class="block text-2xl flex justify-center rounded-border border border-surface p-4 p-tag-finalizada">{{ orcamento.valor | currency:'BRL':'symbol':'1.2-2':'pt' }}</div>
             </div>
-            <div class="block font-light text-xl mb-12">Orçado em {{orcamento.dataHora | date:'dd/MM/yyyy'}} às {{orcamento.dataHora | date:'HH:mm:ss'}} por {{orcamento.funcionario}}</div>
+            <div class="block font-light text-xl mb-12">Orçado em {{orcamento.dataHora | date:'dd/MM/yyyy'}} às {{orcamento.dataHora | date:'HH:mm:ss'}} por {{orcamento.funcionario.nome}}</div>
             <div class="flex justify-end gap-5">
                 <p-button size="large" label="Rejeitar Serviço" severity="secondary" (click)="rejeitadaDialogVisible = true"/>
                 <p-button size="large" label="Aprovar Serviço" (click)="onAprovar()"/>
@@ -107,11 +107,12 @@ export class MostrarOrcamento implements OnInit {
         });
 
         this.requestService.getOrcamento(this.requestId).subscribe((data: Orcamento) => {
-        this.orcamento = data;
-        if (!this.orcamento) {
-            this.router.navigate(['/notfound']);
-            return;
-        }
+            this.orcamento = data;
+            if (!this.orcamento) {
+                this.router.navigate(['/notfound']);
+                return;
+            }
+            console.log(this.orcamento);
         });
     }
 
@@ -124,7 +125,7 @@ export class MostrarOrcamento implements OnInit {
     }
 
     onAprovar()  {
-        this.requestService.aprovarOrcamento(this.request.id!, this.request.clienteId).subscribe(
+        this.requestService.aprovarOrcamento(this.request.id!).subscribe(
             () => {
             this.aprovadaDialogVisible = true;
             }
@@ -139,7 +140,6 @@ export class MostrarOrcamento implements OnInit {
 
         this.requestService.rejeitarOrcamento(
             this.request.id!,
-            this.request.clienteId, 
             this.rejeitarForm.value.motivoRejeicao!
         ).subscribe({
             next: () => {

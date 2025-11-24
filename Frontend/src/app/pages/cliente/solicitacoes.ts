@@ -1,3 +1,4 @@
+import { CategoriaService } from '@/core/services/categoria.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -22,6 +23,11 @@ import { Request } from '@/core/models/request.model';
 interface Column {
     field: string;
     header: string;
+}
+
+interface Categoria {
+    label: string;
+    value: number;
 }
 
 @Component({
@@ -163,7 +169,7 @@ interface Column {
                                         
                                         <p-button label="Visualizar" icon="pi pi-eye" (click)="router.navigate(['/cliente/solicitacoes', rowData.id], { state: { fromList: true } })" styleClass="p-button-text p-button-plain mr-2"></p-button>
                     
-                                        @if (rowData['status'] === 'ORÇADA') {
+                                        @if (rowData['status'] === 'ORCADA') {
                                             <p-button class="block" label="Aprovar/Rejeitar Orçamento" icon="pi pi-check-square" (click)="router.navigate(['/cliente/solicitacoes', rowData.id, 'orcamento'], { state: { fromList: true } })" styleClass="p-button-text"/>
                                         }
 
@@ -195,18 +201,13 @@ interface Column {
 export class Solicitacoes implements OnInit {
     private fb = inject(FormBuilder);
     private messageService = inject(MessageService);
+    private categoriaService = inject(CategoriaService);
     loading = true;
     requests!: Request[];
     cols!: Column[];
     newRequestVisible: boolean = false;
     currentUser: any;
-    categorias = [
-        { label: 'Hardware', value: 'Hardware' },
-        { label: 'Software', value: 'Software' },
-        { label: 'Redes', value: 'Redes' },
-        { label: 'Outros', value: 'Outros' }
-    ];
-
+    categorias!: Categoria[];
     requestService = inject(RequestService);
     router = inject(Router);
     authService = inject(AuthService);
@@ -214,10 +215,18 @@ export class Solicitacoes implements OnInit {
     newRequestForm = this.fb.group({
         descricaoEquipamento: ['', [Validators.required, Validators.maxLength(50)]],
         descricaoProblema: ['', [Validators.required, Validators.maxLength(500)]],
-        categoria: ['', [Validators.required]],
+        categoria: [null, [Validators.required]],
     });
 
     ngOnInit() {
+        this.categoriaService.getCategorias().subscribe((data) => {
+            this.categorias = data.map((cat: any) => ({
+                label: cat.nome,
+                value: cat.id
+            }));
+            console.log("Categorias:", this.categorias);
+        });
+
         this.authService.getAuthenticatedUser().subscribe(user => {
             this.currentUser = user;
             this.requestService.getRequests(this.currentUser.id).subscribe({
@@ -229,6 +238,7 @@ export class Solicitacoes implements OnInit {
                 },
                 complete: () => {
                     this.loading = false;
+                    console.log('requests:', this.requests);
                 }
             });
         });
@@ -236,8 +246,8 @@ export class Solicitacoes implements OnInit {
 
         this.cols = [
             { field: 'id', header: 'ID' },
-            { field: 'dataHoraAbertura', header: 'Data/Hora de Abertura' },
-            { field: 'descricaoEquipamento', header: 'Descrição do Equipamento' },
+            { field: 'dataInicio', header: 'Data/Hora de Abertura' },
+            { field: 'descEquipamento', header: 'Descrição do Equipamento' },
             { field: 'status', header: 'Status' },
             { field: 'Ações', header: 'Ações' }
         ];
@@ -271,8 +281,7 @@ export class Solicitacoes implements OnInit {
         };
 
         this.requestService.createRequest({
-            clienteId: this.currentUser.id,
-            categoria: this.newRequestForm.value.categoria!,
+            categoriaId: this.newRequestForm.value.categoria!,
             descricaoEquipamento: this.newRequestForm.value.descricaoEquipamento!,
             descricaoProblema: this.newRequestForm.value.descricaoProblema!
         }).subscribe({

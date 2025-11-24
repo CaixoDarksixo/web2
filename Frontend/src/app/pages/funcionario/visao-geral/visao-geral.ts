@@ -9,21 +9,7 @@ import { Router } from '@angular/router';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext';
-
-interface Request {
-    id?: number;
-    clienteId: number;
-    status: string;
-    categoria: string;
-    funcionarioAtualId?: number;
-    dataHoraAbertura: string;
-    descricaoEquipamento: string;
-    descricaoProblema: string;
-    descricaoManutencao?: string;
-    orientacoesCliente?: string;
-    dataHoraFechamento?: string;
-    clienteNome?: string;
-}
+import { Request } from '@/core/models/request.model';
 
 @Component({
     selector: 'visao-geral',

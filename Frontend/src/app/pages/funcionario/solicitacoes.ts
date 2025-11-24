@@ -147,6 +147,8 @@ export class Solicitacoes implements OnInit {
         { label: 'Selecionar período', value: 'periodo' }
     ];
 
+    loading: boolean = true;
+
     messageService = inject(MessageService);
     confirmationService = inject(ConfirmationService);
     requestService = inject(RequestService);
@@ -154,12 +156,21 @@ export class Solicitacoes implements OnInit {
     authService = inject(AuthService);
 
     ngOnInit() {
-        this.authService.getAuthenticatedUser().subscribe(user => {
+/*         this.authService.getAuthenticatedUser().subscribe(user => {
             this.currentUser = user;
-            this.requestService.getRequests(1).subscribe((data: Request[]) => {
-                this.requests = data;
+            this.requestService.getRequests().subscribe({
+                next: (data: Request[]) => {
+                    this.requests = data;
+                },
+                error: () => {
+                    this.loading = false;
+                },
+                complete: () => {
+                    this.loading = false;
+                    console.log('requests:', this.requests);
+                }
             });
-        });
+        }); */
     }
     
     onGlobalFilter(table: Table, event: Event) {
@@ -211,8 +222,8 @@ export class Solicitacoes implements OnInit {
 
     onFiltroChange(event: any) {
     const filtro = event.value;
-
-    if (filtro === 'todas') {
+    
+/*     if (filtro === 'todas') {
         this.requestService.getRequests(1).subscribe((data: Request[]) => this.requests = data);
     }
     else if (filtro === 'hoje') {
@@ -222,7 +233,7 @@ export class Solicitacoes implements OnInit {
     }
     else if (filtro === 'periodo') {
         console.log("Selecionar período");
-    }
+    } */
     }
 
 }

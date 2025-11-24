@@ -12,11 +12,14 @@ import { ClienteRegisterDTO } from './services/registration.service';
 import { RegistrationService } from './services/registration.service';
 import { debounceTime, distinctUntilChanged, filter} from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 
 @Component({
     selector: 'app-registration',
     standalone: true,
+    providers: [MessageService],
     imports: [
         AppFloatingConfigurator,
         ReactiveFormsModule,
@@ -25,7 +28,8 @@ import { Observable, of } from 'rxjs';
         InputNumberModule,
         MessageModule,
         ButtonModule,
-        RouterModule
+        RouterModule,
+        ToastModule
     ],
     templateUrl: './registration.html',
 })
@@ -33,8 +37,10 @@ export class Registration {
   private fb = inject(FormBuilder);
   private cepService = inject(CepService);
   private registrationService = inject(RegistrationService);
+  private messageService = inject(MessageService);
 
-  loading = false;
+  cadastroRealizado: Boolean = false;
+  loading: Boolean = false;
 
   form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -80,11 +86,8 @@ export class Registration {
   }
 
   onSubmit() {
-    console.log('Submitting registration form');
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-
-    console.log('Submitting registration form', this.form.getRawValue());
     this.loading = true;
 
     const formData = this.form.getRawValue();
@@ -101,13 +104,17 @@ export class Registration {
     this.registrationService.ClienteRegister(payload).subscribe({
       next: () => {
         this.loading = false;
-        alert('Cadastro realizado com sucesso! Verifique seu email para mais informações.');
+        this.cadastroRealizado = true;
         this.form.reset();
       },
       error: (err) => {
         this.loading = false;
-        const detail = err?.error?.message ?? 'Falha no cadastro. Verifique os dados informados.';
-        alert(`Erro: ${detail}`);
+        this.messageService.add({
+                    severity: 'error',
+                    summary: 'Erro ao cadastrar',
+                    detail: 'Não foi possível realizar o cadastro. Verifique os dados e tente novamente.',
+                    life: 5000
+                });
       }
     });
   }

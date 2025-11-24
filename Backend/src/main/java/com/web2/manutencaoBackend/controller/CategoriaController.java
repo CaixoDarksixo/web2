@@ -18,7 +18,7 @@ import com.web2.manutencaoBackend.entity.CategoriaE;
 import com.web2.manutencaoBackend.service.CategoriaService;
 
 @RestController
-@RequestMapping("/api/categorias")
+@RequestMapping("/categorias")
 public class CategoriaController {
 
     private final CategoriaService categoriaService;

@@ -1,6 +1,7 @@
 package com.web2.manutencaoBackend.controller;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.web2.manutencaoBackend.entity.Cliente;
 import com.web2.manutencaoBackend.entity.Funcionario;
+import com.web2.manutencaoBackend.entity.Historicos;
 import com.web2.manutencaoBackend.entity.Orcamento;
 import com.web2.manutencaoBackend.entity.Pagamento;
 import com.web2.manutencaoBackend.entity.Servico;
@@ -33,7 +34,7 @@ import com.web2.manutencaoBackend.service.ServicoService;
 
 
 @RestController
-@RequestMapping("/servico")
+@RequestMapping("/servicos")
 public class ServicoController {
 
     private final ServicoService    servicoService;
@@ -55,7 +56,7 @@ public class ServicoController {
         this.pagamentoService = pagamentoService;
     }
 
-    @GetMapping("/servicos")
+    @GetMapping
     public ResponseEntity<List<Servico>> filtrarServicos(
             @RequestParam(required = false) Long clienteId,
             @RequestParam(required = false) Long funcionarioId,
@@ -67,6 +68,11 @@ public class ServicoController {
         return ResponseEntity.ok(servicos);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Servico> getById(@PathVariable Long id) {
+        Servico servico = servicoService.findById(id);
+        return ResponseEntity.ok(servico);
+    }
 
     @PostMapping
     public ResponseEntity<Servico> post(@RequestBody Servico servico, Authentication authentication) {
@@ -90,7 +96,7 @@ public class ServicoController {
         servicoService.delete(id);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}")
     public Servico put(@PathVariable Long id, @RequestBody Servico servico, @RequestBody String observacao){
         Servico serAtual = servicoService.findById(id);
         Status anterior = serAtual.getStatus();
@@ -99,38 +105,31 @@ public class ServicoController {
         return serNovo;
     }
 
-        @PutMapping("/aprovar/{id}")
+    @PostMapping("/aprovar/{id}")
     public Servico aprovaServico(@PathVariable Long id,
-                                @RequestParam String observacao,
                                 Authentication authentication) {
-        String email = authentication.getName();
-        Funcionario f = funcionarioRepository.findByEmail(email)
-                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.aprovaServico(id, observacao, f);
+        return servicoService.aprovaServico(id);
     }
 
-    @PutMapping("/rejeitar/{id}")
+    @PostMapping("/rejeitar/{id}")
     public Servico rejeitaServico(@PathVariable Long id,
-                                  @RequestParam String observacao,
-                                  @RequestBody String desRejeicao,
+                                  @RequestBody Map<String, String> payload,
                                   Authentication authentication) {
-        String email = authentication.getName();
-        Funcionario f = funcionarioRepository.findByEmail(email)
-                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.rejeitaServico(id, observacao, desRejeicao, f);
+        String motivo = payload.get("descRejeicao");                            
+        return servicoService.rejeitaServico(id, motivo);
     }
 
-    @PutMapping("/resgatar/{id}")
+    @PostMapping("/resgatar/{id}")
     public Servico resgataServico(@PathVariable Long id,
                                     @RequestParam String observacao,
                                     Authentication authentication) {
         String email = authentication.getName();
         Funcionario f = funcionarioRepository.findByEmail(email)
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.resgataServico(id, observacao, f);
+        return servicoService.resgataServico(id, f);
     }
 
-    @PutMapping("/pagar/{id}")
+    @PostMapping("/pagar/{id}")
     public Servico pagaServico(@PathVariable Long id,
                                @RequestParam String observacao,
                                @RequestBody Pagamento pagamento,
@@ -139,23 +138,22 @@ public class ServicoController {
         Funcionario f = funcionarioRepository.findByEmail(email)
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
         Pagamento pagSalvo = pagamentoService.save(pagamento, servicoService.findById(id).getOrcamento());
-        return servicoService.pagaServico(id, observacao, pagSalvo, f);
+        return servicoService.pagaServico(id, pagSalvo, f);
     }
 
-    @PutMapping("/orcar/{id}")
+    @PostMapping("/orcar/{id}")
     public Servico orcarServico(@PathVariable Long id,
-                                @RequestParam String observacao,
                                 @RequestBody Orcamento orcamento,
                                 Authentication authentication) {
         String email = authentication.getName();
         Funcionario f = funcionarioRepository.findByEmail(email)
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        Servico servico = servicoService.findById(id);
+        orcamento.setFuncionario(f);
         Orcamento orcSalvo = orcamentoService.save(orcamento, orcamento.getValor());
-        return servicoService.orcarServico(id, observacao, orcSalvo, f);
+        return servicoService.orcarServico(id, orcSalvo, f);
     }
 
-    @PutMapping("/manutencao/{id}")
+    @PostMapping("/manutencao/{id}")
     public Servico efetuarManutencao(@PathVariable Long id,
                                      @RequestBody String manutencao,
                                      @RequestParam String observacao,
@@ -166,22 +164,33 @@ public class ServicoController {
         return servicoService.efetuarManutencao(id, manutencao, observacao, f);
     }
 
-    @PutMapping("/redirecionar/{id}")
+    @PostMapping("/redirecionar/{id}")
     public Servico redirecionarServico(@PathVariable Long id,
                                         @RequestBody Funcionario funcionario,
                                         @RequestParam String observacao) {
         Funcionario f = funcionarioRepository.findByEmail(funcionario.getEmail())
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.redirecionarServico(id, f, observacao);
+        return servicoService.redirecionarServico(id, f);
     }
 
-    @PutMapping("/finalizar/{id}")
+    @PostMapping("/finalizar/{id}")
     public Servico finalizarServico(@PathVariable Long id,
                                     @RequestParam String observacao,
                                     Authentication authentication) {
         String email = authentication.getName();
         Funcionario f = funcionarioRepository.findByEmail(email)
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.finalizarServico(id, observacao, f);
+        return servicoService.finalizarServico(id, f);
+    }
+
+    @GetMapping("/historico/{id}")
+    public List<Historicos> getHistoricos(@PathVariable Long id) {
+        return historicosService.getHistorico(id);
+    }
+
+    @GetMapping("/orcamento/{id}")
+    public Orcamento getOrcamentoByServicoId(@PathVariable Long id) {
+        Servico servico = servicoService.findById(id);
+        return servico.getOrcamento();
     }
 }

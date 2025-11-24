@@ -1,21 +1,37 @@
+import { Cliente } from "./cliente.model";
+import { Funcionario } from "./funcionario.model";
+
 export interface Request {
     id?: number;
-    clienteId: number;
-    status: string;
-    categoria: string;
-    funcionarioAtualId?: number;
-    dataHoraAbertura: string;
-    descricaoEquipamento: string;
-    descricaoProblema: string;
-    descricaoManutencao?: string;
-    orientacoesCliente?: string;
-    dataHoraFechamento?: string;
+    dataInicio?: string;
+    dataFim?: string | null;
+    status?: string;
+
+    descEquipamento: string;
+    categoriaEquipamento: {
+        id: number;
+        nome?: string;
+    };
+
+    descDefeito: string;
+    observacao?: string | null;
+
+    cliente?: Cliente;
+
+    descRejeicao?: string | null;
+    descManutencao?: string | null;
+
+    funcionario?: any | null;
+    orcamento?: any | null;
+    pagamento?: any | null;
+
+    ativo?: boolean;
 }
 
 export interface Orcamento {
     id: number;
     solicitacaoId: number;
-    funcionario: string;
+    funcionario: Funcionario;
     valor: number;
     dataHora: string;
 }

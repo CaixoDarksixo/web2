@@ -39,15 +39,15 @@ interface Cliente {
             <p-button label="Voltar" (onClick)="voltar()" icon="pi pi-arrow-left" variant="text" severity="secondary"></p-button>
         </div>
                     <div class="font-semibold text-xl mb-6">Realizar Orçamento</div>
-        <div class="font-bold block text-5xl mb-4">{{ request.descricaoEquipamento }}</div>
-        <div class="block font-light text-xl mb-8">Solicitado em {{request.dataHoraAbertura | date:'dd/MM/yyyy'}} às {{request.dataHoraAbertura | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
+        <div class="font-bold block text-5xl mb-4">{{ request.descEquipamento }}</div>
+        <div class="block font-light text-xl mb-8">Solicitado em {{request.dataInicio | date:'dd/MM/yyyy'}} às {{request.dataInicio | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
         <div class="mb-12">
             <div class="text-xl font-semibold mb-2">Categoria</div>
-            <div class="text-xl block">{{ request.categoria }}</div>
+            <div class="text-xl block">{{ request.categoriaEquipamento.nome }}</div>
         </div>
         <div class="mb-12">
             <div class="text-xl font-semibold mb-4">Descrição do Problema</div>
-            <div class="block text-xl rounded-border border border-surface p-4">{{ request.descricaoProblema }}</div>
+            <div class="block text-xl rounded-border border border-surface p-4">{{ request.descDefeito }}</div>
         </div>
         <div class="mb-12">
             <div class="text-xl font-semibold mb-4">Cliente</div>
@@ -109,7 +109,7 @@ export class RealizarOrcamento implements OnInit {
                 return;
             }
 
-            this.userService.getUserById(this.request.clienteId).subscribe((data: Cliente) => {
+            this.userService.getUserById(this.request.cliente!.id).subscribe((data: Cliente) => {
                 this.cliente = data;
             });
         });

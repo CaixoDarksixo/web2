@@ -50,6 +50,10 @@ public class User implements UserDetails {
         return password;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public void setRole(UserRole role){
         this.role = role;
     }

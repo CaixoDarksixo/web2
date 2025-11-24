@@ -57,7 +57,7 @@ public class FuncionarioService {
 
     public Funcionario save(Funcionario funcionario) {
         
-        funcionario.setRole(UserRole.ADMIN);
+        funcionario.setRole(UserRole.FUNCIONARIO);
         
         if (funcionario.getPassword() != null && !funcionario.getPassword().isEmpty()) {
             funcionario.setPassword(passwordEncoder.encode(funcionario.getPassword()));

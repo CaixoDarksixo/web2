@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { CategoriaService } from '../services/categoria.service';
+import { CategoriaService } from '@/core/services/categoria.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService, MessageService } from 'primeng/api';

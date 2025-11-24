@@ -5,11 +5,12 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
+
 export class CategoriaService {
   http = inject(HttpClient);
 
   public getCategorias(): Observable<any[]> {
-        return this.http.get<any[]>(`http://localhost:3000/categorias`);
+        return this.http.get<any[]>(`http://localhost:8080/categorias`);
     }
 
     public createCategoria(body: { nome: string; descricao?: string }): Observable<any> {

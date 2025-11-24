@@ -18,7 +18,7 @@ interface History {
     autor: string;       
     dataHora: string;    
     observacao?: string;
-    motivoRejeicao?: string;
+    descRejeicao?: string;
 }
 
 @Component({
@@ -58,10 +58,10 @@ interface History {
 
     @else {
         <div class="font-semibold text-xl mb-6">Detalhes da Solicitação</div>
-        <div class="font-bold block text-5xl mb-4">{{ request.descricaoEquipamento }}</div>
+        <div class="font-bold block text-5xl mb-4">{{ request.descEquipamento }}</div>
         <div class="block font-light text-xl mb-8">
-            Solicitado em {{ request.dataHoraAbertura | date:'dd/MM/yyyy' }}
-            às {{ request.dataHoraAbertura | date:'HH:mm:ss' }} | ID: {{ requestId }}
+            Solicitado em {{ request.dataInicio | date:'dd/MM/yyyy' }}
+            às {{ request.dataInicio | date:'HH:mm:ss' }} | ID: {{ requestId }}
         </div>
 
         <div class="flex justify-start items-center gap-20 mb-12">
@@ -75,17 +75,17 @@ interface History {
             </div>
             <div>
             <div class="text-xl font-semibold mb-2">Categoria</div>
-            <div class="text-xl block">{{ request.categoria }}</div>
+            <div class="text-xl block">{{ request.categoriaEquipamento.nome }}</div>
             </div>
         </div>
 
         <div class="mb-12">
             <div class="text-xl font-semibold mb-4">Descrição do Problema</div>
-            <div class="block text-xl rounded-border border border-surface p-4">{{ request.descricaoProblema }}</div>
+            <div class="block text-xl rounded-border border border-surface p-4">{{ request.descDefeito }}</div>
         </div>
 
         <div class="mb-16">
-            @if (request.status === 'ORÇADA') {
+            @if (request.status === 'ORCADA') {
             <p-button label="Aprovar/Rejeitar Orçamento"
                 (onClick)="router.navigate(['/cliente/solicitacoes', request.id, 'orcamento'], { state: { fromList: true } })"
                 size="large" fluid="true" icon="pi pi-check-square" />
@@ -174,7 +174,7 @@ export class VisualizarSolicitacao implements OnInit {
     }
 
     onRescue() {
-        this.requestService.rescueRequest(this.request.id!, this.request.clienteId).subscribe((updatedRequest: Request) => {
+        this.requestService.rescueRequest(this.request.id!, this.request.cliente!.id).subscribe((updatedRequest: Request) => {
             this.request = updatedRequest;
             this.requestService.getHistory(this.request.id!).subscribe((data: History[]) => {
                 this.events = data;
@@ -186,14 +186,14 @@ export class VisualizarSolicitacao implements OnInit {
         switch (history.statusAtual) {
             case "ABERTA": 
                 return(`Solicitação aberta. Aguardando orçamento do funcionário responsável.`);
-            case "ORÇADA": 
+            case "ORCADA": 
                 return(`Orçamento aguardando aprovação do cliente.`);
             case "APROVADA": 
                 return(`Orçamento aprovado. Aguardando manutenção.`);
             case "REJEITADA": 
-                return(`Serviço rejeitado pelo cliente. Motivo: ${history.motivoRejeicao}`);
+                return(`Serviço rejeitado pelo cliente. Motivo: ${history.descRejeicao}`);
             case "ARRUMADA": 
-                return(`Equipamento reparado: ${request.descricaoManutencao} Orientações: ${request.orientacoesCliente}`);
+                return(`Equipamento reparado: ${request.descManutencao} Orientações: ${request.observacao}`);
             case "REDIRECIONADA": 
                 return(`Solicitação redirecionada de ${history.autor} para ${history.funcionarioDestino}.`);
             case "PAGA": 

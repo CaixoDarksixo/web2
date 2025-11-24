@@ -38,6 +38,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
             .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
             .sessionManagement(session ->
                 session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
@@ -45,10 +46,10 @@ public class SecurityConfiguration {
                 .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/me").authenticated()
                 .requestMatchers("/api/clientes/autocadastro").permitAll() // autocadastro sem login
-                .requestMatchers("/servicos/**").hasAnyRole("CLIENTE", "ADMIN") // controle por role
-                .requestMatchers("/servicos").hasAnyRole("CLIENTE", "ADMIN")
+                .requestMatchers("/servicos/**").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO") // controle por role
+                .requestMatchers("/servicos").hasAnyRole("CLIENTE", "ADMIN", "FUNCIONARIO")
                 .requestMatchers("/api/clientes").hasRole("ADMIN") // só admin
-                .requestMatchers("/funcionarios/**").hasAnyRole("FUNCIONARIO", "ADMIN")
+                .requestMatchers("/funcionarios/**").permitAll()
                 .anyRequest().authenticated() // todo o resto precisa de login
             //      .anyRequest().permitAll() //ative pra testar
             )

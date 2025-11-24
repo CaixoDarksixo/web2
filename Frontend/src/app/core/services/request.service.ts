@@ -10,7 +10,7 @@ import { Request } from '@/core/models/request.model';
 })
 
 export class RequestService {
-    private readonly API = 'http://localhost:3000/solicitacoes';
+    private readonly API = 'http://localhost:8080/servicos'; // LINK DA API
 
     private statusIcons: Record<string, string> = {
         APROVADA: 'pi pi-check-circle',
@@ -35,24 +35,7 @@ export class RequestService {
         if (params.length > 0) {
         url += `?${params.join('&')}`;
         }
-        return this.http.get<any[]>(url).pipe(
-            switchMap((requests: any[]) => {
-            if (!requests.length) return of([]);
-            const clienteIds = Array.from(new Set(requests.map(r => r.clienteId)));
-            const clienteRequests = clienteIds.map(id =>
-                this.http.get<any>(`http://localhost:3000/usuarios/${id}`)
-            );
-            return forkJoin(clienteRequests).pipe(
-                map(clientes => {
-                const clienteMap = Object.fromEntries(clientes.map(c => [c.id, c.nome]));
-                return requests.map(r => ({
-                    ...r,
-                    clienteNome: clienteMap[r.clienteId] || ''
-                }));
-                })
-            );
-            })
-        );
+        return this.http.get<Request[]>(url);
     }
 
     public getRequestById(id: number): Observable<Request> {
@@ -60,29 +43,25 @@ export class RequestService {
     }
 
     public createRequest(payload: {
-        clienteId: number,
-        categoria: string,
+        categoriaId: number,
         descricaoEquipamento: string,
         descricaoProblema: string
     }
     ): Observable<Request> {
         const newRequest: Request = {
-            clienteId: payload.clienteId,
-            status: 'ABERTA',
-            categoria: payload.categoria,
-            dataHoraAbertura: new Date().toISOString(),
-            descricaoEquipamento: payload.descricaoEquipamento,
-            descricaoProblema: payload.descricaoProblema,
+            categoriaEquipamento: {id: payload.categoriaId},
+            descEquipamento: payload.descricaoEquipamento,
+            descDefeito: payload.descricaoProblema,
         };
         return this.http.post<Request>(this.API, newRequest);
     }
 
     public getHistory(id: number): Observable<any[]> {
-        return this.http.get<any[]>(`${this.API}/${id}/historico`);
+        return this.http.get<any[]>(`${this.API}/historico/${id}`);
     }
 
     public getOrcamento(id: number): Observable<any> {
-        return this.http.get<any>(`${this.API}/${id}/orcamento`);
+        return this.http.get<any>(`${this.API}/orcamento/${id}`);
     }
 
     public criarOrcamento(
@@ -96,19 +75,18 @@ export class RequestService {
             valor,
             observacao
         };
-        return this.http.post<any>(`${this.API}/${requestId}/orcamento`, body);
+        return this.http.post<any>(`${this.API}/orcar/${requestId}`, body);
     }
 
-    public aprovarOrcamento(requestId: number, clienteId: Number): Observable<any> {
-        return this.http.post<any>(`${this.API}/${requestId}/aprovar`, {clienteId});
+    public aprovarOrcamento(requestId: number): Observable<any> {
+        return this.http.post<any>(`${this.API}/aprovar/${requestId}`, null);
     }
 
-    public rejeitarOrcamento(requestId: number, clienteId: number, motivo: string): Observable<any> {
+    public rejeitarOrcamento(requestId: number, motivo: string): Observable<any> {
         const body = {
-        clienteId,
-        motivo
+        descRejeicao: motivo
     };
-        return this.http.post<any>(`${this.API}/${requestId}/rejeitar`, body);
+        return this.http.post<any>(`${this.API}/rejeitar/${requestId}`, body);
     }
 
     public redirecionarSolicitacao(requestId: number, body: {
@@ -116,18 +94,18 @@ export class RequestService {
         toFuncionarioId: number;
         observacao?: string;
     }): Observable<any> {
-        return this.http.post<any>(`${this.API}/${requestId}/redirecionar`, body);
+        return this.http.post<any>(`${this.API}/redirecionar/${requestId}`, body);
     }
 
     public manutencao(requestId: number, body: {
         funcionarioId: number;
         observacao?: string;
     }): Observable<any> {
-        return this.http.post<any>(`${this.API}/${requestId}/manutencao`, body);
+        return this.http.post<any>(`${this.API}/manutencao/${requestId}`, body);
     }
 
     public finalizar(requestId: number, funcionarioId: number): Observable<any> {
-        return this.http.post<any>(`${this.API}/${requestId}/finalizar`, {funcionarioId});
+        return this.http.post<any>(`${this.API}/finalizar/${requestId}`, {funcionarioId});
     }
 
     public pagar(requestId: number, clienteId: number, valorPago: number): Observable<any> {
@@ -135,11 +113,11 @@ export class RequestService {
             clienteId,
             valorPago
         };
-        return this.http.post<any>(`${this.API}/${requestId}/pagar`, body);
+        return this.http.post<any>(`${this.API}/pagar/${requestId}`, body);
     }
 
     public rescueRequest(requestId: number, clienteId: number): Observable<any> {
-        return this.http.post<any>(`${this.API}/${requestId}/resgatar`, {clienteId});
+        return this.http.post<any>(`${this.API}/resgatar/${requestId}`, {clienteId});
     }
 
     public getTagClass(status: string) {

@@ -22,4 +22,7 @@ public class OrcamentoService {
         return orcamentoRepository.save(orcamento);
     }
     
+    public Orcamento findById(Long id){
+        return orcamentoRepository.findById(id).orElse(null);
+    }
 }

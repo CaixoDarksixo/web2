@@ -34,7 +34,7 @@ public class Servico {
     private LocalDate dataFim;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.ABERTA;
 
     private String descEquipamento;
 
