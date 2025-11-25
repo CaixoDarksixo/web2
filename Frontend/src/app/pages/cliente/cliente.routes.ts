@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Solicitacoes } from './solicitacoes';
-import { VisualizarSolicitacao } from './visualizarSolicitacao';
-import { MostrarOrcamento } from './mostrarOrcamento';
-import { PagarServico } from './pagarServico';
+import { Solicitacoes } from './solicitacoes/solicitacoes';
+import { VisualizarSolicitacao } from './visualizar-solicitacao/visualizar-solicitacao';
+import { MostrarOrcamento } from './mostrar-orcamento/mostrar-orcamento';
+import { PagarServico } from './pagar-servico/pagar-servico';
 
 export default [
     { path: '', redirectTo: 'solicitacoes', pathMatch: 'full' },
