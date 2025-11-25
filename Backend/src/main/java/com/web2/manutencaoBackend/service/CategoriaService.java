@@ -22,7 +22,7 @@ public class CategoriaService {
     }
 
     public List<CategoriaE> getAll() {
-        return categoriaERepository.findAll();
+        return categoriaERepository.findByAtivoTrue();
     }
 
     public Optional<CategoriaE> findById(Long id) {

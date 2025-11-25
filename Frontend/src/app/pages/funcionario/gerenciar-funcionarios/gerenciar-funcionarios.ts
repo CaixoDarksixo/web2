@@ -10,14 +10,7 @@ import { MessageModule } from 'primeng/message';
 import { FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePipe } from '@angular/common';
-
-interface Funcionario {
-    id: number;
-    nome: string;
-    email: string;
-    dataNascimento: string;
-    password?: string;
-}
+import { Funcionario } from '@/core/models/funcionario.model';
 
 @Component({
     selector: 'gerenciar-funcionarios',
@@ -33,6 +26,7 @@ interface Funcionario {
     ConfirmDialogModule,
     DatePipe
     ],
+    providers: [DatePipe],
     templateUrl: './gerenciar-funcionarios.html',
 })
 export class GerenciarFuncionarios implements OnInit {
@@ -46,16 +40,17 @@ export class GerenciarFuncionarios implements OnInit {
     editarFuncionarioVisible: boolean = false;
 
     private fb = inject(FormBuilder);
+    private datePipe = inject(DatePipe);
 
     newFuncionarioForm = this.fb.group({
         nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
         email: ['', [Validators.required, Validators.email]],
-        senha: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+        senha: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]],
         dataNascimento: ['', [Validators.required]],
     });
 
     editarFuncionarioForm = this.fb.group({
-        nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+        nome: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(100)]],
         email: ['', [Validators.required, Validators.email]],
         senha: ['', [Validators.minLength(6), Validators.maxLength(100)]],
         dataNascimento: ['', [Validators.required]],
@@ -81,6 +76,22 @@ export class GerenciarFuncionarios implements OnInit {
         this.newFuncionarioForm.markAllAsTouched();
         if (this.newFuncionarioForm.invalid) return;
 
+        this.funcionarioService.createFuncionario(this.newFuncionarioForm.value.nome!,
+                                                this.newFuncionarioForm.value.email!,
+                                                this.newFuncionarioForm.value.dataNascimento!,
+                                                this.newFuncionarioForm.value.senha!
+        ).subscribe(() => {
+            this.funcionarioService.getFuncionarios().subscribe((data: Funcionario[]) => {
+                this.funcionarios = data;
+
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Funcionário Cadastrado',
+                    detail: 'O novo funcionário foi cadastrado com sucesso.',
+                    life: 5000
+                });
+            });
+        });
         this.newFuncionarioVisible = false; 
         this.newFuncionarioForm.reset()
     }
@@ -89,8 +100,25 @@ export class GerenciarFuncionarios implements OnInit {
         this.editarFuncionarioForm.markAllAsTouched();
         if (this.editarFuncionarioForm.invalid) return;
 
-        this.editarFuncionarioVisible = false;
-        this.editarFuncionarioForm.reset();
+        this.funcionarioService.updateFuncionario(this.funcionariosSelecionados![0].id, 
+                                                this.editarFuncionarioForm.value.nome!,
+                                                this.editarFuncionarioForm.value.email!,
+                                                this.editarFuncionarioForm.value.dataNascimento!,
+                                                this.editarFuncionarioForm.value.senha!).subscribe(() => {
+            this.funcionarioService.getFuncionarios().subscribe((data: Funcionario[]) => {
+                this.funcionarios = data;
+                this.editarFuncionarioVisible = false;
+                this.newFuncionarioForm.reset();
+                this.funcionariosSelecionados = [];
+                
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Funcionário Editado',
+                    detail: 'O funcionário foi editado com sucesso.',
+                    life: 5000
+                });
+            });
+        });
     }
 
     onExcluir() {
@@ -111,7 +139,12 @@ export class GerenciarFuncionarios implements OnInit {
                 severity: 'danger'
             },
             accept: () => {
-                this.funcionariosSelecionados = null;
+                this.funcionarioService.deleteFuncionarios(this.funcionariosSelecionados!.map(c => c.id)).subscribe(() => {
+                    this.funcionarioService.getFuncionarios().subscribe((data: Funcionario[]) => {
+                        this.funcionarios = data;
+                    });
+                });
+                this.funcionariosSelecionados = [];
                 this.messageService.add({
                     severity: 'info',
                     summary: 'Funcionários Excluídos',
@@ -123,11 +156,12 @@ export class GerenciarFuncionarios implements OnInit {
     }
 
     onEditar() {
+        console.log(this.funcionariosSelecionados);
         this.editarFuncionarioVisible = true;
         this.editarFuncionarioForm.patchValue({
             nome: this.funcionariosSelecionados![0].nome,
             email: this.funcionariosSelecionados![0].email,
-            dataNascimento: this.funcionariosSelecionados![0].dataNascimento,
+            dataNascimento: this.datePipe.transform(this.funcionariosSelecionados![0].dataNascimento, 'yyyy-MM-dd'),
         });
     }
 }

@@ -11,7 +11,7 @@
     </div>
     <p-table 
             #dt1
-            sortField="dataHoraAbertura" 
+            sortField="dataInicio" 
             [sortOrder]="1"
             [columns]="cols" 
             [value]="requests"
@@ -24,9 +24,9 @@
             class="request-table">
             <ng-template #header let-columns>
                 <tr class>
-                    <th pSortableColumn="dataHoraAbertura" class="mt-20 mb-8">Data/Hora de Abertura <p-sortIcon field="dataHoraAbertura" /></th>
+                    <th pSortableColumn="dataInicio" class="mt-20 mb-8">Data/Hora de Abertura <p-sortIcon field="dataInicio" /></th>
                     <th class="mt-20 mb-8">Descrição do Equipamento</th>
-                    <th pSortableColumn="clienteNome" class="mt-20 mb-8">Cliente <p-sortIcon field="clienteNome" /></th>
+                    <th pSortableColumn="cliente" class="mt-20 mb-8">Cliente <p-sortIcon field="clienteNome" /></th>
                     <th class="mt-20 mb-8">Ação</th>
                 </tr>
             </ng-template>
@@ -42,6 +42,12 @@
                         @else if (col.header === 'Data/Hora de Abertura') {
                             <td>
                                 {{ rowData[col.field] | date:'dd/MM/yyyy HH:mm' }}
+                            </td>
+                        }
+
+                        @else if (col.header === 'Cliente') {
+                            <td>
+                                {{ rowData.cliente.nome | truncate:30 }}
                             </td>
                         }
 

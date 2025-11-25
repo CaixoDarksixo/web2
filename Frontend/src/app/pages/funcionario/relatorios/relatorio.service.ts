@@ -20,7 +20,7 @@ private readonly API_URL = '/api/receitas';
 // Busca receitas no backend, filtrando por data
 // O backend recebe via @RequestParam.
    
-  getReceitas(dataInicial?: string, dataFinal?: string): Observable<Receita[]> {
+getReceitas(dataInicial?: string, dataFinal?: string): Observable<Receita[]> {
     let params = new HttpParams();
     
 // no formato que o input type="date" fornece.

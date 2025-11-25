@@ -1,6 +1,6 @@
 package com.web2.manutencaoBackend.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class ServicoService {
     }
 
     public Servico save(Servico servico) {
-        servico.setDataInicio(LocalDate.now());
+        servico.setDataInicio(LocalDateTime.now());
         servico.setAtivo(true);
         return servicoRepository.save(servico);
     }
@@ -95,26 +95,24 @@ public class ServicoService {
         return atualizado;
     }
 
-    public Servico resgataServico(Long id, Funcionario f) {
+    public Servico resgataServico(Long id) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
-        servico.setFuncionario(f);
         servico.setStatus(Status.APROVADA);
         Servico atualizado = servicoRepository.save(servico);
-        String observacao = "Serviço resgatado pelo funcionário: " + f.getNome();
+        String observacao = "Serviço resgatado pelo cliente";
         historicosService.save(atualizado, anterior, observacao);
 
         return atualizado;
     }
 
-    public Servico pagaServico(Long id, Pagamento pagamento, Funcionario f) {
+    public Servico pagaServico(Long id, Pagamento pagamento) {
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
-        servico.setFuncionario(f);
         servico.setStatus(Status.PAGA);
         servico.setPagamento(pagamento);
         Servico atualizado = servicoRepository.save(servico);
@@ -124,12 +122,11 @@ public class ServicoService {
         return atualizado;
     }
 
-    public Servico orcarServico(Long id, Orcamento orcamento, Funcionario f){ /////////////////////////////////
+    public Servico orcarServico(Long id, Orcamento orcamento){ /////////////////////////////////
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
-        servico.setFuncionario(f);
         servico.setStatus(Status.ORCADA);
         servico.setOrcamento(orcamento);
         Servico atualizado = servicoRepository.save(servico);
@@ -153,15 +150,15 @@ public class ServicoService {
         return atualizado;
     }
 
-    public Servico redirecionarServico(Long id, Funcionario funcionario){
+    public Servico redirecionarServico(Long id, Funcionario funcionario, Funcionario funcionarioDest){
         Servico servico = servicoRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
         Status anterior = servico.getStatus();
-        servico.setStatus(Status.FINALIZADA);
-        servico.setFuncionario(funcionario);
+        servico.setStatus(Status.REDIRECIONADA);
+        servico.setFuncionario(funcionarioDest);
         Servico atualizado = servicoRepository.save(servico);
-        String observacao = "Serviço finalizado pelo funcionário: " + funcionario.getNome();
+        String observacao = "Serviço redirecionado pelo funcionário: " + funcionario.getNome();
         historicosService.save(atualizado, anterior, observacao);
         
         return atualizado;
@@ -183,7 +180,7 @@ public class ServicoService {
 
     
     public List<Servico> filtrarServicos(Long clienteId, Long funcionarioId, Status estado,
-                                        LocalDate dataInicio, LocalDate dataFim) {
+                                        LocalDateTime dataInicio, LocalDateTime dataFim) {
 
         return servicoRepository.filtrarServicos(clienteId, funcionarioId, estado, dataInicio, dataFim);
     }

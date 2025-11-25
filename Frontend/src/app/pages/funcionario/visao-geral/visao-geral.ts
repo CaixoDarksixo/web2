@@ -28,9 +28,9 @@ import { Request } from '@/core/models/request.model';
 })
 export class VisaoGeral implements OnInit {
     cols = [
-        { field: 'dataHoraAbertura', header: 'Data/Hora de Abertura' },
-        { field: 'descricaoEquipamento', header: 'Descrição do Equipamento' },
-        { field: "clienteNome", header: 'Cliente' },
+        { field: 'dataInicio', header: 'Data/Hora de Abertura' },
+        { field: 'descEquipamento', header: 'Descrição do Equipamento' },
+        { field: "cliente", header: 'Cliente' },
         { field: 'Ação', header: 'Ação' }
     ];
 
@@ -40,8 +40,9 @@ export class VisaoGeral implements OnInit {
     router = inject(Router);
 
     ngOnInit() {
-        this.requestService.getRequests(undefined, "ABERTA").subscribe((data: Request[]) => {
+        this.requestService.getRequests({status: "ABERTA"}).subscribe((data: Request[]) => {
             this.requests = data;
+        console.log(data);
         });
     }
 

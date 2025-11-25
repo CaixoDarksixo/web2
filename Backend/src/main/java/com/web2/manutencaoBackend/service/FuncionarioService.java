@@ -25,6 +25,10 @@ public class FuncionarioService {
         this.funcionarioRepository = funcionarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
+    
+    public Iterable<Funcionario> findAll() {
+        return funcionarioRepository.findAllByAtivoTrue();
+    }
 
   /*  public List<FuncionarioResponseDTO> getAll() {
         return funcionarioRepository.findAll().stream()

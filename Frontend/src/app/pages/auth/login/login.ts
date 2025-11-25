@@ -73,13 +73,12 @@ export class Login {
           this.auth.storeToken(res.token, !!remember);
         }
         console.log(res.role);
-        switch (res.role![0]) {
-          case 'ROLE_FUNCIONARIO':
-            this.router.navigate(['/funcionario']);
-            return;
-          case 'ROLE_CLIENTE':
-            this.router.navigate(['/cliente']);
-            return;
+        if (res.role?.includes('ROLE_FUNCIONARIO')) {
+          this.router.navigate(['/funcionario']);
+          return;
+        } else {
+          this.router.navigate(['/cliente']);
+          return;
         }
       },
       error: (err: LoginError) => {

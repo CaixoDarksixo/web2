@@ -5,7 +5,8 @@ import { RequestService } from '@/core/services/request.service';
 import { CommonModule, DatePipe, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import { Request, Orcamento } from '@/core/models/request.model';
+import { Request } from '@/core/models/request.model';
+import { Orcamento } from '@/core/models/orcamento.model';
 
 @Component({
     selector: 'pagar-servico',
@@ -17,7 +18,7 @@ import { Request, Orcamento } from '@/core/models/request.model';
     DialogModule,
     CommonModule
     ],
-  templateUrl: "./pagar-servico.html"
+    templateUrl: './pagar-servico.html',
 })
 
 export class PagarServico implements OnInit {
@@ -65,7 +66,7 @@ export class PagarServico implements OnInit {
     }
 
     onPagar()  {
-        this.requestService.pagar(this.request.id!, this.request.clienteId, this.orcamento.valor).subscribe({
+        this.requestService.pagar(this.request.id!, this.orcamento.valor).subscribe({
             next: () => {
                 this.pagaDialogVisible = true;
                 this.messageService.add({

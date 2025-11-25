@@ -2,9 +2,10 @@ import { Routes } from '@angular/router';
 import { VisaoGeral } from './visao-geral/visao-geral';
 import { GerenciarCategorias } from './gerenciar-categorias/gerenciar-categorias';
 import { GerenciarFuncionarios } from './gerenciar-funcionarios/gerenciar-funcionarios';
-import { Solicitacoes } from './solicitacoes';
-import { Relatorios } from './relatorios';
-import { RealizarOrcamento } from './realizarOrcamento';
+import { Solicitacoes } from './solicitacoes/solicitacoes';
+import { Relatorios } from './relatorios/relatorios';
+import { RealizarOrcamento } from './realizar-orcamento/realizar-orcamento';
+import { EfetuarManutencao } from './efetuar-manutencao/efetuar-manutencao';
 
 export default [
     { path: '', pathMatch: 'full', component: VisaoGeral },
@@ -12,5 +13,6 @@ export default [
     { path: 'categorias', component: GerenciarCategorias},
     { path: 'funcionarios', component: GerenciarFuncionarios},
     { path: 'relatorios', component: Relatorios},
+    { path: 'solicitacoes/:id/manutencao', component: EfetuarManutencao},
     { path: 'solicitacoes/:id/orcamento', component: RealizarOrcamento},
 ] as Routes;

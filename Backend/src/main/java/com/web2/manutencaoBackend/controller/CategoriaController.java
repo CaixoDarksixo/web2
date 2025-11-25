@@ -30,6 +30,8 @@ public class CategoriaController {
 
     @GetMapping
     public ResponseEntity<List<CategoriaE>> getAll() {
+        //filtrar por ativo=true
+        
         List<CategoriaE> categorias = categoriaService.getAll();
         return new ResponseEntity<>(categorias, HttpStatus.OK);
     }

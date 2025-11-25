@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
-import { forkJoin } from 'rxjs';
+import { Observable} from 'rxjs';
 import { Request } from '@/core/models/request.model';
+import { Orcamento } from '@/core/models/orcamento.model';
+import { Funcionario } from '../models/funcionario.model';
 
 @Injectable({
     providedIn: 'root',
@@ -24,16 +24,16 @@ export class RequestService {
     
     http = inject(HttpClient);
     
-    //necessario ajuste quando integrar com backend
-    public getRequests(clienteId?: number, status?: string): Observable<Request[]> {
+    public getRequests(filtros: { clienteId?: number, status?: string, funcionarioId?: number } = {}): Observable<Request[]> {
         let url = this.API;
         const params: string[] = [];
 
-        if (clienteId) params.push(`clienteId=${clienteId}`);
-        if (status) params.push(`status=${status}`);
+        if (filtros.clienteId) params.push(`clienteId=${filtros.clienteId}`);
+        if (filtros.status) params.push(`estado=${filtros.status}`);
+        if (filtros.funcionarioId) params.push(`funcionarioId=${filtros.funcionarioId}`);
 
         if (params.length > 0) {
-        url += `?${params.join('&')}`;
+            url += `?${params.join('&')}`;
         }
         return this.http.get<Request[]>(url);
     }
@@ -60,64 +60,57 @@ export class RequestService {
         return this.http.get<any[]>(`${this.API}/historico/${id}`);
     }
 
-    public getOrcamento(id: number): Observable<any> {
+    public getOrcamento(id: number): Observable<Orcamento> {
         return this.http.get<any>(`${this.API}/orcamento/${id}`);
     }
 
     public criarOrcamento(
         requestId: number,
-        funcionario: string,
         valor: number,
-        observacao?: string,
-    ): Observable<any> {
+    ): Observable<Orcamento> {
         const body = {
-            funcionario,
-            valor,
-            observacao
+            valor
         };
-        return this.http.post<any>(`${this.API}/orcar/${requestId}`, body);
+        return this.http.post<Orcamento>(`${this.API}/orcar/${requestId}`, body);
     }
 
-    public aprovarOrcamento(requestId: number): Observable<any> {
-        return this.http.post<any>(`${this.API}/aprovar/${requestId}`, null);
+    public aprovarOrcamento(requestId: number): Observable<Orcamento> {
+        return this.http.post<Orcamento>(`${this.API}/aprovar/${requestId}`, null);
     }
 
-    public rejeitarOrcamento(requestId: number, motivo: string): Observable<any> {
+    public rejeitarOrcamento(requestId: number, motivo: string): Observable<Orcamento> {
         const body = {
         descRejeicao: motivo
     };
-        return this.http.post<any>(`${this.API}/rejeitar/${requestId}`, body);
+        return this.http.post<Orcamento>(`${this.API}/rejeitar/${requestId}`, body);
     }
 
-    public redirecionarSolicitacao(requestId: number, body: {
-        fromFuncionarioId: number;
-        toFuncionarioId: number;
-        observacao?: string;
-    }): Observable<any> {
-        return this.http.post<any>(`${this.API}/redirecionar/${requestId}`, body);
+    public redirecionarSolicitacao(requestId: number, funcionarioId: number): Observable<Request> {
+        return this.http.post<Request>(`${this.API}/redirecionar/${requestId}`, {funcionarioId});
     }
 
-    public manutencao(requestId: number, body: {
-        funcionarioId: number;
-        observacao?: string;
-    }): Observable<any> {
-        return this.http.post<any>(`${this.API}/manutencao/${requestId}`, body);
+    public manutencao(requestId: number, manutencao: string, observacao: string): Observable<Request> {
+        const body = {
+            manutencao,
+            observacao
+        };
+
+        return this.http.post<Request>(`${this.API}/manutencao/${requestId}`, body);
     }
 
     public finalizar(requestId: number, funcionarioId: number): Observable<any> {
         return this.http.post<any>(`${this.API}/finalizar/${requestId}`, {funcionarioId});
     }
 
-    public pagar(requestId: number, clienteId: number, valorPago: number): Observable<any> {
+    public pagar(requestId: number, valorPago: number): Observable<any> {
         const body = {
-            clienteId,
             valorPago
         };
         return this.http.post<any>(`${this.API}/pagar/${requestId}`, body);
     }
 
-    public rescueRequest(requestId: number, clienteId: number): Observable<any> {
-        return this.http.post<any>(`${this.API}/resgatar/${requestId}`, {clienteId});
+    public rescueRequest(requestId: number): Observable<any> {
+        return this.http.post<any>(`${this.API}/resgatar/${requestId}`, null);
     }
 
     public getTagClass(status: string) {

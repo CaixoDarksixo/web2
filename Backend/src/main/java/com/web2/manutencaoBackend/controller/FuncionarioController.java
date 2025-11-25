@@ -27,6 +27,12 @@ public class FuncionarioController {
         this.funcionarioService = funcionarioService;
     }
 
+    @GetMapping
+    public ResponseEntity<Iterable<Funcionario>> getAll() {
+        Iterable<Funcionario> funcionarios = funcionarioService.findAll();
+        return ResponseEntity.ok(funcionarios);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Funcionario> getById(@PathVariable Long id) {
         Optional<Funcionario> funcionario= funcionarioService.findById(id);

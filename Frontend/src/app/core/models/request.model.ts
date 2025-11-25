@@ -1,5 +1,4 @@
 import { Cliente } from "./cliente.model";
-import { Funcionario } from "./funcionario.model";
 
 export interface Request {
     id?: number;
@@ -26,13 +25,5 @@ export interface Request {
     pagamento?: any | null;
 
     ativo?: boolean;
-}
-
-export interface Orcamento {
-    id: number;
-    solicitacaoId: number;
-    funcionario: Funcionario;
-    valor: number;
-    dataHora: string;
 }
     

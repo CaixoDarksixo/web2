@@ -1,6 +1,7 @@
 package com.web2.manutencaoBackend.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,17 +24,27 @@ public interface ServicoRepository extends JpaRepository<Servico, Long>{
 @Query("""
     SELECT s FROM Servico s
     WHERE (:clienteId IS NULL OR s.cliente.id = :clienteId)
-      AND (:funcionarioId IS NULL OR s.funcionario.id = :funcionarioId)
+      AND (
+            :funcionarioId IS NULL 
+            OR 
+            (s.funcionario.id = :funcionarioId OR s.funcionario IS NULL) 
+      )
       AND (:estado IS NULL OR s.status = :estado)
-      AND (:dataInicio IS NULL OR s.dataInicio >= :dataInicio)
-      AND (:dataFim IS NULL OR s.dataFim <= :dataFim)
+      
+      AND (
+          cast(:dataInicio as timestamp) IS NULL OR s.dataInicio >= :dataInicio 
+      )
+      
+      AND (
+          cast(:dataFim as timestamp) IS NULL OR s.dataFim <= :dataFim
+      )
 """)
 List<Servico> filtrarServicos(
         @Param("clienteId") Long clienteId,
         @Param("funcionarioId") Long funcionarioId,
         @Param("estado") Status estado,
-        @Param("dataInicio") LocalDate dataInicio,
-        @Param("dataFim") LocalDate dataFim
+        @Param("dataInicio") LocalDateTime dataInicio,
+        @Param("dataFim") LocalDateTime dataFim
 );
 
 

@@ -61,13 +61,40 @@ export class GerenciarCategorias implements OnInit {
     }
 
     criarCategoria() {
+        this.categoriaService.createCategoria(this.categoriaForm.value.nome!).subscribe(() => {
+            this.categoriaService.getCategorias().subscribe((data: Categoria[]) => {
+                this.categorias = data;
+
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Categoria Criada',
+                    detail: 'A nova categoria foi criada com sucesso.',
+                    life: 5000
+                });
+            });
+        });
         this.newCategoriaVisible = false; 
         this.categoriaForm.reset()
     }
 
     editarCategoria() {
-        this.editarCategoriaVisible = false;
-        this.categoriaForm.reset();
+        this.categoriaService.updateCategoria(this.categoriasSelecionadas![0].id, this.categoriaForm.value.nome!).subscribe(() => {
+            this.categoriaService.getCategorias().subscribe((data: Categoria[]) => {
+                this.categorias = data;
+                this.editarCategoriaVisible = false;
+                this.categoriaForm.reset();
+                this.categoriasSelecionadas = [];
+                
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Categoria Editada',
+                    detail: 'A categoria foi editada com sucesso.',
+                    life: 5000
+                });
+            });
+        });
+
+
     }
 
     onExcluir() {
@@ -87,7 +114,12 @@ export class GerenciarCategorias implements OnInit {
                 severity: 'danger'
             },
             accept: () => {
-                this.categoriasSelecionadas = null;
+                this.categoriaService.deleteCategorias(this.categoriasSelecionadas!.map(c => c.id)).subscribe(() => {
+                    this.categoriaService.getCategorias().subscribe((data: Categoria[]) => {
+                        this.categorias = data;
+                    });
+                });
+                this.categoriasSelecionadas = [];
                 this.messageService.add({
                     severity: 'info',
                     summary: 'Categorias Excluídas',

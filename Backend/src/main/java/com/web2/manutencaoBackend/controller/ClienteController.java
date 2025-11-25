@@ -49,6 +49,13 @@ public class ClienteController {
         return clienteService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cliente> getById(@PathVariable Long id) {
+        return clienteService.findById(id)
+                .map(cliente -> new ResponseEntity<>(cliente, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         clienteService.delete(id);

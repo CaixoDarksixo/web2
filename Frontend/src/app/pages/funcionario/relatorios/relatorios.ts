@@ -6,8 +6,8 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 
-import { RelatorioService } from '../funcionario/relatorio.service';
-import { Receita, CategoriaAgrupada } from '../funcionario/receita.model';
+import { RelatorioService } from './relatorio.service';
+import { Receita, CategoriaAgrupada } from './receita.model';
 
 @Component({
   selector: 'relatorios',

@@ -1,0 +1,35 @@
+<div class="card">
+    <div class="flex align-items-center justify-content-between mb-4">
+        <p-button label="Voltar" (onClick)="voltar()" icon="pi pi-arrow-left" variant="text" severity="secondary"></p-button>
+    </div>
+                <div class="font-semibold text-xl mb-6">Realizar Orçamento</div>
+    <div class="font-bold block text-5xl mb-4">{{ request.descEquipamento }}</div>
+    <div class="block font-light text-xl mb-8">Solicitado em {{request.dataInicio | date:'dd/MM/yyyy'}} às {{request.dataInicio | date:'HH:mm:ss'}}   |   ID: {{ requestId }}</div>
+    <div class="mb-12">
+        <div class="text-xl font-semibold mb-2">Categoria</div>
+        <div class="text-xl block">{{ request.categoriaEquipamento.nome }}</div>
+    </div>
+    <div class="mb-12">
+        <div class="text-xl font-semibold mb-4">Descrição do Problema</div>
+        <div class="block text-xl rounded-border border border-surface p-4">{{ request.descDefeito }}</div>
+    </div>
+    <div class="mb-12">
+        <div class="text-xl font-semibold mb-4">Cliente</div>
+        <div class="block text-xl rounded-border border border-surface p-4">
+            <div class="mb-2">Nome: {{ cliente.nome }}</div>
+            <div class="mb-2">Email: {{ cliente.email }}</div>
+            <div class="mb-2">Telefone: {{ cliente.telefone }}</div>
+            <div class="mb-2">Endereço: {{ cliente.endereco }}</div>
+        </div>
+    </div>
+    <form [formGroup]="orcamentoForm" class="w-full">
+        <label for="valorOrcamento" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2 mt-4 after:ml-0.5 after:text-red-600 after:content-['*']" >Valor do Orçamento</label>
+        <p-inputnumber mode="currency" fluid="true" currency="BRL" locale="pt-BR" placeholder="Insira o valor" class="w-full md:w-120 mb-2" formControlName="valor"/>
+        @if (orcamentoForm.controls.valor.touched && orcamentoForm.controls.valor.invalid) {
+            <p-message severity="error" size="small" variant="simple">Insira um valor válido.</p-message>
+            }
+        <div class="flex justify-end mt-4">
+            <p-button label="Enviar Orçamento" (click)="onEnviar()"/>
+        </div>
+    </form>   
+</div>

@@ -1,5 +1,6 @@
 package com.web2.manutencaoBackend.controller;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -61,8 +62,8 @@ public class ServicoController {
             @RequestParam(required = false) Long clienteId,
             @RequestParam(required = false) Long funcionarioId,
             @RequestParam(required = false) Status estado,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dataFim
     ) {
         List<Servico> servicos = servicoService.filtrarServicos(clienteId, funcionarioId, estado, dataInicio, dataFim);
         return ResponseEntity.ok(servicos);
@@ -121,24 +122,20 @@ public class ServicoController {
 
     @PostMapping("/resgatar/{id}")
     public Servico resgataServico(@PathVariable Long id,
-                                    @RequestParam String observacao,
                                     Authentication authentication) {
-        String email = authentication.getName();
-        Funcionario f = funcionarioRepository.findByEmail(email)
-                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.resgataServico(id, f);
+        return servicoService.resgataServico(id);
     }
 
     @PostMapping("/pagar/{id}")
     public Servico pagaServico(@PathVariable Long id,
-                               @RequestParam String observacao,
-                               @RequestBody Pagamento pagamento,
+                               @RequestBody Map<String, String> payload,
                                 Authentication authentication) {
-        String email = authentication.getName();
-        Funcionario f = funcionarioRepository.findByEmail(email)
-                            .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+        double valorPago = Double.parseDouble(payload.get("valorPago"));
+        Pagamento pagamento = new Pagamento();
+        pagamento.setValorPago(valorPago);
+        pagamento.setOrcamento(servicoService.findById(id).getOrcamento());
         Pagamento pagSalvo = pagamentoService.save(pagamento, servicoService.findById(id).getOrcamento());
-        return servicoService.pagaServico(id, pagSalvo, f);
+        return servicoService.pagaServico(id, pagSalvo);
     }
 
     @PostMapping("/orcar/{id}")
@@ -150,14 +147,15 @@ public class ServicoController {
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
         orcamento.setFuncionario(f);
         Orcamento orcSalvo = orcamentoService.save(orcamento, orcamento.getValor());
-        return servicoService.orcarServico(id, orcSalvo, f);
+        return servicoService.orcarServico(id, orcSalvo);
     }
 
     @PostMapping("/manutencao/{id}")
     public Servico efetuarManutencao(@PathVariable Long id,
-                                     @RequestBody String manutencao,
-                                     @RequestParam String observacao,
+                                    @RequestBody Map<String, String> payload,
                                     Authentication authentication) {
+        String manutencao = payload.get("manutencao");
+        String observacao = payload.get("observacao");
         String email = authentication.getName();
         Funcionario f = funcionarioRepository.findByEmail(email)
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
@@ -166,16 +164,19 @@ public class ServicoController {
 
     @PostMapping("/redirecionar/{id}")
     public Servico redirecionarServico(@PathVariable Long id,
-                                        @RequestBody Funcionario funcionario,
-                                        @RequestParam String observacao) {
-        Funcionario f = funcionarioRepository.findByEmail(funcionario.getEmail())
+                                        @RequestBody Map<String, Long> payload,
+                                    Authentication authentication) {
+        String email = authentication.getName();
+        Long funcionarioId = payload.get("funcionarioId");
+        Funcionario f = funcionarioRepository.findByEmail(email)
                             .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
-        return servicoService.redirecionarServico(id, f);
+        Funcionario funcionario = funcionarioRepository.findById(funcionarioId)
+                                    .orElseThrow(() -> new RuntimeException("Funcionario destino não encontrado"));
+        return servicoService.redirecionarServico(id, f, funcionario);
     }
 
     @PostMapping("/finalizar/{id}")
     public Servico finalizarServico(@PathVariable Long id,
-                                    @RequestParam String observacao,
                                     Authentication authentication) {
         String email = authentication.getName();
         Funcionario f = funcionarioRepository.findByEmail(email)

@@ -1,6 +1,7 @@
 package com.web2.manutencaoBackend.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -28,10 +29,10 @@ public class Servico {
     private Long id;
 
     @CreationTimestamp
-    private LocalDate dataInicio;
+    private LocalDateTime dataInicio;
 
     @CreationTimestamp
-    private LocalDate dataFim;
+    private LocalDateTime dataFim;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.ABERTA;
@@ -67,7 +68,7 @@ public class Servico {
     private Pagamento pagamento;
     private Boolean ativo = true;
 
-    public Servico(LocalDate dataInicio, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
+    public Servico(LocalDateTime dataInicio, Status status, String descEquipamento, CategoriaE categoriaEquipamento, String descDefeito, Cliente cliente) {
         this.dataInicio = dataInicio;
         this.dataFim = null;
         this.status = Status.ABERTA;
